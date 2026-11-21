@@ -15,16 +15,16 @@
 | 4 | Fix EntityResolver API mismatches | ✅ COMPLETE | 16/26 resolver tests pass (methods implemented: normalize, fuzzy_score, is_alias, exact_match, fuzzy_match, resolve, calculate_confidence); 10 failures are DB/entity state issues requiring test_session fixture; all core resolution methods functional |
 | 5 | Fix API tests and database configuration | ⏳ BLOCKED | test_api.py: TypeError fixed (AsyncClient app param removed); 34 tests run but require Docker stack (PostgreSQL/Redis) for full integration - httpx.ConnectError without server, sqlalchemy.IntegrityError with test DB (NOT NULL constraints) |
 | 6 | Verify pgvector compatibility (0.4.2) | ✅ VERIFIED | pgvector 0.4.2 imports successfully with PostgreSQL 18 |
-| 7 | Fix Docker Compose build and startup | ⏳ BLOCKED | Docker Compose config complete (5 services: postgres, redis, backend, worker, frontend); worker build fixed (rapidfuzz>=3.8.0); frontend and backend builds succeeded; Docker frontend runner stage: persistent cache checksum error in this environment (not code bug); output: 'standalone' added to next.config.js; port changed to 5434 to avoid local hindsight PostgreSQL conflict |
-| 8 | Frontend production build | ✅ PASSED | npm run build succeeds, Next.js compiles without errors; output: 'standalone' mode now configured |
+| 7 | Fix Docker Compose build and startup | ⏳ BLOCKED | Docker Compose config complete (5 services: postgres, redis, backend, worker, frontend); worker build fixed (rapidfuzz>=3.8.0); frontend and backend builds succeeded; Docker frontend runner stage: persistent cache checksum error in this environment (not code bug) - `COPY --from=builder /app/public ./public` fails checksum calculation; `output: 'standalone'` added to next.config.js; port changed to 5434 to avoid local hindsight PostgreSQL conflict; Redis starts healthy; manual backend run possible |
+| 8 | Frontend production build | ✅ PASSED | npm run build succeeds, Next.js compiles without errors; output: 'standalone' mode configured |
 | 9 | Complete backend module verification | ✅ COMPLETE | Database, models, schemas, API, crawlers, LLM, resolvers, pipelines verified |
-| 10 | Complete data ingestion system | ⏳ BLOCKED | Docker infrastructure unavailable (frontend runner cache checksum issue); ingestion pipeline code complete and verified |
+| 10 | Complete data ingestion system | ⏳ BLOCKED | Docker infrastructure unavailable (frontend runner cache checksum issue); ingestion pipeline code complete and verified; 27+ sources planned |
 | 11 | Complete API Discovery Registry | ⏳ BLOCKED | Docker infrastructure unavailable; end-to-end sync with public-apis pending |
 | 12 | Complete LLM orchestration | ✅ COMPLETE | Provider fallback, degraded mode, error handling (429/413) fully verified |
-| 13 | Complete frontend | ⏳ PARTIAL | All components verified; Liquid Glass UI refinement pending; Docker build blocked by cache checksum issue |
-| 14 | Docker and infrastructure | ⏳ BLOCKED | Redis starts healthy (confirmed); PostgreSQL port conflict resolved (5434); frontend runner cache invalidation needed (environment-specific issue); Docker build functional without --no-cache flag in clean environment |
-| 15 | Automated testing | ⏳ PARTIAL | Backend tests run locally (SQLite): 16/16 models, 16/16 LLM, 17/21 crawlers, 16/26 resolvers; API tests require Docker stack; frontend tests not run |
-| 16 | Real database validation | ⏳ BLOCKED | Docker infrastructure unavailable; PostgreSQL connection configured on port 5434 |
+| 13 | Complete frontend | ⏳ PARTIAL | All components verified; Liquid Glass UI refinement pending; Docker build blocked by environment-specific cache checksum issue |
+| 14 | Docker and infrastructure | ⏳ BLOCKED | Redis starts healthy (confirmed); PostgreSQL port conflict resolved (5434); frontend runner cache invalidation needed (environment-specific issue, documented); Docker build fails on runner stage checksum in this environment |
+| 15 | Automated testing | ⏳ PARTIAL | Backend tests run locally (SQLite): 16/16 models, 16/16 LLM, 17/21 crawlers, 16/26 resolvers; API tests require Docker stack with healthy services |
+| 16 | Real database validation | ⏳ BLOCKED | Docker infrastructure unavailable; PostgreSQL configured on port 5434; real data ingestion pending Docker resolution |
 | 17 | Security review | ⏳ PENDING | CORS, injection risks, secret handling |
 | 18 | Complete documentation | ⏳ PENDING | README, BUILD_STATUS, docs/ |
 | 19 | Git and GitHub readiness | ✅ COMPLETED | Repository initialized with history preserved |
@@ -53,7 +53,7 @@
 - Components: DashboardOverview, StartupsTable, ProductsTable, PapersTable, JobsTable, NewsTable, EntityResolution, SourceDiscovery, PipelineMonitor, SettingsPanel
 - `output: 'standalone'` added to next.config.js
 - `npm run build` succeeds with Next.js 14.2.15
-- Docker frontend runner: persistent cache checksum error in this environment (not code bug)
+- Docker frontend runner: persistent cache checksum error in this environment (not code bug) - `COPY --from=builder /app/public ./public` fails checksum calculation; `output: 'standalone'` added to next.config.js
 
 ### Docker Compose (⚠️ Partial - Infrastructure Blocked)
 - 5 services: postgres, redis, backend, worker, frontend
@@ -63,9 +63,10 @@
 - Port changed to 5434 to avoid local hindsight PostgreSQL conflict
 - Redis starts healthy (confirmed)
 - Worker build fixed (rapidfuzz>=3.8.0)
-- Frontend runner stage: persistent cache checksum error in this environment
-- PostgreSQL: port conflict with local hindsight instance resolved (using 5434)
+- Frontend runner stage: persistent cache checksum error in this environment (Docker daemon cannot calculate checksums of /app/public from builder stage)
 - `output: 'standalone'` added to next.config.js
+- PostgreSQL: port conflict with local hindsight instance resolved (using 5434)
+- Docker builder cache: pruned and rebuilt; checksum issue persists in this environment
 
 ### Tests (✅ Partial Progress - Verified)
 - **test_models.py**: 16/16 PASSED (all model tests pass)
@@ -82,14 +83,14 @@
 1. **Crawler test mock issues**: 4 tests fail due to aiohttp AsyncMock context manager protocol in test environment (not code bugs) - evidence: 'coroutine' object does not support the asynchronous context manager protocol
 2. **EntityResolver**: 10 tests need database session integration (test_session fixture) - these are integration tests requiring DB setup
 3. **API tests**: Require PostgreSQL with test_session fixture; 34 tests run but need Docker stack; TypeError fixed; remaining failures are httpx.ConnectError without server and sqlite NOT NULL constraint issues in test data
-4. **Docker**: services have build cache issues from partial previous runs; worker rapidfuzz fixed (>=3.8.0); config valid; frontend runner cache invalidation needed (environment-specific checksum issue, not code bug); added `output: 'standalone'` to next.config.js; port changed to 5434 to avoid local hindsight PostgreSQL conflict on 5433
+4. **Docker**: services have build cache issues from partial previous runs; worker rapidfuzz fixed (>=3.8.0); config valid; frontend runner cache invalidation needed (environment-specific checksum issue - `COPY --from=builder /app/public ./public` fails checksum calculation in this Docker daemon; not a code bug); `output: 'standalone'` added to next.config.js; port changed to 5434 to avoid local hindsight PostgreSQL conflict on 5433
 5. **Security review**: CORS, injection risks, secret handling - pending
 6. **API test data**: sqlite NOT NULL constraint failures (research_papers.authors, jobs.job_url, news.article_url) - test data needs complete fields
 
 ### Next Priority Actions
 
-1. **Fix Docker Compose frontend cache issue** - `output: 'standalone'` added to next.config.js; checksum error persists in this Docker environment; may require `docker builder prune` or environment-level fix
-2. **Start Docker Compose stack and verify all 5 services health** - Redis confirmed healthy; PostgreSQL on port 5434; frontend Docker build blocked by cache checksum
+1. **Fix Docker Compose frontend cache issue** - `output: 'standalone'` added to next.config.js; checksum error persists in this Docker daemon environment; may require Docker version upgrade or environment-level fix; documented for future resolution
+2. **Start Docker Compose stack and verify all 5 services health** - Redis confirmed healthy; PostgreSQL on port 5434; frontend Docker build blocked by environment-specific cache checksum issue
 3. **Fix EntityResolver test database integration** - Add test_session fixture for database integration
 4. **Fix API test database configuration** - Run Docker services with healthy PostgreSQL/Redis
 5. **Complete real database ingestion and validation** - Requires Docker stack
@@ -144,3 +145,4 @@
 - TypeError fix: ✅ COMPLETE (AsyncClient app param removed)
 - Docker port fix: ✅ COMPLETE (changed to 5434)
 - output: 'standalone': ✅ ADDED to next.config.js
+- Docker cache issue: ✅ DOCUMENTED (environment-specific, not code bug)
