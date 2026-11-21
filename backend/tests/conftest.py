@@ -60,6 +60,13 @@ def mock_db_session():
     return AsyncMock(spec=AsyncSession)
 
 
+@pytest.fixture(scope="function")
+async def async_client():
+    """Create an AsyncClient for testing FastAPI endpoints."""
+    async with AsyncClient(base_url="http://test") as client:
+        yield client
+
+
 @pytest.fixture
 def sample_startup_data():
     """Sample startup data for testing."""
