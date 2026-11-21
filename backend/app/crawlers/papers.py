@@ -25,6 +25,27 @@ class ArxivAdapter(SourceAdapter):
     def record_type(self) -> str:
         return "paper"
 
+    async def parse_arxiv_response(self, xml_response: str) -> list[dict]:
+        """Parse arXiv API XML response into list of paper dicts."""
+        import xml.etree.ElementTree as ET
+        
+        ns = {"atom": "http://www.w3.org/2005/Atom"}
+        root = ET.fromstring(xml_response)
+        
+        results = []
+        for entry in root.findall("atom:entry", ns):
+            arxiv_id = entry.find("atom:id", ns).text.split("/")[-1]
+            title = entry.find("atom:title", ns).text.strip()
+            summary = entry.find("atom:summary", ns).text.strip() if entry.find("atom:summary", ns) is not None else ""
+            published = entry.find("atom:published", ns).text if entry.find("atom:published", ns) is not None else ""
+            
+            results.append({
+                "title": title,
+                "abstract": summary,
+                "published_date": published,
+            })
+        return results
+
     async def collect(self) -> list[dict]:
         records = []
         query = "cat:cs.AI OR cat:cs.LG OR cat:cs.CL OR cat:cs.CV OR cat:stat.ML"

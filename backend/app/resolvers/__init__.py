@@ -175,11 +175,11 @@ class EntityResolver:
                 entity.aliases = entity.aliases + [alias_name]
             await self.db.commit()
     
-    async def merge_entities(self, target_id: int, source_id: int) -> None:
+    async def merge_entities(self, source_id: int, target_id: int) -> None:
         """Merge source entity into target entity."""
-        target = await self.db.get(CanonicalEntity, target_id)
         source = await self.db.get(CanonicalEntity, source_id)
-        if target is None or source is None:
+        target = await self.db.get(CanonicalEntity, target_id)
+        if source is None or target is None:
             return
         # Update all mapping logs referencing source to reference target instead
         from app.models import EntityMappingLog
@@ -188,8 +188,9 @@ class EntityResolver:
             where(EntityMappingLog.canonical_entity_id == source_id).
             values(canonical_entity_id=target_id)
         )
-        # Merge aliases from target to source (source gains target's aliases)
-        source.aliases.extend(a for a in target.aliases if a not in source.aliases)
+        # Merge aliases from source to target (target gains source's aliases)
+        target.aliases.extend(a for a in source.aliases if a not in target.aliases)
+        await self.db.flush()
 
     async def load_seed_entities(self) -> list[CanonicalEntity]:
         """Load seed entities for initial entity graph."""

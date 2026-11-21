@@ -201,7 +201,7 @@ class TestPapersEndpoint:
         await test_session.commit()
         await test_session.refresh(record)
 
-        paper = ResearchPaper(record_id=record.id, title="Test Paper", github_url="https://github.com/test")
+        paper = ResearchPaper(record_id=record.id, title="Test Paper", authors=["Test Author"], paper_url="https://arxiv.org/abs/test", published_date="2023-01-01", github_url="https://github.com/test")
         test_session.add(paper)
         await test_session.commit()
 
@@ -217,14 +217,14 @@ class TestPapersEndpoint:
         record1 = Record(source_name="test", source_url="https://example.com/1", record_type="paper", content_hash="p1", raw_data={})
         test_session.add(record1)
         await test_session.commit()
-        paper1 = ResearchPaper(record_id=record1.id, title="With GitHub", github_url="https://github.com/test")
+        paper1 = ResearchPaper(record_id=record1.id, title="With GitHub", authors=["GitHub Author"], paper_url="https://arxiv.org/abs/test", published_date="2023-01-01", github_url="https://github.com/test")
         test_session.add(paper1)
 
         # Paper without GitHub
         record2 = Record(source_name="test", source_url="https://example.com/2", record_type="paper", content_hash="p2", raw_data={})
         test_session.add(record2)
         await test_session.commit()
-        paper2 = ResearchPaper(record_id=record2.id, title="Without GitHub")
+        paper2 = ResearchPaper(record_id=record2.id, title="Without GitHub", authors=["No GitHub Author"], paper_url="https://arxiv.org/abs/test2", published_date="2023-01-02")
         test_session.add(paper2)
         await test_session.commit()
 
@@ -255,7 +255,7 @@ class TestJobsEndpoint:
         await test_session.commit()
         await test_session.refresh(record)
 
-        job = Job(record_id=record.id, title="AI Engineer", company_name="TestAI", is_remote=True)
+        job = Job(record_id=record.id, title="AI Engineer", company="TestAI", job_url="https://example.com/job1", published_date="2023-01-01", is_remote=True)
         test_session.add(job)
         await test_session.commit()
 
@@ -271,7 +271,7 @@ class TestJobsEndpoint:
         record1 = Record(source_name="test", source_url="https://example.com/1", record_type="job", content_hash="j1", raw_data={})
         test_session.add(record1)
         await test_session.commit()
-        job1 = Job(record_id=record1.id, title="Fresh Job", published_date=datetime.now(timezone.utc))
+        job1 = Job(record_id=record1.id, title="Fresh Job", company="FreshCo", job_url="https://example.com/job2", published_date="2023-01-15")
         test_session.add(job1)
 
         # Old job
@@ -279,7 +279,7 @@ class TestJobsEndpoint:
         test_session.add(record2)
         await test_session.commit()
         old_date = datetime.now(timezone.utc) - timedelta(days=7)
-        job2 = Job(record_id=record2.id, title="Old Job", published_date=old_date)
+        job2 = Job(record_id=record2.id, title="Old Job", company="OldCo", job_url="https://example.com/job3", published_date=old_date)
         test_session.add(job2)
         await test_session.commit()
 
@@ -305,7 +305,7 @@ class TestNewsEndpoint:
         await test_session.commit()
         await test_session.refresh(record)
 
-        news = News(record_id=record.id, headline="Test News", sentiment_score=0.5)
+        news = News(record_id=record.id, headline="Test News", article_url="https://example.com/news", published_at="2023-01-01", source_name="Test Source", sentiment_score=0.5)
         test_session.add(news)
         await test_session.commit()
 
@@ -461,7 +461,7 @@ class TestExportEndpoints:
         )
         test_session.add(record)
         await test_session.commit()
-        paper = ResearchPaper(record_id=record.id, title="Test Paper", authors=["Author"])
+        paper = ResearchPaper(record_id=record.id, title="Test Paper", authors=["Test Author"], paper_url="https://arxiv.org/abs/test", published_date="2023-01-01")
         test_session.add(paper)
         await test_session.commit()
 
@@ -497,7 +497,7 @@ class TestExportEndpoints:
         )
         test_session.add(record)
         await test_session.commit()
-        news = News(record_id=record.id, headline="Test News", sentiment_score=0.5)
+        news = News(record_id=record.id, headline="Test News", article_url="https://example.com/news2", published_at="2023-01-02", source_name="Test Source 2", sentiment_score=0.5)
         test_session.add(news)
         await test_session.commit()
 
@@ -584,7 +584,7 @@ class TestStatsEndpoints:
         )
         test_session.add(record)
         await test_session.commit()
-        news = News(record_id=record.id, headline="Test", published_at=datetime.now(timezone.utc))
+        news = News(record_id=record.id, headline="Test", article_url="https://example.com/news3", published_at="2023-01-03", source_name="Test Source 3", sentiment_score=0.5)
         test_session.add(news)
         await test_session.commit()
 
@@ -602,7 +602,7 @@ class TestStatsEndpoints:
         )
         test_session.add(record)
         await test_session.commit()
-        paper = ResearchPaper(record_id=record.id, title="Test", github_stars=100)
+        paper = ResearchPaper(record_id=record.id, title="Test", authors=["Test Author"], paper_url="https://arxiv.org/abs/test", published_date="2023-01-01", github_stars=100)
         test_session.add(paper)
         await test_session.commit()
 

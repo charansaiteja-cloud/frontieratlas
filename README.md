@@ -55,7 +55,7 @@ docker compose up -d --build
 ```
 
 Services:
-- **PostgreSQL** (port 5432) - Primary database with pgvector
+- **PostgreSQL** (port 5434) - Primary database with pgvector
 - **Redis** (port 6379) - Celery task queue
 - **Backend API** (port 8000) - FastAPI REST API
 - **Celery Worker** - Background ingestion tasks

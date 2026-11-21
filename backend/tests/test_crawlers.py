@@ -97,15 +97,17 @@ class TestRateLimiter:
 class TestBaseCrawler:
     """Tests for the BaseCrawler class."""
     
-    def test_crawler_fetch_success(self, mock_session):
+    @pytest.mark.asyncio
+    async def test_crawler_fetch_success(self, mock_session):
         """Test successful fetch."""
         crawler = _TestBaseCrawler(mock_session)
-        result = crawler.fetch("https://example.com")
+        result = await crawler.fetch("https://example.com")
         
         assert result is not None
         assert result.status == 200
     
-    def test_crawler_fetch_retry_on_429(self, mock_session):
+    @pytest.mark.asyncio
+    async def test_crawler_fetch_retry_on_429(self, mock_session):
         """Test retry on 429 status code."""
         from unittest.mock import patch
         
@@ -131,12 +133,13 @@ class TestBaseCrawler:
         mock_session.get = lambda url: _429Response()
         
         crawler = _TestBaseCrawler(mock_session, max_retries=2)
-        result = crawler.fetch("https://example.com")
+        result = await crawler.fetch("https://example.com")
         
         # Should succeed on second attempt with retry
         assert result is not None
     
-    def test_crawler_fetch_413_handling(self, mock_session):
+    @pytest.mark.asyncio
+    async def test_crawler_fetch_413_handling(self, mock_session):
         """Test 413 payload too large handling."""
         from unittest.mock import patch
         
@@ -161,7 +164,7 @@ class TestBaseCrawler:
         mock_session.get = lambda url: _413Response()
         
         crawler = _TestBaseCrawler(mock_session, max_retries=2)
-        result = crawler.fetch("https://example.com")
+        result = await crawler.fetch("https://example.com")
         
         # Should succeed on second attempt
         assert result is not None
