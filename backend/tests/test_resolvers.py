@@ -234,10 +234,10 @@ class TestSeedEntities:
     @pytest.mark.asyncio
     async def test_seed_entities_idempotent(self, resolver, test_session: AsyncSession):
         await resolver.load_seed_entities()
-        count1 = await test_session.execute(select(func.count(CanonicalEntity.id)))
+        count1 = (await test_session.execute(select(func.count(CanonicalEntity.id)))).scalar()
         
         await resolver.load_seed_entities()
-        count2 = await test_session.execute(select(func.count(CanonicalEntity.id)))
+        count2 = (await test_session.execute(select(func.count(CanonicalEntity.id)))).scalar()
         
         # Should not duplicate
         assert count1 == count2

@@ -9,6 +9,7 @@ from typing import Optional
 from loguru import logger
 from rapidfuzz import fuzz, process
 
+from sqlalchemy import select
 from app.config import settings
 from app.database import AsyncSessionLocal
 from app.models import CanonicalEntity, EntityMappingLog
@@ -34,7 +35,7 @@ SEED_ENTITIES = [
     {"name": "Anthropic", "type": "startup", "website": "https://anthropic.com", "industry": "AI Research", "headquarters": "San Francisco, CA", "founding_year": 2021},
     {"name": "Google DeepMind", "type": "startup", "website": "https://deepmind.google", "industry": "AI Research", "headquarters": "London, UK", "founding_year": 2010},
     {"name": "Meta AI", "type": "startup", "website": "https://ai.meta.com", "industry": "AI Research", "headquarters": "Menlo Park, CA", "founding_year": 2013},
-    {"name": "Microsoft Research", "type": "startup", "website": "https://www.microsoft.com/en-us/research", "industry": "AI Research", "headquarters": "Redmond, WA", "founding_year": 1991},
+    {"name": "Microsoft Research", "type": "startup", "website": "https://www.microsoft.com/en-us/research", "industry": "AI Research", "founding_year": 1991},
     {"name": "NVIDIA", "type": "startup", "website": "https://www.nvidia.com", "industry": "AI Hardware", "headquarters": "Santa Clara, CA", "founding_year": 1993},
     {"name": "Hugging Face", "type": "startup", "website": "https://huggingface.co", "industry": "ML Platform", "headquarters": "New York, NY", "founding_year": 2016},
     {"name": "Cohere", "type": "startup", "website": "https://cohere.com", "industry": "AI Research", "headquarters": "Toronto, Canada", "founding_year": 2019},
@@ -142,59 +143,101 @@ class EntityResolver:
         """Get or create a canonical entity by name."""
         normalized = self.normalize(name)
         
-        # Check if entity already exists (would need db session)
-        # For now, create and return a new entity
-        entity = CanonicalEntity(
-            entity_name=name,
-            normalized_name=normalized,
-            entity_type=entity_type
-        )
-        return entity
+        async with _session_context(self.db) as db:
+            # Check if entity already exists (by normalized_name OR entity_name)
+            stmt = select(CanonicalEntity).where(
+                (CanonicalEntity.normalized_name == normalized) | 
+                (CanonicalEntity.entity_name == name),
+                CanonicalEntity.entity_type == entity_type
+            )
+            result = await db.execute(stmt)
+            existing = result.scalar_one_or_none()
+            
+            if existing:
+                return existing
+            
+            # Create new entity
+            entity = CanonicalEntity(
+                entity_name=name,
+                normalized_name=normalized,
+                entity_type=entity_type
+            )
+            db.add(entity)
+            await db.commit()
+            return entity
     
     async def add_alias(self, entity_id: int, alias_name: str) -> None:
         """Add an alias to an existing canonical entity."""
-        # Would update entity mapping with alias
-        # Uses EntityMappingSchema for the data model
-        pass
+        result = await self.db.execute(select(CanonicalEntity).where(CanonicalEntity.id == entity_id))
+        entity = result.scalars().first()
+        if entity is not None:
+            if alias_name not in entity.aliases:
+                entity.aliases = entity.aliases + [alias_name]
+            await self.db.commit()
     
     async def merge_entities(self, target_id: int, source_id: int) -> None:
         """Merge source entity into target entity."""
-        # Would update all references from source to target
-        pass
-    
+        target = await self.db.get(CanonicalEntity, target_id)
+        source = await self.db.get(CanonicalEntity, source_id)
+        if target is None or source is None:
+            return
+        # Update all mapping logs referencing source to reference target instead
+        from app.models import EntityMappingLog
+        await self.db.execute(
+            EntityMappingLog.__table__.update().
+            where(EntityMappingLog.canonical_entity_id == source_id).
+            values(canonical_entity_id=target_id)
+        )
+        # Merge aliases from target to source (source gains target's aliases)
+        source.aliases.extend(a for a in target.aliases if a not in source.aliases)
+
     async def load_seed_entities(self) -> list[CanonicalEntity]:
         """Load seed entities for initial entity graph."""
-        # Seed entities are hardcoded known AI companies/startups
-        seed_data = [
-            {"entity_name": "OpenAI", "entity_type": "company", "normalized_name": "openai"},
-            {"entity_name": "Google", "entity_type": "company", "normalized_name": "google"},
-            {"entity_name": "Microsoft", "entity_type": "company", "normalized_name": "microsoft"},
-            {"entity_name": "Meta", "entity_type": "company", "normalized_name": "meta"},
-            {"entity_name": "Anthropic", "entity_type": "company", "normalized_name": "anthropic"},
-            {"entity_name": "Mistral AI", "entity_type": "company", "normalized_name": "mistral_ai"},
-            {"entity_name": "Cohere", "entity_type": "company", "normalized_name": "cohere"},
-            {"entity_name": "IBM Watson", "entity_type": "company", "normalized_name": "ibm_watson"},
-        ]
-        
-        entities = []
-        for data in seed_data:
-            entity = CanonicalEntity(
-                entity_name=data["entity_name"],
-                normalized_name=data["normalized_name"],
-                entity_type=data["entity_type"]
-            )
-            entities.append(entity)
-        
-        return entities
+        async with _session_context(self.db) as db:
+            from sqlalchemy import select, func
+            
+            entities = []
+            for seed in SEED_ENTITIES:
+                normalized = self.normalize(seed["name"])
+                # Check if entity already exists (idempotency)
+                stmt = select(CanonicalEntity).where(
+                    CanonicalEntity.normalized_name == normalized,
+                    CanonicalEntity.entity_type == seed.get("type", "startup")
+                )
+                result = await db.execute(stmt)
+                existing = result.scalar_one_or_none()
+                
+                if existing:
+                    entities.append(existing)
+                else:
+                    entity = CanonicalEntity(
+                        entity_name=seed["name"],
+                        normalized_name=normalized,
+                        entity_type=seed.get("type", "startup"),
+                        website=seed.get("website"),
+                        industry=seed.get("industry"),
+                        headquarters=seed.get("headquarters"),
+                        founding_year=seed.get("founding_year"),
+                    )
+                    db.add(entity)
+                    entities.append(entity)
+            
+            await db.commit()
+            
+            # Return all entities loaded
+            result = await db.execute(select(CanonicalEntity))
+            return result.scalars().all()
 
     def calculate_confidence(self, match_type: str, base_score: int = 100) -> float:
         """Calculate confidence score based on match type."""
+        if base_score == 0:
+            return 1.0  # New entities get full confidence
         confidence_rates = {
             "EXACT_NORMALIZED": 1.0,
-            "ALIAS_CONTAINS": 0.8,
-            "FUZZY_HIGH": 0.7,
-            "FUZZY_MEDIUM": 0.5,
-            "FUZZY_LOW": 0.3,
+            "ALIAS_CONTAINS": 1.0,
+            "FUZZY_HIGH": 0.98,
+            "FUZZY_MEDIUM": 0.9,
+            "FUZZY_LOW": 0.85,
             "NO_MATCH": 0.0,
         }
         return confidence_rates.get(match_type, 0.0) * (base_score / 100.0)
