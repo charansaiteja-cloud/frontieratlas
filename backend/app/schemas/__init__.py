@@ -12,7 +12,22 @@ def utcnow() -> datetime:
 
 
 def make_content_hash(record_type: str, source_url: str, payload: dict) -> str:
-    data = json.dumps({"t": record_type, "u": source_url, "p": payload}, sort_keys=True, default=str)
+    """Generate stable content hash excluding volatile metadata."""
+    # Fields to exclude from hash - these change on each ingestion run
+    VOLATILE_FIELDS = {
+        "collected_at",
+        "crawl_timestamp",
+        "fetched_at",
+        "request_id",
+        "session_id",
+        "content_hash",  # Don't hash the hash itself
+        "metrics_updated_at",  # Paper-specific timestamp that changes on each crawl
+    }
+
+    # Create a clean copy without volatile fields
+    clean_payload = {k: v for k, v in payload.items() if k not in VOLATILE_FIELDS}
+
+    data = json.dumps({"t": record_type, "u": source_url, "p": clean_payload}, sort_keys=True, default=str)
     return hashlib.sha256(data.encode()).hexdigest()
 
 

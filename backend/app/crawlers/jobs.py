@@ -99,9 +99,13 @@ class LeverAdapter(SourceAdapter):
 
     async def collect(self) -> list[dict]:
         records = []
+        # Known companies that use Lever - from public lists
         ai_companies = [
-            "anthropic", "cohere", "stabilityai", "huggingface", "replicate",
-            "weaviate", "pinecone", "chromadb", "langchain", "vercel",
+            "netflix", "shopify", "twilio", "sendgrid", "strapi", "supabase",
+            "planetscale", "vercel", "linear", "notion", "figma", "airtable",
+            "stripe", "mercari", "retool", "ramp", "brex", "plaid", "coinbase",
+            "robinhood", "doordash", "instacart", "databricks", "snowflake",
+            "palantir", "stripe", "square", "dropbox", "airbnb", "uber", "lyft"
         ]
         
         async with httpx.AsyncClient(timeout=settings.request_timeout) as client:
@@ -109,7 +113,12 @@ class LeverAdapter(SourceAdapter):
                 url = f"https://api.lever.co/v0/postings/{company}?mode=json"
                 try:
                     resp = await client.get(url)
+                    if resp.status_code != 200:
+                        continue
                     data = resp.json()
+                    # Lever API returns dict with error for invalid companies, list for valid ones
+                    if not isinstance(data, list):
+                        continue
                 except Exception:
                     continue
                 

@@ -1,4 +1,14 @@
-mapping_id,raw_entity_name,canonical_entity_name,match_method,confidence_score,resolution_status,required_human_review,reviewed_by,reviewed_at,source_url,created_at
+﻿mapping_id,raw_entity_name,canonical_entity_name,match_method,confidence_score,resolution_status,required_human_review,reviewed_by,reviewed_at,source_url,created_at
+b52e9496-d2c2-4c2c-bcb1-ff717c97f7e4,The Decoder,The Decoder,NO_MATCH,1.0,AUTO,False,,,https://the-decoder.com/feed/,2026-11-22T14:07:15.876318+00:00
+161f27df-6eb3-4d25-b4be-f607050bb37a,The Decoder,The Decoder,NO_MATCH,1.0,AUTO,False,,,https://the-decoder.com/feed/,2026-11-22T14:07:15.856832+00:00
+8268999f-8c04-4ed8-bfd8-bc133ef5a66e,The Decoder,The Decoder,NO_MATCH,1.0,AUTO,False,,,https://the-decoder.com/feed/,2026-11-22T14:07:15.835683+00:00
+a734b8a5-0b04-4a9a-bd0d-1791cf760c0d,The Decoder,The Decoder,NO_MATCH,1.0,AUTO,False,,,https://the-decoder.com/feed/,2026-11-22T14:07:15.814658+00:00
+da90bf60-095d-4503-80d3-97a05bce4613,The Decoder,The Decoder,NO_MATCH,1.0,AUTO,False,,,https://the-decoder.com/feed/,2026-11-22T14:07:15.794687+00:00
+1a6c4939-809b-4781-ba25-9ad96787ae7a,Anthropic,Anthropic,EXACT_NORMALIZED,1.0,AUTO,False,,,https://boards-api.greenhouse.io/v1/boards/anthropic/jobs,2026-11-22T14:05:59.434516+00:00
+e59fa506-a1a3-489e-9842-11ffbe3c334c,The Decoder,The Decoder,NO_MATCH,1.0,AUTO,False,,,https://the-decoder.com/feed/,2026-11-22T14:05:50.187649+00:00
+eddf67e1-b6dc-4b15-823a-763847b4262a,The Decoder,The Decoder,NO_MATCH,1.0,AUTO,False,,,https://the-decoder.com/feed/,2026-11-22T14:04:19.547858+00:00
+395cfb15-a45e-43a6-829e-f4e4a7cd17a0,Anthropic,Anthropic,EXACT_NORMALIZED,1.0,AUTO,False,,,https://boards-api.greenhouse.io/v1/boards/anthropic/jobs,2026-11-22T14:02:45.181512+00:00
+8df6cac0-d52c-4082-a08d-e80c82e361b8,The Decoder,The Decoder,NO_MATCH,1.0,AUTO,False,,,https://the-decoder.com/feed/,2026-11-22T14:02:35.908443+00:00
 3ad6f077-487b-4514-94c4-30b50a7fe4e9,everything,everything,NO_MATCH,1.0,AUTO,False,,,https://github.com/HeyPuter/everything,2026-11-22T10:28:57.679022+00:00
 54354235-cc48-47c7-9987-bd2d03fd547e,founder-skill,founder-skill,NO_MATCH,1.0,AUTO,False,,,https://github.com/Jakeschincariol/founder-skill,2026-11-22T10:27:22.145632+00:00
 f0cb5bc1-bd90-4112-af47-263b8fbd2950,abp,abp,NO_MATCH,1.0,AUTO,False,,,https://github.com/abpframework/abp,2026-11-22T10:25:40.697555+00:00

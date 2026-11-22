@@ -316,11 +316,11 @@ class IngestionPipeline:
         else:
             return
         
-        canonical, mapping = await entity_resolver.resolve(entity_name, entity_type, source_url)
+        mapping = await entity_resolver.resolve(entity_name, entity_type, source_url)
         
-        if canonical:
+        if mapping and mapping.canonical_entity_id:
             # Update entity with canonical ID
-            await self.update_canonical_id(record_type, record_id, canonical.id, db)
+            await self.update_canonical_id(record_type, record_id, uuid.UUID(mapping.canonical_entity_id), db)
 
     async def update_canonical_id(self, record_type: str, record_id: uuid.UUID, canonical_id: uuid.UUID, db):
         from sqlalchemy import select

@@ -1,0 +1,124 @@
+﻿mapping_id,raw_entity_name,canonical_entity_name,match_method,confidence_score,resolution_status,required_human_review,reviewed_by,reviewed_at,source_url,created_at
+b52e9496-d2c2-4c2c-bcb1-ff717c97f7e4,The Decoder,The Decoder,NO_MATCH,1.0,AUTO,False,,,https://the-decoder.com/feed/,2026-11-22T14:07:15.876318+00:00
+161f27df-6eb3-4d25-b4be-f607050bb37a,The Decoder,The Decoder,NO_MATCH,1.0,AUTO,False,,,https://the-decoder.com/feed/,2026-11-22T14:07:15.856832+00:00
+8268999f-8c04-4ed8-bfd8-bc133ef5a66e,The Decoder,The Decoder,NO_MATCH,1.0,AUTO,False,,,https://the-decoder.com/feed/,2026-11-22T14:07:15.835683+00:00
+a734b8a5-0b04-4a9a-bd0d-1791cf760c0d,The Decoder,The Decoder,NO_MATCH,1.0,AUTO,False,,,https://the-decoder.com/feed/,2026-11-22T14:07:15.814658+00:00
+da90bf60-095d-4503-80d3-97a05bce4613,The Decoder,The Decoder,NO_MATCH,1.0,AUTO,False,,,https://the-decoder.com/feed/,2026-11-22T14:07:15.794687+00:00
+1a6c4939-809b-4781-ba25-9ad96787ae7a,Anthropic,Anthropic,EXACT_NORMALIZED,1.0,AUTO,False,,,https://boards-api.greenhouse.io/v1/boards/anthropic/jobs,2026-11-22T14:05:59.434516+00:00
+e59fa506-a1a3-489e-9842-11ffbe3c334c,The Decoder,The Decoder,NO_MATCH,1.0,AUTO,False,,,https://the-decoder.com/feed/,2026-11-22T14:05:50.187649+00:00
+eddf67e1-b6dc-4b15-823a-763847b4262a,The Decoder,The Decoder,NO_MATCH,1.0,AUTO,False,,,https://the-decoder.com/feed/,2026-11-22T14:04:19.547858+00:00
+395cfb15-a45e-43a6-829e-f4e4a7cd17a0,Anthropic,Anthropic,EXACT_NORMALIZED,1.0,AUTO,False,,,https://boards-api.greenhouse.io/v1/boards/anthropic/jobs,2026-11-22T14:02:45.181512+00:00
+8df6cac0-d52c-4082-a08d-e80c82e361b8,The Decoder,The Decoder,NO_MATCH,1.0,AUTO,False,,,https://the-decoder.com/feed/,2026-11-22T14:02:35.908443+00:00
+3ad6f077-487b-4514-94c4-30b50a7fe4e9,everything,everything,NO_MATCH,1.0,AUTO,False,,,https://github.com/HeyPuter/everything,2026-11-22T10:28:57.679022+00:00
+54354235-cc48-47c7-9987-bd2d03fd547e,founder-skill,founder-skill,NO_MATCH,1.0,AUTO,False,,,https://github.com/Jakeschincariol/founder-skill,2026-11-22T10:27:22.145632+00:00
+f0cb5bc1-bd90-4112-af47-263b8fbd2950,abp,abp,NO_MATCH,1.0,AUTO,False,,,https://github.com/abpframework/abp,2026-11-22T10:25:40.697555+00:00
+b670ffac-0dff-48df-b5cb-9bd18fea0440,macro,macro,NO_MATCH,1.0,AUTO,False,,,https://github.com/macro-inc/macro,2026-11-22T10:24:03.934580+00:00
+3fb06e1b-ad44-4f4e-ba80-e25f9c8eeb7f,awesome-claude-skills,awesome-claude-skills,NO_MATCH,1.0,AUTO,False,,,https://github.com/ComposioHQ/awesome-claude-skills,2026-11-22T10:22:28.876487+00:00
+85ce6d73-a462-4b14-b4ec-68f9aabcc810,macro,macro,NO_MATCH,1.0,AUTO,False,,,https://github.com/macro-inc/macro,2026-11-22T10:19:50.605495+00:00
+e5e0e982-c747-4891-b34d-e30d2da23d92,pim-community-dev,pim-community-dev,NO_MATCH,1.0,AUTO,False,,,https://github.com/akeneo/pim-community-dev,2026-11-22T10:18:14.607917+00:00
+f27e6c97-b4cf-42ec-9276-316e2a052074,macro,macro,NO_MATCH,1.0,AUTO,False,,,https://github.com/macro-inc/macro,2026-11-22T10:16:38.833246+00:00
+fabfa2a0-c386-4c14-a94c-d7f019ebabc9,fd,fd,NO_MATCH,1.0,AUTO,False,,,https://github.com/sharkdp/fd,2026-11-22T10:15:03.362255+00:00
+5a7ff4f3-ca1e-4193-b0f7-aaca3f873c7e,macro,macro,NO_MATCH,1.0,AUTO,False,,,https://github.com/macro-inc/macro,2026-11-22T10:13:27.665580+00:00
+ed831434-2ea9-4aa0-8623-efa062cdebd6,tons-of-skills-marketplace,tons-of-skills-marketplace,NO_MATCH,1.0,AUTO,False,,,https://github.com/jeremylongshore/tons-of-skills-marketplace,2026-11-22T10:10:51.554817+00:00
+e2f03e33-2a40-48fe-bafc-31d00deba7c0,ideas-for-projects-people-would-use,ideas-for-projects-people-would-use,NO_MATCH,1.0,AUTO,False,,,https://github.com/Divide-By-0/ideas-for-projects-people-would-use,2026-11-22T10:09:15.532912+00:00
+e80a40b8-b939-4ddb-b01f-c043a327db2d,awesome-claude-skills,awesome-claude-skills,NO_MATCH,1.0,AUTO,False,,,https://github.com/ComposioHQ/awesome-claude-skills,2026-11-22T10:07:40.658004+00:00
+6951bb3c-ffcf-4ca4-badf-6cb744d41dcf,macro,macro,NO_MATCH,1.0,AUTO,False,,,https://github.com/macro-inc/macro,2026-11-22T10:06:02.103337+00:00
+67667e09-f31a-436b-a7a8-24c0925b48a0,fd,fd,NO_MATCH,1.0,AUTO,False,,,https://github.com/sharkdp/fd,2026-11-22T10:03:59.800948+00:00
+fa0ac6cc-e6e6-4205-8fc0-71de64ed6c0f,tons-of-skills-marketplace,tons-of-skills-marketplace,NO_MATCH,1.0,AUTO,False,,,https://github.com/jeremylongshore/tons-of-skills-marketplace,2026-11-22T10:02:42.898568+00:00
+e43cc85d-d0f7-4e80-aaa5-7a14842dbe1a,macro,macro,NO_MATCH,1.0,AUTO,False,,,https://github.com/macro-inc/macro,2026-11-22T10:01:24.247646+00:00
+b71e97fe-e8a8-4bc5-b0ab-40ad5ead10c3,macro,macro,NO_MATCH,1.0,AUTO,False,,,https://github.com/macro-inc/macro,2026-11-22T10:00:06.891690+00:00
+669a5748-9958-4524-b721-9c55cb649050,replica-skill,replica-skill,NO_MATCH,1.0,AUTO,False,,,https://github.com/Jakeschincariol/replica-skill,2026-11-22T09:57:48.179203+00:00
+d7a17dd5-2f35-461a-baa6-541cc292e792,unopim,unopim,NO_MATCH,1.0,AUTO,False,,,https://github.com/unopim/unopim,2026-11-22T09:56:30.059676+00:00
+d05d6679-9615-48fb-82de-fc152a854c0f,founder-skill,founder-skill,NO_MATCH,1.0,AUTO,False,,,https://github.com/Jakeschincariol/founder-skill,2026-11-22T09:55:12.570287+00:00
+8289ee7d-6843-461b-8df1-38d1d712fe6e,macro,macro,NO_MATCH,1.0,AUTO,False,,,https://github.com/macro-inc/macro,2026-11-22T09:53:54.832960+00:00
+fdd74faa-0f74-4e9b-ad56-f275e58a49a7,everything,everything,NO_MATCH,1.0,AUTO,False,,,https://github.com/HeyPuter/everything,2026-11-22T09:51:35.363512+00:00
+5647b996-7b93-436a-88c3-49e45f75e97b,awesome-claude-skills,awesome-claude-skills,NO_MATCH,1.0,AUTO,False,,,https://github.com/ComposioHQ/awesome-claude-skills,2026-11-22T09:50:15.323253+00:00
+16ec97df-4d11-43c1-a4c3-e30d3ec8b826,macro,macro,NO_MATCH,1.0,AUTO,False,,,https://github.com/macro-inc/macro,2026-11-22T09:48:55.378422+00:00
+10b70a7a-e776-496b-a8d7-66e6edfe051e,macro,macro,NO_MATCH,1.0,AUTO,False,,,https://github.com/macro-inc/macro,2026-11-22T09:47:38.408851+00:00
+d4cbd0d0-28ce-497b-a043-17d3dcd30888,tons-of-skills-marketplace,tons-of-skills-marketplace,NO_MATCH,1.0,AUTO,False,,,https://github.com/jeremylongshore/tons-of-skills-marketplace,2026-11-22T09:46:18.906585+00:00
+03cb0827-6bc2-47c4-b760-b2fca7c9dafa,polar,polar,NO_MATCH,1.0,AUTO,False,,,https://github.com/polarsource/polar,2026-11-22T09:45:03.879338+00:00
+26f16092-636b-47c4-9449-0788f2c0ef2b,macro,macro,NO_MATCH,1.0,AUTO,False,,,https://github.com/macro-inc/macro,2026-11-22T09:42:42.482393+00:00
+dff7bae1-2191-4f84-b9cf-cb14c3827515,macro,macro,NO_MATCH,1.0,AUTO,False,,,https://github.com/macro-inc/macro,2026-11-22T09:41:26.030713+00:00
+9e88f0fe-95d6-4d7b-b7fb-49071e633813,awesome-claude-skills,awesome-claude-skills,NO_MATCH,1.0,AUTO,False,,,https://github.com/ComposioHQ/awesome-claude-skills,2026-11-22T09:40:06.359156+00:00
+32f3c668-9d01-45d1-9ba2-1ed176278e56,awesome-claude-skills,awesome-claude-skills,NO_MATCH,1.0,AUTO,False,,,https://github.com/ComposioHQ/awesome-claude-skills,2026-11-22T09:38:47.700642+00:00
+4034b891-0e43-4db6-a13f-af37dbd446fb,founder-skill,founder-skill,NO_MATCH,1.0,AUTO,False,,,https://github.com/Jakeschincariol/founder-skill,2026-11-22T09:37:29.116883+00:00
+992eb22d-4ef9-4998-a271-d63737dd484d,macro,macro,NO_MATCH,1.0,AUTO,False,,,https://github.com/macro-inc/macro,2026-11-22T09:35:10.484979+00:00
+b706b0c0-9341-4b3e-b56b-62348b90aaff,bat,bat,NO_MATCH,1.0,AUTO,False,,,https://github.com/sharkdp/bat,2026-11-22T09:33:52.727472+00:00
+66ff23ea-3c4d-4280-9dfc-5f90e737dbc8,abp,abp,NO_MATCH,1.0,AUTO,False,,,https://github.com/abpframework/abp,2026-11-22T09:32:35.383289+00:00
+1c5699a3-e776-4fe1-8018-20ae2fa46502,tons-of-skills-marketplace,tons-of-skills-marketplace,NO_MATCH,1.0,AUTO,False,,,https://github.com/jeremylongshore/tons-of-skills-marketplace,2026-11-22T09:31:16.862243+00:00
+8f14c7fa-facc-46c8-a25d-6af689e0a1c3,macro,macro,NO_MATCH,1.0,AUTO,False,,,https://github.com/macro-inc/macro,2026-11-22T09:31:15.700378+00:00
+2944aec6-fda8-4674-8c50-6b32957039dc,macro,macro,NO_MATCH,1.0,AUTO,False,,,https://github.com/macro-inc/macro,2026-11-22T09:28:58.904251+00:00
+5c8ed36b-e7a1-4e05-814f-ee773157cdf6,everything,everything,NO_MATCH,1.0,AUTO,False,,,https://github.com/HeyPuter/everything,2026-11-22T09:26:40.838777+00:00
+684a5ca9-439b-4833-be70-5617ee5f8044,macro,macro,NO_MATCH,1.0,AUTO,False,,,https://github.com/macro-inc/macro,2026-11-22T09:26:39.909141+00:00
+d54f525e-6bf3-4b61-bb14-55246c3618e5,awesome-claude-skills,awesome-claude-skills,NO_MATCH,1.0,AUTO,False,,,https://github.com/ComposioHQ/awesome-claude-skills,2026-11-22T09:24:21.958210+00:00
+fa6f6053-0340-4d8c-99eb-abfb4b35334b,founder-skill,founder-skill,NO_MATCH,1.0,AUTO,False,,,https://github.com/Jakeschincariol/founder-skill,2026-11-22T09:23:00.886031+00:00
+d7a305b4-2431-446c-b3fd-016aabc66cf1,awesome-claude-skills,awesome-claude-skills,NO_MATCH,1.0,AUTO,False,,,https://github.com/ComposioHQ/awesome-claude-skills,2026-11-22T09:22:01.591196+00:00
+37f6784c-9955-44b5-a10d-0b9e7d4dd2a2,macro,macro,NO_MATCH,1.0,AUTO,False,,,https://github.com/macro-inc/macro,2026-11-22T09:20:41.643872+00:00
+39d917d6-d1b0-4c8b-88e0-6b8bb2c9f065,replica-skill,replica-skill,NO_MATCH,1.0,AUTO,False,,,https://github.com/Jakeschincariol/replica-skill,2026-11-22T09:18:24.377435+00:00
+9262e041-9db0-48bd-8380-6185a2cef019,macro,macro,NO_MATCH,1.0,AUTO,False,,,https://github.com/macro-inc/macro,2026-11-22T09:18:23.299923+00:00
+b2d274e8-bee8-4531-b8a6-aeb7a4269243,Libraries.dev,Libraries.dev,NO_MATCH,1.0,AUTO,False,,,https://github.com/Jakubantalik/Libraries.dev,2026-11-22T09:16:05.187423+00:00
+30f187f9-e403-4799-a3a8-0abe7b19b94c,polar,polar,NO_MATCH,1.0,AUTO,False,,,https://github.com/polarsource/polar,2026-11-22T09:14:56.553527+00:00
+3c160909-cbac-4712-baa2-cd48d0a95047,awesome-claude-skills,awesome-claude-skills,NO_MATCH,1.0,AUTO,False,,,https://github.com/ComposioHQ/awesome-claude-skills,2026-11-22T09:12:46.616942+00:00
+b89d1e3b-249e-498b-a08a-7514849fe9b0,macro,macro,NO_MATCH,1.0,AUTO,False,,,https://github.com/macro-inc/macro,2026-11-22T09:12:45.404870+00:00
+0b7d8d75-2dbe-46d1-8010-499242c09b1c,founder-skill,founder-skill,NO_MATCH,1.0,AUTO,False,,,https://github.com/Jakeschincariol/founder-skill,2026-11-22T09:09:26.295271+00:00
+bd770f1b-dfb5-43a5-972f-4d6543c964d9,macro,macro,NO_MATCH,1.0,AUTO,False,,,https://github.com/macro-inc/macro,2026-11-22T09:09:26.185042+00:00
+756d67c7-d5d3-4513-9fe8-1da2c780f109,founder-skill,founder-skill,NO_MATCH,1.0,AUTO,False,,,https://github.com/Jakeschincariol/founder-skill,2026-11-22T09:08:19.087385+00:00
+40087187-f63c-4e1c-839d-e60f03761cef,polar,polar,NO_MATCH,1.0,AUTO,False,,,https://github.com/polarsource/polar,2026-11-22T09:06:07.071953+00:00
+15a62773-3805-4622-bc66-43b1ce0be284,macro,macro,NO_MATCH,1.0,AUTO,False,,,https://github.com/macro-inc/macro,2026-11-22T09:06:05.997530+00:00
+046b1b11-bab1-44dd-91e5-d144f4ff76b1,replica-skill,replica-skill,NO_MATCH,1.0,AUTO,False,,,https://github.com/Jakeschincariol/replica-skill,2026-11-22T09:02:47.663255+00:00
+9510ef5a-7c67-45cb-a408-e59eac206209,polar,polar,NO_MATCH,1.0,AUTO,False,,,https://github.com/polarsource/polar,2026-11-22T09:02:47.461162+00:00
+4c33de83-ae61-409f-92d7-b32d98e9c3f8,awesome-claude-skills,awesome-claude-skills,NO_MATCH,1.0,AUTO,False,,,https://github.com/ComposioHQ/awesome-claude-skills,2026-11-22T09:01:39.349330+00:00
+bdd81032-83cf-44f4-8d08-4799684aad2c,transitions.dev,transitions.dev,NO_MATCH,1.0,AUTO,False,,,https://github.com/Jakubantalik/transitions.dev,2026-11-22T08:59:28.288320+00:00
+7bb75e34-0d5b-4b77-84b3-4b3c8865e9ea,macro,macro,NO_MATCH,1.0,AUTO,False,,,https://github.com/macro-inc/macro,2026-11-22T08:59:27.423468+00:00
+6d565cd3-75b6-4ae2-8b3e-5aea74a4079f,claude-skills-founder,claude-skills-founder,NO_MATCH,1.0,AUTO,False,,,https://github.com/emotixco/claude-skills-founder,2026-11-22T08:55:09.170925+00:00
+515fbc82-a049-4b28-94fa-ffad6fc3b144,macro,macro,NO_MATCH,1.0,AUTO,False,,,https://github.com/macro-inc/macro,2026-11-22T08:55:09.082948+00:00
+30be1f22-70cf-42a8-a3f5-db3336cef7f0,rea,rea,NO_MATCH,1.0,AUTO,False,,,https://github.com/morluto/rea,2026-11-22T08:54:01.900278+00:00
+dab2cc97-b5f0-4241-8302-1139f2f6b9b4,polar,polar,NO_MATCH,1.0,AUTO,False,,,https://github.com/polarsource/polar,2026-11-22T08:51:51.202908+00:00
+649b63b1-ed5d-4257-99f2-7c3295ff474e,macro,macro,NO_MATCH,1.0,AUTO,False,,,https://github.com/macro-inc/macro,2026-11-22T08:51:50.414865+00:00
+4dfef701-2d54-4947-b9d0-065bfe72b851,polar,polar,NO_MATCH,1.0,AUTO,False,,,https://github.com/polarsource/polar,2026-11-22T08:48:33.533613+00:00
+fd39768e-fcc8-4447-b9a7-b661601ce1d2,awesome-claude-skills,awesome-claude-skills,NO_MATCH,1.0,AUTO,False,,,https://github.com/ComposioHQ/awesome-claude-skills,2026-11-22T08:46:15.774717+00:00
+09c45302-2679-4552-a57a-f746e37d963f,macro,macro,NO_MATCH,1.0,AUTO,False,,,https://github.com/macro-inc/macro,2026-11-22T08:46:14.922818+00:00
+dbd9b732-bcd0-4674-a466-cfe7d3f3bafc,founder-skill,founder-skill,NO_MATCH,1.0,AUTO,False,,,https://github.com/Jakeschincariol/founder-skill,2026-11-22T08:42:55.087867+00:00
+87f9f567-bb2f-40de-a949-d55acec57775,macro,macro,NO_MATCH,1.0,AUTO,False,,,https://github.com/macro-inc/macro,2026-11-22T08:42:54.980101+00:00
+81b939a2-8de9-4148-9179-3a662dd819ae,rea,rea,NO_MATCH,1.0,AUTO,False,,,https://github.com/morluto/rea,2026-11-22T08:40:40.021009+00:00
+ff2a3ff0-899d-4a32-9926-4f72801083e7,polar,polar,NO_MATCH,1.0,AUTO,False,,,https://github.com/polarsource/polar,2026-11-22T08:40:38.494894+00:00
+951e832d-87af-422f-81c2-943939107747,replica-skill,replica-skill,NO_MATCH,1.0,AUTO,False,,,https://github.com/Jakeschincariol/replica-skill,2026-11-22T08:37:20.685683+00:00
+47b5acd3-be7b-4768-869a-a0b549782c43,macro,macro,NO_MATCH,1.0,AUTO,False,,,https://github.com/macro-inc/macro,2026-11-22T08:36:01.870773+00:00
+b309e8df-63b4-4567-9642-8c99541c1493,macro,macro,NO_MATCH,1.0,AUTO,False,,,https://github.com/macro-inc/macro,2026-11-22T08:34:43.256236+00:00
+b2518dad-e27a-46e5-a88c-d7d2603afc81,replica-skill,replica-skill,NO_MATCH,1.0,AUTO,False,,,https://github.com/Jakeschincariol/replica-skill,2026-11-22T08:32:25.514714+00:00
+51ab7b5a-5e62-49d8-ace0-6e87a224b09b,awesome-claude-skills,awesome-claude-skills,NO_MATCH,1.0,AUTO,False,,,https://github.com/ComposioHQ/awesome-claude-skills,2026-11-22T08:31:07.376349+00:00
+391a6db5-b0de-49a4-8e55-b386afb5f279,rea,rea,NO_MATCH,1.0,AUTO,False,,,https://github.com/morluto/rea,2026-11-22T08:29:48.712022+00:00
+3827ca96-8a9d-44c3-8e31-fe179ea09533,rea,rea,NO_MATCH,1.0,AUTO,False,,,https://github.com/morluto/rea,2026-11-22T08:28:31.182158+00:00
+d1b07a43-4c6d-46ea-a8c0-32ec45af784e,everything,everything,NO_MATCH,1.0,AUTO,False,,,https://github.com/HeyPuter/everything,2026-11-22T08:27:13.134763+00:00
+3ff662ce-9815-4d25-89e4-8b5f4a7686cb,awesome-claude-skills,awesome-claude-skills,NO_MATCH,1.0,AUTO,False,,,https://github.com/ComposioHQ/awesome-claude-skills,2026-11-22T08:24:55.782789+00:00
+20587fcb-95be-4b3d-b47a-03d97bd9fdf2,rea,rea,NO_MATCH,1.0,AUTO,False,,,https://github.com/morluto/rea,2026-11-22T08:23:35.644456+00:00
+41e2f431-1bca-4362-ae8d-c543303862cf,macro,macro,NO_MATCH,1.0,AUTO,False,,,https://github.com/macro-inc/macro,2026-11-22T08:22:19.812052+00:00
+40fb4d32-ab0b-4cc8-936d-885f2e1c7427,it-tools,it-tools,NO_MATCH,1.0,AUTO,False,,,https://github.com/CorentinTh/it-tools,2026-11-22T08:19:44.175981+00:00
+f55e9029-3983-43ad-878f-639b6b08a16e,macro,macro,NO_MATCH,1.0,AUTO,False,,,https://github.com/macro-inc/macro,2026-11-22T08:18:08.418338+00:00
+a4e91317-4730-485f-808f-152b0d8c8cd3,awesome-claude-skills,awesome-claude-skills,NO_MATCH,1.0,AUTO,False,,,https://github.com/ComposioHQ/awesome-claude-skills,2026-11-22T08:16:31.178377+00:00
+aa089354-ff8e-40f4-9a0a-e64e16caa211,macro,macro,NO_MATCH,1.0,AUTO,False,,,https://github.com/macro-inc/macro,2026-11-22T08:14:54.860338+00:00
+b49a582c-9c2d-4927-9450-d4bc540ec5f0,AiToEarn,AiToEarn,NO_MATCH,1.0,AUTO,False,,,https://github.com/yikart/AiToEarn,2026-11-22T08:08:03.474307+00:00
+3721dfb4-9ce2-4d67-931b-96d3e9b60187,rea,rea,NO_MATCH,1.0,AUTO,False,,,https://github.com/morluto/rea,2026-11-22T08:06:28.849422+00:00
+ef50a271-bd44-4255-b9fe-47586037e384,awesome-claude-skills,awesome-claude-skills,NO_MATCH,1.0,AUTO,False,,,https://github.com/ComposioHQ/awesome-claude-skills,2026-11-22T08:03:30.572347+00:00
+0765a472-0abc-4ec0-9659-495d451305a0,macro,macro,NO_MATCH,1.0,AUTO,False,,,https://github.com/macro-inc/macro,2026-11-22T08:01:54.257386+00:00
+d45ca756-bbf0-46c5-b489-f5589c1f6e3a,fd,fd,NO_MATCH,1.0,AUTO,False,,,https://github.com/sharkdp/fd,2026-11-22T07:53:05.977008+00:00
+e9bba97f-894a-4d11-b8a3-1ae303982d49,tensorflow,tensorflow,NO_MATCH,1.0,AUTO,False,,,https://github.com/tensorflow/tensorflow,2026-11-22T07:51:27.653647+00:00
+c42eda4e-868e-40b0-b929-5a48d8256388,bat,bat,NO_MATCH,1.0,AUTO,False,,,https://github.com/sharkdp/bat,2026-11-22T07:47:14.118081+00:00
+2e55f9da-6dde-43b0-9d77-9662cb28b5e7,macro,macro,NO_MATCH,1.0,AUTO,False,,,https://github.com/macro-inc/macro,2026-11-22T07:44:43.643687+00:00
+804776cf-5be4-4dc8-b197-24a5e0639c0d,awesome-claude-skills,awesome-claude-skills,NO_MATCH,1.0,AUTO,False,,,https://github.com/ComposioHQ/awesome-claude-skills,2026-11-22T07:29:22.843334+00:00
+5cbe0fdb-1222-4776-9b1e-c9f65d8ed7a3,macro,macro,NO_MATCH,1.0,AUTO,False,,,https://github.com/macro-inc/macro,2026-11-22T07:27:45.829031+00:00
+0b3859df-1ad3-44a7-a3ef-735a022456bd,appwrite,appwrite,NO_MATCH,1.0,AUTO,False,,,https://github.com/appwrite/appwrite,2026-11-22T07:25:37.547123+00:00
+969ecd72-3d69-4e0c-a11e-55f78b9b3aa3,awesome-claude-skills,awesome-claude-skills,NO_MATCH,1.0,AUTO,False,,,https://github.com/ComposioHQ/awesome-claude-skills,2026-11-22T07:23:12.719488+00:00
+44f235bc-cd6c-445b-b8d7-ef8bb1601c14,ui,ui,NO_MATCH,1.0,AUTO,False,,,https://github.com/shadcn-ui/ui,2026-11-22T07:22:04.307214+00:00
+d3372e06-01e3-414d-84ec-3cb579c6a010,rea,rea,NO_MATCH,1.0,AUTO,False,,,https://github.com/morluto/rea,2026-11-22T07:19:34.624141+00:00
+0ad54589-0051-4658-92eb-427229809221,BestBlogs,BestBlogs,NO_MATCH,1.0,AUTO,False,,,https://github.com/ginobefun/BestBlogs,2026-11-22T07:10:29.491018+00:00
+97b73afa-4635-465d-a781-613eb7735b03,rea,rea,NO_MATCH,1.0,AUTO,False,,,https://github.com/morluto/rea,2026-11-22T07:06:49.327492+00:00
+bfebfc9a-f09f-44ed-b3a3-77c09a09dd69,rea,rea,NO_MATCH,1.0,AUTO,False,,,https://github.com/morluto/rea,2026-11-22T06:52:08.374803+00:00
+681f66e3-2d58-4464-9afb-601951b2865e,macro,macro,NO_MATCH,1.0,AUTO,False,,,https://github.com/macro-inc/macro,2026-11-22T06:14:24.714485+00:00
+e8637933-3488-4bb2-9646-1b9476ac127e,Marketing-for-Founders,Marketing-for-Founders,NO_MATCH,1.0,AUTO,False,,,https://github.com/EdoStra/Marketing-for-Founders,2026-11-22T06:13:16.733281+00:00
+9d4fc772-0759-465a-a607-d23b4e6f8393,The Decoder,The Decoder,NO_MATCH,1.0,AUTO,False,,,https://the-decoder.com/feed/,2026-11-22T04:30:54.988797+00:00
+06d0a8e1-ccbb-4936-a4ad-54a39fb340c0,Anthropic,Anthropic,EXACT_NORMALIZED,1.0,AUTO,False,,,https://boards-api.greenhouse.io/v1/boards/anthropic/jobs,2026-11-22T04:30:28.579725+00:00
+f291dd1a-4d49-43e8-80ba-e11a3cf80f99,Anthropic,Anthropic,EXACT_NORMALIZED,1.0,AUTO,False,,,https://boards-api.greenhouse.io/v1/boards/anthropic/jobs,2026-11-22T03:55:43.343969+00:00
+b1c9999b-3132-4295-bfee-3a8ee6154d03,The Decoder,The Decoder,NO_MATCH,1.0,AUTO,False,,,https://the-decoder.com/feed/,2026-11-22T03:55:33.963662+00:00
+388e4062-e4e7-4557-acbb-51ccc0af6176,Anthropic,Anthropic,EXACT_NORMALIZED,1.0,AUTO,False,,,https://boards-api.greenhouse.io/v1/boards/anthropic/jobs,2026-11-22T03:45:09.794616+00:00
+f984100f-234d-4492-a47d-c5c91c29c32a,The Decoder,The Decoder,NO_MATCH,1.0,AUTO,False,,,https://the-decoder.com/feed/,2026-11-22T03:44:59.895325+00:00
