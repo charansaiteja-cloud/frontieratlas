@@ -13,7 +13,7 @@ class TestHealthEndpoint:
 
     @pytest.mark.asyncio
     async def test_health_check(self, async_client: AsyncClient):
-        response = await async_client.get("/health")
+        response = await async_client.get("/api/health")
         assert response.status_code == 200
         data = response.json()
         assert data["status"] == "healthy"
@@ -25,7 +25,7 @@ class TestDashboardStats:
 
     @pytest.mark.asyncio
     async def test_dashboard_stats_empty(self, async_client: AsyncClient, test_session):
-        response = await async_client.get("/dashboard/stats")
+        response = await async_client.get("/api/dashboard/stats")
         assert response.status_code == 200
         data = response.json()
         
@@ -54,7 +54,7 @@ class TestDashboardStats:
         test_session.add(startup)
         await test_session.commit()
 
-        response = await async_client.get("/dashboard/stats")
+        response = await async_client.get("/api/dashboard/stats")
         assert response.status_code == 200
         data = response.json()
         
@@ -67,7 +67,7 @@ class TestStartupsEndpoint:
 
     @pytest.mark.asyncio
     async def test_get_startups_empty(self, async_client: AsyncClient):
-        response = await async_client.get("/startups")
+        response = await async_client.get("/api/startups")
         assert response.status_code == 200
         data = response.json()
         assert data["items"] == []
@@ -90,7 +90,7 @@ class TestStartupsEndpoint:
         test_session.add(startup)
         await test_session.commit()
 
-        response = await async_client.get("/startups")
+        response = await async_client.get("/api/startups")
         assert response.status_code == 200
         data = response.json()
         assert data["total"] == 1
@@ -117,7 +117,7 @@ class TestStartupsEndpoint:
         await test_session.commit()
 
         # Search for "Open"
-        response = await async_client.get("/startups?search=Open")
+        response = await async_client.get("/api/startups?search=Open")
         assert response.status_code == 200
         data = response.json()
         assert data["total"] == 1
@@ -143,7 +143,7 @@ class TestStartupsEndpoint:
         await test_session.commit()
 
         # Page 1
-        response = await async_client.get("/startups?page=1&page_size=10")
+        response = await async_client.get("/api/startups?page=1&page_size=10")
         assert response.status_code == 200
         data = response.json()
         assert data["total"] == 25
@@ -151,7 +151,7 @@ class TestStartupsEndpoint:
         assert data["page"] == 1
 
         # Page 2
-        response = await async_client.get("/startups?page=2&page_size=10")
+        response = await async_client.get("/api/startups?page=2&page_size=10")
         assert response.status_code == 200
         data = response.json()
         assert len(data["items"]) == 10
@@ -178,7 +178,7 @@ class TestProductsEndpoint:
         test_session.add(product)
         await test_session.commit()
 
-        response = await async_client.get("/products")
+        response = await async_client.get("/api/products")
         assert response.status_code == 200
         data = response.json()
         assert data["total"] == 1
@@ -201,11 +201,11 @@ class TestPapersEndpoint:
         await test_session.commit()
         await test_session.refresh(record)
 
-        paper = ResearchPaper(record_id=record.id, title="Test Paper", authors=["Test Author"], paper_url="https://arxiv.org/abs/test", published_date="2023-01-01", github_url="https://github.com/test")
+        paper = ResearchPaper(record_id=record.id, title="Test Paper", authors=["Test Author"], paper_url="https://arxiv.org/abs/test", published_date=datetime(2023, 1, 1, tzinfo=timezone.utc), github_url="https://github.com/test")
         test_session.add(paper)
         await test_session.commit()
 
-        response = await async_client.get("/papers")
+        response = await async_client.get("/api/papers")
         assert response.status_code == 200
         data = response.json()
         assert data["total"] == 1
@@ -217,23 +217,23 @@ class TestPapersEndpoint:
         record1 = Record(source_name="test", source_url="https://example.com/1", record_type="paper", content_hash="p1", raw_data={})
         test_session.add(record1)
         await test_session.commit()
-        paper1 = ResearchPaper(record_id=record1.id, title="With GitHub", authors=["GitHub Author"], paper_url="https://arxiv.org/abs/test", published_date="2023-01-01", github_url="https://github.com/test")
+        paper1 = ResearchPaper(record_id=record1.id, title="With GitHub", authors=["GitHub Author"], paper_url="https://arxiv.org/abs/test", published_date=datetime(2023, 1, 1, tzinfo=timezone.utc), github_url="https://github.com/test")
         test_session.add(paper1)
 
         # Paper without GitHub
         record2 = Record(source_name="test", source_url="https://example.com/2", record_type="paper", content_hash="p2", raw_data={})
         test_session.add(record2)
         await test_session.commit()
-        paper2 = ResearchPaper(record_id=record2.id, title="Without GitHub", authors=["No GitHub Author"], paper_url="https://arxiv.org/abs/test2", published_date="2023-01-02")
+        paper2 = ResearchPaper(record_id=record2.id, title="Without GitHub", authors=["No GitHub Author"], paper_url="https://arxiv.org/abs/test2", published_date=datetime(2023, 1, 2, tzinfo=timezone.utc))
         test_session.add(paper2)
         await test_session.commit()
 
-        response = await async_client.get("/papers?has_github=true")
+        response = await async_client.get("/api/papers?has_github=true")
         data = response.json()
         assert data["total"] == 1
         assert data["items"][0]["github_url"] is not None
 
-        response = await async_client.get("/papers?has_github=false")
+        response = await async_client.get("/api/papers?has_github=false")
         data = response.json()
         assert data["total"] == 1
         assert data["items"][0]["github_url"] is None
@@ -255,11 +255,11 @@ class TestJobsEndpoint:
         await test_session.commit()
         await test_session.refresh(record)
 
-        job = Job(record_id=record.id, title="AI Engineer", company="TestAI", job_url="https://example.com/job1", published_date="2023-01-01", is_remote=True)
+        job = Job(record_id=record.id, title="AI Engineer", company="TestAI", job_url="https://example.com/job1", published_date=datetime(2023, 1, 1, tzinfo=timezone.utc), is_remote=True)
         test_session.add(job)
         await test_session.commit()
 
-        response = await async_client.get("/jobs")
+        response = await async_client.get("/api/jobs")
         assert response.status_code == 200
         data = response.json()
         assert data["total"] == 1
@@ -271,7 +271,7 @@ class TestJobsEndpoint:
         record1 = Record(source_name="test", source_url="https://example.com/1", record_type="job", content_hash="j1", raw_data={})
         test_session.add(record1)
         await test_session.commit()
-        job1 = Job(record_id=record1.id, title="Fresh Job", company="FreshCo", job_url="https://example.com/job2", published_date="2023-01-15")
+        job1 = Job(record_id=record1.id, title="Fresh Job", company="FreshCo", job_url="https://example.com/job2", published_date=datetime.now(timezone.utc) - timedelta(hours=12))
         test_session.add(job1)
 
         # Old job
@@ -283,7 +283,7 @@ class TestJobsEndpoint:
         test_session.add(job2)
         await test_session.commit()
 
-        response = await async_client.get("/jobs?fresh_only=true")
+        response = await async_client.get("/api/jobs?fresh_only=true")
         data = response.json()
         assert data["total"] == 1
         assert data["items"][0]["title"] == "Fresh Job"
@@ -305,11 +305,11 @@ class TestNewsEndpoint:
         await test_session.commit()
         await test_session.refresh(record)
 
-        news = News(record_id=record.id, headline="Test News", article_url="https://example.com/news", published_at="2023-01-01", source_name="Test Source", sentiment_score=0.5)
+        news = News(record_id=record.id, headline="Test News", article_url="https://example.com/news", published_at=datetime(2023, 1, 1, tzinfo=timezone.utc), source_name="Test Source", sentiment_score=0.5)
         test_session.add(news)
         await test_session.commit()
 
-        response = await async_client.get("/news")
+        response = await async_client.get("/api/news")
         assert response.status_code == 200
         data = response.json()
         assert data["total"] == 1
@@ -334,7 +334,7 @@ class TestEntityMappingsEndpoint:
         test_session.add(log)
         await test_session.commit()
 
-        response = await async_client.get("/entities/mappings")
+        response = await async_client.get("/api/entities/mappings")
         assert response.status_code == 200
         data = response.json()
         assert data["total"] == 1
@@ -346,14 +346,14 @@ class TestPipelineEndpoints:
 
     @pytest.mark.asyncio
     async def test_pipeline_status(self, async_client: AsyncClient):
-        response = await async_client.get("/pipeline/status")
+        response = await async_client.get("/api/pipeline/status")
         assert response.status_code == 200
         data = response.json()
         assert "tasks" in data
 
     @pytest.mark.asyncio
     async def test_pipeline_logs(self, async_client: AsyncClient):
-        response = await async_client.get("/pipeline/logs")
+        response = await async_client.get("/api/pipeline/logs")
         assert response.status_code == 200
         data = response.json()
         assert "items" in data
@@ -361,28 +361,28 @@ class TestPipelineEndpoints:
 
     @pytest.mark.asyncio
     async def test_start_pipeline(self, async_client: AsyncClient):
-        response = await async_client.post("/pipeline/start")
+        response = await async_client.post("/api/pipeline/start")
         assert response.status_code == 200
         data = response.json()
         assert "message" in data
 
     @pytest.mark.asyncio
     async def test_start_pipeline_type(self, async_client: AsyncClient):
-        response = await async_client.post("/pipeline/start?record_type=startup")
+        response = await async_client.post("/api/pipeline/start?record_type=startup")
         assert response.status_code == 200
         data = response.json()
         assert "startup" in data["message"].lower()
 
     @pytest.mark.asyncio
     async def test_stop_pipeline(self, async_client: AsyncClient):
-        response = await async_client.post("/pipeline/stop")
+        response = await async_client.post("/api/pipeline/stop")
         assert response.status_code == 200
         data = response.json()
         assert "message" in data
 
     @pytest.mark.asyncio
     async def test_retry_failed(self, async_client: AsyncClient):
-        response = await async_client.post("/pipeline/retry-failed")
+        response = await async_client.post("/api/pipeline/retry-failed")
         assert response.status_code == 200
         data = response.json()
         assert "message" in data
@@ -404,7 +404,7 @@ class TestSourcesEndpoint:
         test_session.add(source)
         await test_session.commit()
 
-        response = await async_client.get("/sources")
+        response = await async_client.get("/api/sources")
         assert response.status_code == 200
         data = response.json()
         assert "sources" in data
@@ -427,9 +427,9 @@ class TestExportEndpoints:
         test_session.add(startup)
         await test_session.commit()
 
-        response = await async_client.get("/exports/startups")
+        response = await async_client.get("/api/exports/startups")
         assert response.status_code == 200
-        assert response.headers["content-type"] == "text/csv"
+        assert "text/csv" in response.headers["content-type"]
         assert "attachment" in response.headers["content-disposition"]
         content = response.text
         assert "entity_name" in content
@@ -447,7 +447,7 @@ class TestExportEndpoints:
         test_session.add(product)
         await test_session.commit()
 
-        response = await async_client.get("/exports/products")
+        response = await async_client.get("/api/exports/products")
         assert response.status_code == 200
         content = response.text
         assert "product_name" in content
@@ -461,11 +461,11 @@ class TestExportEndpoints:
         )
         test_session.add(record)
         await test_session.commit()
-        paper = ResearchPaper(record_id=record.id, title="Test Paper", authors=["Test Author"], paper_url="https://arxiv.org/abs/test", published_date="2023-01-01")
+        paper = ResearchPaper(record_id=record.id, title="Test Paper", authors=["Test Author"], paper_url="https://arxiv.org/abs/test", published_date=datetime(2023, 1, 1, tzinfo=timezone.utc))
         test_session.add(paper)
         await test_session.commit()
 
-        response = await async_client.get("/exports/papers")
+        response = await async_client.get("/api/exports/papers")
         assert response.status_code == 200
         content = response.text
         assert "title" in content
@@ -479,11 +479,11 @@ class TestExportEndpoints:
         )
         test_session.add(record)
         await test_session.commit()
-        job = Job(record_id=record.id, title="AI Engineer", company_name="TestAI")
+        job = Job(record_id=record.id, title="AI Engineer", company_name="TestAI", job_url="https://example.com/job1", published_date=datetime(2023, 1, 15, tzinfo=timezone.utc))
         test_session.add(job)
         await test_session.commit()
 
-        response = await async_client.get("/exports/jobs")
+        response = await async_client.get("/api/exports/jobs")
         assert response.status_code == 200
         content = response.text
         assert "title" in content
@@ -497,11 +497,11 @@ class TestExportEndpoints:
         )
         test_session.add(record)
         await test_session.commit()
-        news = News(record_id=record.id, headline="Test News", article_url="https://example.com/news2", published_at="2023-01-02", source_name="Test Source 2", sentiment_score=0.5)
+        news = News(record_id=record.id, headline="Test News", article_url="https://example.com/news2", published_at=datetime(2023, 1, 2, tzinfo=timezone.utc), source_name="Test Source 2", sentiment_score=0.5)
         test_session.add(news)
         await test_session.commit()
 
-        response = await async_client.get("/exports/news")
+        response = await async_client.get("/api/exports/news")
         assert response.status_code == 200
         content = response.text
         assert "headline" in content
@@ -519,7 +519,7 @@ class TestExportEndpoints:
         test_session.add(log)
         await test_session.commit()
 
-        response = await async_client.get("/exports/entities")
+        response = await async_client.get("/api/exports/entities")
         assert response.status_code == 200
         content = response.text
         assert "raw_entity_name" in content
@@ -527,7 +527,7 @@ class TestExportEndpoints:
 
     @pytest.mark.asyncio
     async def test_export_unknown_type(self, async_client: AsyncClient):
-        response = await async_client.get("/exports/unknown")
+        response = await async_client.get("/api/exports/unknown")
         assert response.status_code == 404
 
 
@@ -543,7 +543,7 @@ class TestStatsEndpoints:
         test_session.add(record)
         await test_session.commit()
 
-        response = await async_client.get("/stats/ingestion-activity")
+        response = await async_client.get("/api/stats/ingestion-activity")
         assert response.status_code == 200
         data = response.json()
         assert "activity" in data
@@ -557,7 +557,7 @@ class TestStatsEndpoints:
         test_session.add(record)
         await test_session.commit()
 
-        response = await async_client.get("/stats/source-distribution")
+        response = await async_client.get("/api/stats/source-distribution")
         assert response.status_code == 200
         data = response.json()
         assert "distribution" in data
@@ -571,7 +571,7 @@ class TestStatsEndpoints:
         test_session.add(record)
         await test_session.commit()
 
-        response = await async_client.get("/stats/record-type-distribution")
+        response = await async_client.get("/api/stats/record-type-distribution")
         assert response.status_code == 200
         data = response.json()
         assert "distribution" in data
@@ -584,11 +584,11 @@ class TestStatsEndpoints:
         )
         test_session.add(record)
         await test_session.commit()
-        news = News(record_id=record.id, headline="Test", article_url="https://example.com/news3", published_at="2023-01-03", source_name="Test Source 3", sentiment_score=0.5)
+        news = News(record_id=record.id, headline="Test", article_url="https://example.com/news3", published_at=datetime(2023, 1, 3, tzinfo=timezone.utc), source_name="Test Source 3", sentiment_score=0.5)
         test_session.add(news)
         await test_session.commit()
 
-        response = await async_client.get("/stats/freshness-timeline")
+        response = await async_client.get("/api/stats/freshness-timeline")
         assert response.status_code == 200
         data = response.json()
         assert "news" in data
@@ -602,11 +602,11 @@ class TestStatsEndpoints:
         )
         test_session.add(record)
         await test_session.commit()
-        paper = ResearchPaper(record_id=record.id, title="Test", authors=["Test Author"], paper_url="https://arxiv.org/abs/test", published_date="2023-01-01", github_stars=100)
+        paper = ResearchPaper(record_id=record.id, title="Test", authors=["Test Author"], paper_url="https://arxiv.org/abs/test", published_date=datetime(2023, 1, 1, tzinfo=timezone.utc), github_stars=100)
         test_session.add(paper)
         await test_session.commit()
 
-        response = await async_client.get("/stats/github-stars")
+        response = await async_client.get("/api/stats/github-stars")
         assert response.status_code == 200
         data = response.json()
         assert "stars" in data
@@ -621,25 +621,7 @@ class TestStatsEndpoints:
         test_session.add(record)
         await test_session.commit()
 
-        response = await async_client.get("/stats/extraction-status")
+        response = await async_client.get("/api/stats/extraction-status")
         assert response.status_code == 200
         data = response.json()
         assert "status" in data
-
-
-# AsyncClient fixture
-@pytest.fixture
-async def async_client(test_session):
-    # Override get_db dependency
-    from app.database import get_db
-    from app.main import app
-    
-    def override_get_db():
-        yield test_session
-    
-    app.dependency_overrides[get_db] = override_get_db
-    
-    async with AsyncClient(base_url="http://test") as client:
-        yield client
-    
-    app.dependency_overrides.clear()

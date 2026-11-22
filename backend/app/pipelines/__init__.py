@@ -138,8 +138,8 @@ class IngestionPipeline:
         if record_type == "startup":
             entity = Startup(
                 record_id=record_id,
-                entity_name=raw.get("entity_name", ""),
-                description=raw.get("description"),
+                entity_name=raw.get("entity_name") or raw.get("title", ""),
+                description=raw.get("abstract") or raw.get("description"),
                 website=raw.get("website"),
                 employee_count=raw.get("employee_count"),
                 industry=raw.get("industry"),
@@ -151,7 +151,7 @@ class IngestionPipeline:
                 record_id=record_id,
                 product_name=raw.get("product_name", ""),
                 product_url=raw.get("product_url"),
-                description=raw.get("description"),
+                description=raw.get("abstract") or raw.get("description"),
                 startup_name=raw.get("startup_name"),
                 pricing_model=raw.get("pricing_model", "UNKNOWN"),
             )
@@ -188,7 +188,7 @@ class IngestionPipeline:
                 company=raw.get("company", ""),
                 title=raw.get("title", ""),
                 job_url=raw.get("job_url", ""),
-                description=raw.get("description"),
+                description=raw.get("abstract") or raw.get("description"),
                 location=raw.get("location"),
                 is_remote=raw.get("is_remote", False),
                 employment_type=raw.get("employment_type"),
@@ -355,10 +355,16 @@ class IngestionPipeline:
             health.last_crawl_status = status
             if status == "SUCCESS":
                 health.last_successful_crawl = utcnow()
+                if health.records_discovered is None:
+                    health.records_discovered = 0
                 health.records_discovered += records
+                if health.failure_count is None:
+                    health.failure_count = 0
                 health.failure_count = 0
                 health.health_status = "HEALTHY"
             else:
+                if health.failure_count is None:
+                    health.failure_count = 0
                 health.failure_count += 1
                 health.blocked_reason = error
                 health.health_status = "DEGRADED" if health.failure_count < 3 else "BLOCKED"

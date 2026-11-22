@@ -57,7 +57,7 @@ class ProductHuntAIAdapter(SourceAdapter):
                 })
         return records
 
-    async def _get_session(self):
+    def _get_session(self):
         import aiohttp
         timeout = aiohttp.ClientTimeout(total=settings.request_timeout)
         return aiohttp.ClientSession(timeout=timeout)
@@ -119,7 +119,7 @@ class FuturepediaAdapter(SourceAdapter):
                 await asyncio.sleep(1)
         return records
 
-    async def _get_session(self):
+    def _get_session(self):
         import aiohttp
         timeout = aiohttp.ClientTimeout(total=settings.request_timeout)
         return aiohttp.ClientSession(timeout=timeout)
@@ -164,7 +164,7 @@ class AIToolsDirectoryAdapter(SourceAdapter):
                 })
         return records
 
-    async def _get_session(self):
+    def _get_session(self):
         import aiohttp
         timeout = aiohttp.ClientTimeout(total=settings.request_timeout)
         return aiohttp.ClientSession(timeout=timeout)
@@ -216,7 +216,7 @@ class HuggingFaceSpacesAdapter(SourceAdapter):
                 await asyncio.sleep(1)
         return records
 
-    async def _get_session(self):
+    def _get_session(self):
         import aiohttp
         timeout = aiohttp.ClientTimeout(total=settings.request_timeout)
         return aiohttp.ClientSession(timeout=timeout)
@@ -261,7 +261,7 @@ class ThereIsAnAIForThatAdapter(SourceAdapter):
                 })
         return records
 
-    async def _get_session(self):
+    def _get_session(self):
         import aiohttp
         timeout = aiohttp.ClientTimeout(total=settings.request_timeout)
         return aiohttp.ClientSession(timeout=timeout)
@@ -274,3 +274,53 @@ PRODUCT_ADAPTERS = [
     HuggingFaceSpacesAdapter(),
     ThereIsAnAIForThatAdapter(),
 ]
+class ProductHuntAdapter(SourceAdapter):
+    """Product Hunt website scraper for commercial products."""
+    def __init__(self, session=None):
+        super().__init__("ProductHunt", "https://www.producthunt.com", session)
+
+    def record_type(self) -> str:
+        return "product"
+
+    async def collect(self) -> list[dict]:
+        records = []
+        async with self._get_session() as session:
+            # Product Hunt new page - no API key needed for basic scraping
+            for page in range(1, 4):  # 3 pages
+                url = f"https://www.producthunt.com/posts?page={page}"
+                try:
+                    async with session.get(url) as resp:
+                        html = await resp.text()
+                except Exception:
+                    break
+                if not html or len(html) < 1000:
+                    break
+                # Simple parsing - look for product cards
+                # Product Hunt uses specific CSS classes
+                import re
+                # Find product entries
+                entries = re.findall(r'<div class="Post__StyledPost[^"]*".*?<h3[^>]*>(.*?)</h3>.*?<a[^>]*href="([^"]*)"[^>]*>(.*?)</a>', html, re.DOTALL)
+                for entry in entries[:10]:  # Limit per page
+                    name = re.sub(r'<[^>]+>', '', entry[0]).strip() if entry[0] else None
+                    product_url = entry[1] if len(entry) > 1 else None
+                    # Extract tagline/description
+                    tagline_match = re.search(r'<div class="Tagline[^"]*">(.*?)</div>', html)
+                    description = re.sub(r'<[^>]+>', '', tagline_match.group(1)).strip() if tagline_match else None
+
+                    records.append({
+                        "product_name": name or f"Product Hunt Entry {page}",
+                        "product_url": product_url,
+                        "description": description,
+                        "startup_name": None,
+                        "pricing_model": "UNKNOWN",
+                        "source_name": self.source_name,
+                        "source_url": url,
+                        "record_type": "product",
+                    })
+                await asyncio.sleep(2)  # Rate limiting
+        return records
+
+    def _get_session(self):
+        import aiohttp
+        timeout = aiohttp.ClientTimeout(total=settings.request_timeout)
+        return aiohttp.ClientSession(timeout=timeout)

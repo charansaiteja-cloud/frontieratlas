@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { useState } from 'react';
 import {
   Search, Filter, Download, ExternalLink, ChevronDown, ChevronUp,
-  FileText, Github, Star, Calendar, Tag, Globe, BookOpen
+  FileText, Github, Star, Calendar, Tag, Globe, BookOpen, RefreshCw
 } from 'lucide-react';
 import type { Paper } from '@/types';
 
@@ -22,35 +22,48 @@ export default function PapersTable({ data, loading, refresh }: PapersTableProps
   const [sortKey, setSortKey] = useState<keyof Paper>('title');
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc');
   const [githubFilter, setGithubFilter] = useState<string>('');
+  const [items, setItems] = useState<Paper[]>(data.papers);
 
-  const items = data.papers;
-  
   const sortedItems = [...items].sort((a, b) => {
     const aVal = a[sortKey];
     const bVal = b[sortKey];
     if (aVal == null && bVal == null) return 0;
     if (aVal == null) return 1;
     if (bVal == null) return -1;
-    const cmp = String(aVal).localeCompare(String(bVal));
-    return sortDir === 'asc' ? cmp : -cmp;
+    const comparison = String(aVal).localeCompare(String(bVal));
+    return sortDir === 'asc' ? comparison : -comparison;
   });
 
-  const filteredItems = sortedItems.filter(item =>
-    (item.title.toLowerCase().includes(search.toLowerCase()) ||
-     item.authors?.some(a => a.toLowerCase().includes(search.toLowerCase())) ||
-     item.arxiv_id?.toLowerCase().includes(search.toLowerCase())) &&
-    (githubFilter === '' || (githubFilter === 'with_github' && item.github_url) || (githubFilter === 'without_github' && !item.github_url))
-  );
+  const filteredItems = githubFilter
+    ? sortedItems.filter(p => githubFilter === 'has' ? p.github_url : !p.github_url)
+    : sortedItems;
 
   const paginatedItems = filteredItems.slice((page - 1) * pageSize, page * pageSize);
-  const totalPages = Math.ceil(filteredItems.length / pageSize);
 
-  const formatDate = (dateStr: string) => {
+  const handleSort = (key: keyof Paper) => {
+    if (sortKey === key) {
+      setSortDir(d => d === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortKey(key);
+      setSortDir('asc');
+    }
+  };
+
+  const formatDate = (dateStr?: string) => {
+    if (!dateStr) return '—';
     try {
-      return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      return new Date(dateStr).toLocaleDateString('en-US', {
+        year: 'numeric', month: 'short', day: 'numeric'
+      });
     } catch {
       return dateStr;
     }
+  };
+
+  const truncateAuthors = (authors: string[]) => {
+    if (!authors || authors.length === 0) return '—';
+    if (authors.length <= 2) return authors.join(', ');
+    return `${authors.slice(0, 2).join(', ')} +${authors.length - 2} more`;
   };
 
   return (
@@ -62,149 +75,215 @@ export default function PapersTable({ data, loading, refresh }: PapersTableProps
       >
         <div>
           <h1 className="text-3xl font-bold text-gradient">Research Papers</h1>
-          <p className="text-slate-400 mt-1">{filteredItems.length} papers indexed from arXiv, Papers with Code, OpenAlex, and Hugging Face</p>
+          <p className="text-slate-400 mt-1">Discovered AI research papers and publications</p>
         </div>
-        <div className="flex items-center gap-3 flex-wrap">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-            <input
-              type="text"
-              placeholder="Search papers..."
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              className="w-64 pl-10 pr-4 py-2 rounded-xl glass border border-white/10 focus:border-blue-500/30 focus:outline-none text-sm bg-white/5"
-            />
-          </div>
-          <select
-            value={githubFilter}
-            onChange={e => setGithubFilter(e.target.value)}
-            className="px-4 py-2 rounded-xl glass border border-white/10 focus:border-blue-500/30 focus:outline-none text-sm bg-white/5"
-          >
-            <option value="">All Papers</option>
-            <option value="with_github">Has GitHub Repo</option>
-            <option value="without_github">No GitHub Repo</option>
-          </select>
-          <button onClick={refresh} disabled={loading} className="px-4 py-2 rounded-xl glass border border-white/10 hover:border-blue-500/30 transition-all flex items-center gap-2 text-sm">
-            <Download className="w-4 h-4" />
-            <span>Export CSV</span>
-          </button>
-        </div>
+        <button onClick={refresh} disabled={loading} className="btn-secondary flex items-center gap-2">
+          <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+          <span>Refresh</span>
+        </button>
       </motion.div>
 
+      {/* Stats Summary */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="glass rounded-2xl overflow-hidden"
+        className="grid grid-cols-2 lg:grid-cols-5 gap-4"
       >
-        {loading && filteredItems.length === 0 ? (
+        <div className="glass-card p-4">
+          <p className="text-sm text-slate-400">Total Papers</p>
+          <p className="text-2xl font-bold text-white">{data.papers.length.toLocaleString()}</p>
+        </div>
+        <div className="glass-card p-4">
+          <p className="text-sm text-slate-400">With GitHub</p>
+          <p className="text-2xl font-bold text-emerald-400">
+            {data.papers.filter(p => p.github_url).length.toLocaleString()}
+          </p>
+        </div>
+        <div className="glass-card p-4">
+          <p className="text-sm text-slate-400">ArXiv Papers</p>
+          <p className="text-2xl font-bold text-amber-400">
+            {data.papers.filter(p => p.arxiv_id).length.toLocaleString()}
+          </p>
+        </div>
+        <div className="glass-card p-4">
+          <p className="text-sm text-slate-400">Total Stars</p>
+          <p className="text-2xl font-bold text-yellow-400">
+            {data.papers.reduce((sum, p) => sum + (p.github_stars || 0), 0).toLocaleString()}
+          </p>
+        </div>
+        <div className="glass-card p-4">
+          <p className="text-sm text-slate-400">Sources</p>
+          <p className="text-2xl font-bold text-white">
+            {Array.from(new Set(data.papers.map(p => p.source_name))).length}
+          </p>
+        </div>
+      </motion.div>
+
+      {/* Filters */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.15 }}
+        className="glass-card p-4"
+      >
+        <div className="flex flex-col sm:flex-row gap-4">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+            <input
+              type="text"
+              placeholder="Search papers by title, authors..."
+              value={search}
+              onChange={e => { setSearch(e.target.value); setPage(1); }}
+              className="input-glass pl-10"
+            />
+          </div>
+          <select
+            value={githubFilter}
+            onChange={e => { setGithubFilter(e.target.value); setPage(1); }}
+            className="select-glass w-auto min-w-[160px]"
+          >
+            <option value="">All Papers</option>
+            <option value="has">Has GitHub Repo</option>
+            <option value="none">No GitHub Repo</option>
+          </select>
+          <select
+            value={pageSize}
+            onChange={e => { setPageSize(Number(e.target.value)); setPage(1); }}
+            className="select-glass w-auto min-w-[140px]"
+          >
+            <option value="10">10 per page</option>
+            <option value="20">20 per page</option>
+            <option value="50">50 per page</option>
+            <option value="100">100 per page</option>
+          </select>
+        </div>
+      </motion.div>
+
+      {/* Table */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+        className="glass-card overflow-hidden"
+      >
+        {loading && items.length === 0 ? (
           <div className="p-12 text-center">
-            <div className="w-12 h-12 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+            <div className="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
             <p className="text-slate-400">Loading papers...</p>
           </div>
-        ) : filteredItems.length === 0 ? (
+        ) : items.length === 0 ? (
           <div className="p-12 text-center">
             <FileText className="w-16 h-16 mx-auto mb-4 text-slate-500" />
             <h3 className="text-xl font-semibold mb-2">No papers found</h3>
-            <p className="text-slate-400 mb-6">Run the ingestion pipeline to index research papers.</p>
-            <button onClick={refresh} className="px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-medium">
-              Start Pipeline
-            </button>
+            <p className="text-slate-400 mb-6">Start the ingestion pipeline to discover research papers.</p>
           </div>
         ) : (
           <>
             <div className="overflow-x-auto">
-              <table className="w-full">
+              <table className="table-glass">
                 <thead>
-                  <tr className="border-b border-white/10 bg-white/5">
+                  <tr>
                     {[
-                      { key: 'title', label: 'Title', width: '35%' },
-                      { key: 'authors', label: 'Authors', width: '15%' },
-                      { key: 'published_date', label: 'Published', width: '12%' },
-                      { key: 'github_stars', label: '⭐ Stars', width: '8%' },
-                      { key: 'github_url', label: 'Code', width: '8%' },
-                      { key: 'arxiv_id', label: 'arXiv', width: '10%' },
-                      { key: 'source_name', label: 'Source', width: '12%' },
+                      { key: 'title', label: 'Title', sortable: true },
+                      { key: 'authors', label: 'Authors', sortable: false },
+                      { key: 'published_date', label: 'Published', sortable: true },
+                      { key: 'arxiv_id', label: 'ArXiv', sortable: false },
+                      { key: 'github_stars', label: 'Stars', sortable: true },
+                      { key: 'source_name', label: 'Source', sortable: true },
+                      { key: 'created_at', label: 'Discovered', sortable: true },
                     ].map(col => (
                       <th
                         key={col.key}
-                        onClick={() => {
-                          const k = col.key as keyof Paper;
-                          setSortDir(sortKey === k && sortDir === 'asc' ? 'desc' : 'asc');
-                          setSortKey(k);
-                        }}
-                        className="px-4 py-3 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider cursor-pointer hover:text-white select-none"
-                        style={{ width: col.width }}
+                        className={`px-4 py-3 ${col.sortable ? 'cursor-pointer hover:text-emerald-400' : ''}`}
+                        onClick={() => col.sortable && handleSort(col.key as keyof Paper)}
+                        style={{ minWidth: col.key === 'title' ? '280px' : col.key === 'authors' ? '180px' : '120px' }}
                       >
                         <div className="flex items-center gap-1">
-                          {col.label}
-                          {sortKey === col.key && (
-                            sortDir === 'asc' ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />
+                          <span>{col.label}</span>
+                          {col.sortable && sortKey === col.key && (
+                            <span className="text-emerald-400">
+                              {sortDir === 'asc' ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                            </span>
                           )}
                         </div>
                       </th>
                     ))}
+                    <th className="px-4 py-3 w-32">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/5">
-                  {paginatedItems.map((item, i) => (
+                  {paginatedItems.map((paper, i) => (
                     <motion.tr
-                      key={item.id}
+                      key={paper.id}
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: i * 0.02 }}
                       className="hover:bg-white/5 transition-colors"
                     >
                       <td className="px-4 py-3">
-                        <div>
-                          <p className="font-medium text-white line-clamp-1">{item.title}</p>
-                          {item.abstract && (
-                            <p className="text-sm text-slate-400 line-clamp-1 mt-1 max-w-md">{item.abstract}</p>
+                        <div className="flex items-start gap-3">
+                          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <FileText className="w-4 h-4 text-white" />
+                          </div>
+                          <div className="min-w-0">
+                            <p className="font-medium text-white truncate">{paper.title}</p>
+                            {paper.arxiv_id && (
+                              <a href={`https://arxiv.org/abs/${paper.arxiv_id}`} target="_blank" rel="noopener noreferrer" className="text-xs text-cyan-400 hover:text-cyan-300 flex items-center gap-1">
+                                <ExternalLink className="w-3 h-3" />
+                                arXiv:{paper.arxiv_id}
+                              </a>
+                            )}
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3">
+                        <p className="text-sm text-slate-300 truncate max-w-xs">{truncateAuthors(paper.authors)}</p>
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className="text-sm text-slate-300 flex items-center gap-1">
+                          <Calendar className="w-3 h-3" />
+                          {formatDate(paper.published_date)}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3">
+                        {paper.arxiv_id ? (
+                          <span className="badge badge-amber">arXiv</span>
+                        ) : (
+                          <span className="text-slate-500">—</span>
+                        )}
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="flex items-center gap-1">
+                          {paper.github_stars && paper.github_stars > 0 ? (
+                            <span className="font-mono text-yellow-400 flex items-center gap-1">
+                              <Star className="w-3 h-3" />
+                              {paper.github_stars.toLocaleString()}
+                            </span>
+                          ) : (
+                            <span className="text-slate-500">—</span>
                           )}
                         </div>
                       </td>
                       <td className="px-4 py-3">
-                        <p className="text-sm text-slate-300 line-clamp-1">
-                          {item.authors?.slice(0, 3).join(', ')}{item.authors && item.authors.length > 3 ? ` +${item.authors.length - 3} more` : ''}
-                        </p>
+                        <span className="badge badge-emerald">{paper.source_name}</span>
                       </td>
                       <td className="px-4 py-3">
-                        <div className="flex items-center gap-1 text-sm text-slate-300">
-                          <Calendar className="w-3 h-3 text-slate-500" />
-                          {formatDate(item.published_date)}
+                        <span className="text-sm text-slate-300">{formatDate(paper.published_date)}</span>
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="flex items-center gap-1">
+                          {paper.paper_url && (
+                            <a href={paper.paper_url} target="_blank" rel="noopener noreferrer" className="p-1.5 rounded-lg hover:bg-white/10 transition-colors text-slate-400 hover:text-cyan-400" title="View Paper">
+                              <ExternalLink className="w-4 h-4" />
+                            </a>
+                          )}
+                          {paper.github_url && (
+                            <a href={paper.github_url} target="_blank" rel="noopener noreferrer" className="p-1.5 rounded-lg hover:bg-white/10 transition-colors text-slate-400 hover:text-emerald-400" title="View GitHub">
+                              <Github className="w-4 h-4" />
+                            </a>
+                          )}
                         </div>
-                      </td>
-                      <td className="px-4 py-3">
-                        <div className="flex items-center gap-1 text-sm">
-                          <Star className="w-3 h-3 text-yellow-400" />
-                          <span className={item.github_stars && item.github_stars > 100 ? 'font-bold text-yellow-400' : 'text-slate-300'}>
-                            {item.github_stars?.toLocaleString() || '—'}
-                          </span>
-                        </div>
-                      </td>
-                      <td className="px-4 py-3">
-                        {item.github_url ? (
-                          <a href={item.github_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-sm text-green-400 hover:text-green-300 transition-colors">
-                            <Github className="w-3 h-3" />
-                            Repo
-                          </a>
-                        ) : (
-                          <span className="text-slate-500 text-sm">—</span>
-                        )}
-                      </td>
-                      <td className="px-4 py-3">
-                        {item.arxiv_id ? (
-                          <a href={`https://arxiv.org/abs/${item.arxiv_id}`} target="_blank" rel="noopener noreferrer" className="text-sm text-blue-400 hover:text-blue-300 font-mono">
-                            {item.arxiv_id}
-                          </a>
-                        ) : (
-                          <span className="text-slate-500 text-sm">—</span>
-                        )}
-                      </td>
-                      <td className="px-4 py-3">
-                        <span className="px-2 py-1 text-xs rounded-full bg-cyan-500/20 text-cyan-400 border border-cyan-500/30">
-                          {item.source_name}
-                        </span>
                       </td>
                     </motion.tr>
                   ))}
@@ -212,27 +291,15 @@ export default function PapersTable({ data, loading, refresh }: PapersTableProps
               </table>
             </div>
 
-            {totalPages > 1 && (
+            {filteredItems.length > pageSize && (
               <div className="px-4 py-3 border-t border-white/10 flex items-center justify-between">
                 <p className="text-sm text-slate-400">
                   Showing {(page - 1) * pageSize + 1} to {Math.min(page * pageSize, filteredItems.length)} of {filteredItems.length} results
                 </p>
                 <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => setPage(p => Math.max(1, p - 1))}
-                    disabled={page === 1}
-                    className="px-3 py-1.5 rounded-lg glass border border-white/10 hover:border-blue-500/30 disabled:opacity-50 text-sm"
-                  >
-                    Previous
-                  </button>
-                  <span className="px-3 text-sm text-slate-300">Page {page} / {totalPages}</span>
-                  <button
-                    onClick={() => setPage(p => Math.min(totalPages, p + 1))}
-                    disabled={page === totalPages}
-                    className="px-3 py-1.5 rounded-lg glass border border-white/10 hover:border-blue-500/30 disabled:opacity-50 text-sm"
-                  >
-                    Next
-                  </button>
+                  <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} className="btn-ghost px-3 py-1.5 text-sm">Previous</button>
+                  <span className="px-3 text-sm text-slate-300">Page {page} / {Math.ceil(filteredItems.length / pageSize)}</span>
+                  <button onClick={() => setPage(p => Math.min(Math.ceil(filteredItems.length / pageSize), p + 1))} disabled={page === Math.ceil(filteredItems.length / pageSize)} className="btn-ghost px-3 py-1.5 text-sm">Next</button>
                 </div>
               </div>
             )}

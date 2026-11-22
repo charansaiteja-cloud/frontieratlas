@@ -46,13 +46,14 @@ def mock_session():
         async def __aexit__(self, exc_type, exc_val, exc_tb):
             pass
         
-        def get_text(self):
+        async def text(self):
             return self._text
         
-        def get_json(self):
+        async def json(self):
             return self._json
         
-        def get_headers(self):
+        @property
+        def headers(self):
             return self._headers
     
     # Base success response
@@ -109,59 +110,103 @@ class TestBaseCrawler:
     @pytest.mark.asyncio
     async def test_crawler_fetch_retry_on_429(self, mock_session):
         """Test retry on 429 status code."""
-        from unittest.mock import patch
+        from unittest.mock import AsyncMock
         
-        # Create mock responses
+        # Create a mock response for 429
         class _429Response:
             status = 429
             _text = "<html>429 Error</html>"
-            def get_text(self):
+            async def text(self):
                 return self._text
-            def get_headers(self):
+            async def json(self):
+                return {"error": "rate limited"}
+            @property
+            def headers(self):
                 return {"content-type": "text/html", "retry-after": "0"}
+            async def __aenter__(self):
+                return self
+            async def __aexit__(self, exc_type, exc_val, exc_tb):
+                pass
         
         class _200Response:
             status = 200
             _text = "<html>Success</html>"
-            def get_text(self):
+            async def text(self):
                 return self._text
-            def get_headers(self):
+            async def json(self):
+                return {"data": "success"}
+            @property
+            def headers(self):
                 return {"content-type": "text/html"}
-        
-        # Patch session.get to return our mock responses
-        original_get = mock_session.get
-        mock_session.get = lambda url: _429Response()
+            async def __aenter__(self):
+                return self
+            async def __aexit__(self, exc_type, exc_val, exc_tb):
+                pass
+
+        # Mock session.get to return 429 first, then 200
+        call_count = 0
+        async def mock_get(*args, **kwargs):
+            nonlocal call_count
+            call_count += 1
+            if call_count == 1:
+                return _429Response()
+            return _200Response()
+
+        mock_session.get = mock_get
         
         crawler = _TestBaseCrawler(mock_session, max_retries=2)
         result = await crawler.fetch("https://example.com")
         
         # Should succeed on second attempt with retry
         assert result is not None
+        assert result.status == 200
     
     @pytest.mark.asyncio
     async def test_crawler_fetch_413_handling(self, mock_session):
         """Test 413 payload too large handling."""
-        from unittest.mock import patch
+        from unittest.mock import AsyncMock
         
-        # Create mock responses
+        # Create a mock response for 413
         class _413Response:
             status = 413
             _text = "<html>413 Payload Too Large</html>"
-            def get_text(self):
+            async def text(self):
                 return self._text
-            def get_headers(self):
+            async def json(self):
+                return {"error": "payload too large"}
+            @property
+            def headers(self):
                 return {"content-type": "text/html", "content-length": "123"}
+            async def __aenter__(self):
+                return self
+            async def __aexit__(self, exc_type, exc_val, exc_tb):
+                pass
         
         class _200Response:
             status = 200
             _text = "<html>Success</html>"
-            def get_text(self):
+            async def text(self):
                 return self._text
-            def get_headers(self):
+            async def json(self):
+                return {"data": "success"}
+            @property
+            def headers(self):
                 return {"content-type": "text/html"}
-        
-        # Patch session.get to return our mock responses
-        mock_session.get = lambda url: _413Response()
+            async def __aenter__(self):
+                return self
+            async def __aexit__(self, exc_type, exc_val, exc_tb):
+                pass
+
+        # Mock session.get to return 413 first, then 200
+        call_count = 0
+        async def mock_get(*args, **kwargs):
+            nonlocal call_count
+            call_count += 1
+            if call_count == 1:
+                return _413Response()
+            return _200Response()
+
+        mock_session.get = mock_get
         
         crawler = _TestBaseCrawler(mock_session, max_retries=2)
         result = await crawler.fetch("https://example.com")
@@ -381,8 +426,13 @@ class TestCrawlerErrorHandling:
         
         crawler = _TestBaseCrawler(mock_session)
         
-        with pytest.raises(asyncio.TimeoutError):
+        with pytest.raises(Exception) as exc_info:
             await crawler.fetch("https://example.com")
+
+        # The retry decorator wraps the exception in RetryError
+        import tenacity
+        assert isinstance(exc_info.value, tenacity.RetryError)
+        assert isinstance(exc_info.value.last_attempt.exception(), asyncio.TimeoutError)
     
     @pytest.mark.asyncio
     async def test_invalid_response_handling(self):

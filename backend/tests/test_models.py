@@ -101,13 +101,13 @@ class TestResearchPaperModel:
     """Tests for the ResearchPaper model."""
 
     @pytest.mark.asyncio
-    async def test_create_paper(self, test_session: AsyncSession, sample_paper_data):
+    async def test_create_paper(self, test_session: AsyncSession, sample_paper_data, sample_paper_raw_data):
         record = Record(
             source_name="test_source",
             source_url="https://example.com/paper",
             record_type="paper",
             content_hash="paper123",
-            raw_data=sample_paper_data,
+            raw_data=sample_paper_raw_data,
         )
         test_session.add(record)
         await test_session.commit()
@@ -132,13 +132,13 @@ class TestJobModel:
     """Tests for the Job model."""
 
     @pytest.mark.asyncio
-    async def test_create_job(self, test_session: AsyncSession, sample_job_data):
+    async def test_create_job(self, test_session: AsyncSession, sample_job_data, sample_job_raw_data):
         record = Record(
             source_name="test_source",
             source_url="https://example.com/job",
             record_type="job",
             content_hash="job123",
-            raw_data=sample_job_data,
+            raw_data=sample_job_raw_data,
         )
         test_session.add(record)
         await test_session.commit()
@@ -164,13 +164,13 @@ class TestNewsModel:
     """Tests for the News model."""
 
     @pytest.mark.asyncio
-    async def test_create_news(self, test_session: AsyncSession, sample_news_data):
+    async def test_create_news(self, test_session: AsyncSession, sample_news_data, sample_news_raw_data):
         record = Record(
             source_name="test_source",
             source_url="https://example.com/news",
             record_type="news",
             content_hash="news123",
-            raw_data=sample_news_data,
+            raw_data=sample_news_raw_data,
         )
         test_session.add(record)
         await test_session.commit()

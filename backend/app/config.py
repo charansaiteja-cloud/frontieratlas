@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     port: int = int(os.getenv("FA_PORT", "8000"))
 
     database_url: str = os.getenv(
-        "DATABASE_URL", "postgresql+asyncpg://frontieratlas:changeme@localhost:5432/frontieratlas"
+        "DATABASE_URL", "postgresql+asyncpg://postgres:postgres@localhost:5434/frontieratlas"
     )
     redis_url: str = os.getenv("REDIS_URL", "redis://localhost:6379/0")
 

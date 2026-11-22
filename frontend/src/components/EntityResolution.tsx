@@ -1,14 +1,12 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
-  Search, Filter, Download, ChevronDown, ChevronUp,
-  GitBranch, AlertTriangle, CheckCircle, XCircle, UserCheck,
-  RefreshCw, Eye, Edit3, ExternalLink
+  Search, Filter, Download, ExternalLink, ChevronDown, ChevronUp,
+  GitBranch, Link2, Merge, Split, AlertTriangle, CheckCircle,
+  XCircle, HelpCircle, RefreshCw, Briefcase, Newspaper
 } from 'lucide-react';
-import type { EntityMapping } from '@/types';
-import { fetchEntityMappings } from '@/lib/api';
 
 interface EntityResolutionProps {
   data: any;
@@ -17,66 +15,53 @@ interface EntityResolutionProps {
   refresh: () => void;
 }
 
-const STATUS_COLORS: Record<string, string> = {
-  AUTO: 'bg-green-500/20 text-green-400 border-green-500/30',
-  PENDING_REVIEW: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
-  MANUAL: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
-  REJECTED: 'bg-red-500/20 text-red-400 border-red-500/30',
-};
+const ENTITY_TYPES = [
+  { key: 'startup', label: 'Startups', icon: '🚀', color: 'blue' },
+  { key: 'product', label: 'Products', icon: '📦', color: 'violet' },
+  { key: 'paper', label: 'Papers', icon: '📄', color: 'emerald' },
+  { key: 'job', label: 'Jobs', icon: '💼', color: 'amber' },
+  { key: 'news', label: 'News', icon: '📰', color: 'rose' },
+];
 
-const METHOD_COLORS: Record<string, string> = {
-  EXACT_NORMALIZED: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
-  ALIAS_CONTAINS: 'bg-teal-500/20 text-teal-400 border-teal-500/30',
-  FUZZY_HIGH: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
-  FUZZY_MEDIUM: 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30',
-  FUZZY_LOW: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
-  NO_MATCH: 'bg-slate-500/20 text-slate-400 border-slate-500/30',
+const STATUS_COLORS: Record<string, string> = {
+  'resolved': 'badge-emerald',
+  'pending': 'badge-amber',
+  'conflict': 'badge-rose',
+  'merged': 'badge-blue',
 };
 
 export default function EntityResolution({ loading, refresh }: EntityResolutionProps) {
-  const [mappings, setMappings] = useState<EntityMapping[]>([]);
-  const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(50);
+  const [activeTab, setActiveTab] = useState<'overview' | 'clusters' | 'conflicts'>('overview');
   const [search, setSearch] = useState('');
-  const [statusFilter, setStatusFilter] = useState<string>('');
-  const [total, setTotal] = useState(0);
-  const [selectedMapping, setSelectedMapping] = useState<EntityMapping | null>(null);
 
-  useEffect(() => {
-    loadMappings();
-  }, [page, statusFilter]);
+  // Mock data for demonstration - in real app this would come from API
+  const clusters = [
+    { id: 'ent_1', canonical_name: 'Anthropic', type: 'startup', count: 12, status: 'resolved', aliases: ['Anthropic', 'Anthropic AI', 'Anthropic PBC'], confidence: 0.98 },
+    { id: 'ent_2', canonical_name: 'OpenAI', type: 'startup', count: 15, status: 'resolved', aliases: ['OpenAI', 'OpenAI Inc.', 'Open Artificial Intelligence'], confidence: 0.99 },
+    { id: 'ent_3', canonical_name: 'GPT-4', type: 'product', count: 8, status: 'resolved', aliases: ['GPT-4', 'GPT 4', 'Generative Pre-trained Transformer 4'], confidence: 0.95 },
+    { id: 'ent_4', canonical_name: 'Claude', type: 'product', count: 6, status: 'pending', aliases: ['Claude', 'Claude AI', 'Claude 3', 'Claude 3.5'], confidence: 0.87 },
+    { id: 'ent_5', canonical_name: 'Transformer Architecture', type: 'paper', count: 23, status: 'conflict', aliases: ['Attention Is All You Need', 'Transformer', 'Transformer Model'], confidence: 0.72 },
+    { id: 'ent_6', canonical_name: 'LangChain', type: 'product', count: 9, status: 'resolved', aliases: ['LangChain', 'Lang Chain', 'LangChain Framework'], confidence: 0.93 },
+    { id: 'ent_7', canonical_name: 'ML Research Scientist', type: 'job', count: 45, status: 'resolved', aliases: ['ML Research Scientist', 'Machine Learning Researcher', 'AI Research Scientist'], confidence: 0.91 },
+    { id: 'ent_8', canonical_name: 'Mistral AI', type: 'startup', count: 7, status: 'pending', aliases: ['Mistral', 'Mistral AI', 'Mistral 7B'], confidence: 0.85 },
+  ];
 
-  const loadMappings = async () => {
-    try {
-      const res = await fetchEntityMappings({ page, page_size: pageSize, status: statusFilter || undefined });
-      setMappings(res.items);
-      setTotal(res.total);
-    } catch (error) {
-      console.error('Failed to load mappings:', error);
-    }
+  const conflicts = clusters.filter(c => c.status === 'conflict' || c.status === 'pending');
+
+  const typeColors: Record<string, string> = {
+    blue: 'bg-blue-500/20 text-blue-400',
+    violet: 'bg-violet-500/20 text-violet-400',
+    emerald: 'bg-emerald-500/20 text-emerald-400',
+    amber: 'bg-amber-500/20 text-amber-400',
+    rose: 'bg-rose-500/20 text-rose-400',
   };
 
-  const handleReview = async (mapping: EntityMapping, action: 'approve' | 'reject') => {
-    try {
-      // In production, this would call an API endpoint
-      const updated = { ...mapping, resolution_status: action === 'approve' ? 'MANUAL' : 'REJECTED' };
-      setMappings(mappings.map(m => m.id === mapping.id ? updated : m));
-    } catch (error) {
-      console.error('Failed to review mapping:', error);
-    }
-  };
-
-  const filteredMappings = mappings.filter(m =>
-    m.raw_entity_name.toLowerCase().includes(search.toLowerCase()) ||
-    m.canonical_entity_name.toLowerCase().includes(search.toLowerCase())
-  );
-
-  const stats = {
-    total: mappings.length,
-    auto: mappings.filter(m => m.resolution_status === 'AUTO').length,
-    pending: mappings.filter(m => m.resolution_status === 'PENDING_REVIEW').length,
-    manual: mappings.filter(m => m.resolution_status === 'MANUAL').length,
-    rejected: mappings.filter(m => m.resolution_status === 'REJECTED').length,
+  const typeIcons: Record<string, any> = {
+    startup: GitBranch,
+    product: Merge,
+    paper: HelpCircle,
+    job: Briefcase,
+    news: Newspaper,
   };
 
   return (
@@ -88,282 +73,267 @@ export default function EntityResolution({ loading, refresh }: EntityResolutionP
       >
         <div>
           <h1 className="text-3xl font-bold text-gradient">Entity Resolution</h1>
-          <p className="text-slate-400 mt-1">Review and manage entity mappings across all data sources</p>
+          <p className="text-slate-400 mt-1">Deduplicate and merge entities across all data sources</p>
         </div>
-        <div className="flex items-center gap-3">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-            <input
-              type="text"
-              placeholder="Search mappings..."
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              className="w-64 pl-10 pr-4 py-2 rounded-xl glass border border-white/10 focus:border-blue-500/30 focus:outline-none text-sm bg-white/5"
-            />
-          </div>
-          <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} className="px-4 py-2 rounded-xl glass border border-white/10 focus:border-blue-500/30 focus:outline-none text-sm bg-white/5">
-            <option value="">All Status</option>
-            <option value="AUTO">Auto-Resolved</option>
-            <option value="PENDING_REVIEW">Pending Review</option>
-            <option value="MANUAL">Manually Reviewed</option>
-            <option value="REJECTED">Rejected</option>
-          </select>
-          <button onClick={refresh} disabled={loading} className="px-4 py-2 rounded-xl glass border border-white/10 hover:border-blue-500/30 transition-all flex items-center gap-2 text-sm">
-            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-            <span>Refresh</span>
-          </button>
-        </div>
+        <button onClick={refresh} disabled={loading} className="btn-secondary flex items-center gap-2">
+          <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+          <span>Refresh</span>
+        </button>
       </motion.div>
 
-      {/* Stats Cards */}
+      {/* Stats Overview */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
         className="grid grid-cols-2 lg:grid-cols-5 gap-4"
       >
-        <div className="glass rounded-2xl p-5">
-          <p className="text-sm text-slate-400">Total Mappings</p>
-          <p className="text-3xl font-bold text-white">{stats.total}</p>
+        <div className="glass-card p-4">
+          <p className="text-sm text-slate-400">Total Clusters</p>
+          <p className="text-2xl font-bold text-white">{clusters.length}</p>
         </div>
-        <div className="glass rounded-2xl p-5">
-          <p className="text-sm text-slate-400">Auto-Resolved</p>
-          <p className="text-3xl font-bold text-green-400">{stats.auto}</p>
+        <div className="glass-card p-4">
+          <p className="text-sm text-slate-400">Resolved</p>
+          <p className="text-2xl font-bold text-emerald-400">
+            {clusters.filter(c => c.status === 'resolved').length}
+          </p>
         </div>
-        <div className="glass rounded-2xl p-5">
+        <div className="glass-card p-4">
           <p className="text-sm text-slate-400">Pending Review</p>
-          <p className="text-3xl font-bold text-yellow-400">{stats.pending}</p>
+          <p className="text-2xl font-bold text-amber-400">
+            {clusters.filter(c => c.status === 'pending').length}
+          </p>
         </div>
-        <div className="glass rounded-2xl p-5">
-          <p className="text-sm text-slate-400">Manually Reviewed</p>
-          <p className="text-3xl font-bold text-blue-400">{stats.manual}</p>
+        <div className="glass-card p-4">
+          <p className="text-sm text-slate-400">Conflicts</p>
+          <p className="text-2xl font-bold text-rose-400">
+            {clusters.filter(c => c.status === 'conflict').length}
+          </p>
         </div>
-        <div className="glass rounded-2xl p-5">
-          <p className="text-sm text-slate-400">Rejected</p>
-          <p className="text-3xl font-bold text-red-400">{stats.rejected}</p>
+        <div className="glass-card p-4">
+          <p className="text-sm text-slate-400">Avg Confidence</p>
+          <p className="text-2xl font-bold text-white">
+            {(clusters.reduce((sum, c) => sum + c.confidence, 0) / clusters.length * 100).toFixed(1)}%
+          </p>
         </div>
       </motion.div>
 
-      {/* Table */}
+      {/* Tabs */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.15 }}
-        className="glass rounded-2xl overflow-hidden"
+        className="glass-card p-1"
       >
-        {loading && mappings.length === 0 ? (
-          <div className="p-12 text-center">
-            <div className="w-12 h-12 border-4 border-violet-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-            <p className="text-slate-400">Loading mappings...</p>
-          </div>
-        ) : mappings.length === 0 ? (
-          <div className="p-12 text-center">
-            <GitBranch className="w-16 h-16 mx-auto mb-4 text-slate-500" />
-            <h3 className="text-xl font-semibold mb-2">No mappings found</h3>
-            <p className="text-slate-400 mb-6">Run the ingestion pipeline to generate entity mappings.</p>
-            <button onClick={refresh} className="px-6 py-3 rounded-xl bg-gradient-to-r from-violet-500 to-purple-600 text-white font-medium">
-              Start Pipeline
+        <div className="flex gap-1" role="tablist">
+          {[
+            { id: 'overview', label: 'Overview', count: clusters.length },
+            { id: 'clusters', label: 'All Clusters', count: clusters.length },
+            { id: 'conflicts', label: 'Needs Review', count: conflicts.length },
+          ].map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id as any)}
+              className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
+                activeTab === tab.id
+                  ? 'bg-gradient-to-r from-blue-500/20 to-violet-500/20 text-white border border-blue-500/30 shadow-lg shadow-blue-500/10'
+                  : 'text-slate-300/80 hover:bg-white/5 hover:text-white'
+              }`}
+              role="tab"
+              aria-selected={activeTab === tab.id}
+            >
+              <span>{tab.label}</span>
+              <span className="w-5 h-5 rounded-full bg-white/10 flex items-center justify-center text-xs font-bold">
+                {tab.count}
+              </span>
             </button>
-          </div>
-        ) : (
-          <>
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-white/10 bg-white/5">
-                    {[
-                      { key: 'raw_entity_name', label: 'Raw Entity', width: '25%' },
-                      { key: 'canonical_entity_name', label: 'Canonical Entity', width: '20%' },
-                      { key: 'match_method', label: 'Match Method', width: '15%' },
-                      { key: 'confidence_score', label: 'Confidence', width: '10%' },
-                      { key: 'resolution_status', label: 'Status', width: '12%' },
-                      { key: 'required_human_review', label: 'Review', width: '8%' },
-                      { key: 'source_url', label: 'Source', width: '10%' },
-                    ].map(col => (
-                      <th
-                        key={col.key}
-                        className="px-4 py-3 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider"
-                        style={{ width: col.width }}
-                      >
-                        {col.label}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-white/5">
-                  {filteredMappings.map((mapping, i) => (
-                    <motion.tr
-                      key={mapping.id}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: i * 0.02 }}
-                      className="hover:bg-white/5 transition-colors"
-                    >
-                      <td className="px-4 py-3">
-                        <p className="font-medium text-white">{mapping.raw_entity_name}</p>
-                      </td>
-                      <td className="px-4 py-3">
-                        <p className="text-sm text-slate-300">{mapping.canonical_entity_name}</p>
-                      </td>
-                      <td className="px-4 py-3">
-                        <span className={`px-2 py-1 text-xs rounded-full border ${METHOD_COLORS[mapping.match_method] || METHOD_COLORS.NO_MATCH}`}>
-                          {mapping.match_method.replace(/_/g, ' ')}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3">
-                        <div className="flex items-center gap-2">
-                          <div className="flex-1 h-2 bg-slate-700 rounded-full overflow-hidden">
-                            <div
-                              className={`h-full rounded-full transition-all ${
-                                mapping.confidence_score >= 0.9 ? 'bg-green-500' :
-                                mapping.confidence_score >= 0.7 ? 'bg-yellow-500' : 'bg-red-500'
-                              }`}
-                              style={{ width: `${mapping.confidence_score * 100}%` }}
-                            />
-                          </div>
-                          <span className="text-sm font-mono text-slate-300 w-12 text-right">
-                            {(mapping.confidence_score * 100).toFixed(0)}%
-                          </span>
-                        </div>
-                      </td>
-                      <td className="px-4 py-3">
-                        <span className={`px-2 py-1 text-xs rounded-full border ${STATUS_COLORS[mapping.resolution_status] || STATUS_COLORS.PENDING_REVIEW}`}>
-                          {mapping.resolution_status.replace(/_/g, ' ')}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3">
-                        {mapping.required_human_review ? (
-                          <span title="Requires human review"><AlertTriangle className="w-5 h-5 text-yellow-400 mx-auto" /></span>
-                        ) : (
-                          <span title="Auto-resolved"><CheckCircle className="w-5 h-5 text-green-400 mx-auto" /></span>
-                        )}
-                      </td>
-                      <td className="px-4 py-3">
-                        {mapping.source_url ? (
-                          <a href={mapping.source_url} target="_blank" rel="noopener noreferrer" className="text-sm text-cyan-400 hover:text-cyan-300">
-                            <ExternalLink className="w-3 h-3 inline-block align-middle" />
-                          </a>
-                        ) : (
-                          <span className="text-slate-500 text-sm">—</span>
-                        )}
-                      </td>
-                    </motion.tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            {total > pageSize && (
-              <div className="px-4 py-3 border-t border-white/10 flex items-center justify-between">
-                <p className="text-sm text-slate-400">
-                  Showing {(page - 1) * pageSize + 1} to {Math.min(page * pageSize, filteredMappings.length)} of {total} results
-                </p>
-                <div className="flex items-center gap-2">
-                  <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} className="px-3 py-1.5 rounded-lg glass border border-white/10 hover:border-blue-500/30 disabled:opacity-50 text-sm">Previous</button>
-                  <span className="px-3 text-sm text-slate-300">Page {page} / {Math.ceil(total / pageSize)}</span>
-                  <button onClick={() => setPage(p => Math.min(Math.ceil(total / pageSize), p + 1))} disabled={page === Math.ceil(total / pageSize)} className="px-3 py-1.5 rounded-lg glass border border-white/10 hover:border-blue-500/30 disabled:opacity-50 text-sm">Next</button>
-                </div>
-              </div>
-            )}
-          </>
-        )}
+          ))}
+        </div>
       </motion.div>
 
-      {/* Review Modal */}
-      <AnimatePresence>
-        {selectedMapping && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
-            onClick={() => setSelectedMapping(null)}
-          >
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="glass-strong rounded-2xl p-6 w-full max-w-2xl mx-4 max-h-[80vh] overflow-y-auto"
-              onClick={e => e.stopPropagation()}
-            >
-              <div className="flex items-start justify-between mb-6">
-                <div>
-                  <h3 className="text-xl font-semibold">Review Entity Mapping</h3>
-                  <p className="text-sm text-slate-400 mt-1">Confirm or reject this entity resolution</p>
-                </div>
-                <button onClick={() => setSelectedMapping(null)} className="p-2 rounded-xl hover:bg-white/5 transition-colors">
-                  <X className="w-5 h-5 text-slate-400" />
-                </button>
-              </div>
+      {/* Search */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+        className="glass-card p-4"
+      >
+        <div className="relative max-w-md">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+          <input
+            type="text"
+            placeholder="Search entities by name, alias..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            className="input-glass pl-10"
+          />
+        </div>
+      </motion.div>
 
-              <div className="space-y-4 mb-6">
-                <div>
-                  <label className="text-xs text-slate-400 block mb-1">Raw Entity Name</label>
-                  <p className="text-lg font-medium text-white">{selectedMapping.raw_entity_name}</p>
-                </div>
-                <div>
-                  <label className="text-xs text-slate-400 block mb-1">Canonical Entity</label>
-                  <p className="text-lg font-medium text-blue-400">{selectedMapping.canonical_entity_name}</p>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-xs text-slate-400 block mb-1">Match Method</label>
-                    <span className={`px-3 py-1 text-sm rounded-full border ${METHOD_COLORS[selectedMapping.match_method] || METHOD_COLORS.NO_MATCH}`}>
-                      {selectedMapping.match_method.replace(/_/g, ' ')}
-                    </span>
-                  </div>
-                  <div>
-                    <label className="text-xs text-slate-400 block mb-1">Confidence Score</label>
-                    <div className="flex items-center gap-2">
-                      <div className="flex-1 h-2 bg-slate-700 rounded-full overflow-hidden">
-                        <div
-                          className={`h-full rounded-full ${
-                            selectedMapping.confidence_score >= 0.9 ? 'bg-green-500' :
-                            selectedMapping.confidence_score >= 0.7 ? 'bg-yellow-500' : 'bg-red-500'
-                          }`}
-                          style={{ width: `${selectedMapping.confidence_score * 100}%` }}
+      {/* Content */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.25 }}
+        className="glass-card overflow-hidden"
+      >
+        {activeTab === 'overview' && (
+          <div className="p-6 space-y-6">
+            {/* Type Distribution */}
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Entity Types</h3>
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+                {ENTITY_TYPES.map(type => {
+                  const typeClusters = clusters.filter(c => c.type === type.key);
+                  const resolved = typeClusters.filter(c => c.status === 'resolved').length;
+                  return (
+                    <motion.div
+                      key={type.key}
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: ENTITY_TYPES.indexOf(type) * 0.05 }}
+                      className="glass p-4 rounded-xl"
+                    >
+                      <div className="flex items-center gap-3 mb-2">
+                        <span className="text-2xl">{type.icon}</span>
+                        <div>
+                          <p className="font-medium text-white">{type.label}</p>
+                          <p className="text-xs text-slate-400">{typeClusters.length} clusters</p>
+                        </div>
+                      </div>
+                      <div className="h-2 bg-white/5 rounded-full overflow-hidden">
+                        <motion.div
+                          initial={{ width: 0 }}
+                          animate={{ width: `${typeClusters.length > 0 ? (resolved / typeClusters.length * 100) : 0}%` }}
+                          transition={{ duration: 0.5, delay: 0.3 }}
+                          className="h-full bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full"
                         />
                       </div>
-                      <span className="text-sm font-mono w-12 text-right">
-                        {(selectedMapping.confidence_score * 100).toFixed(0)}%
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                {selectedMapping.source_url && (
-                  <div>
-                    <label className="text-xs text-slate-400 block mb-1">Source URL</label>
-                    <a href={selectedMapping.source_url} target="_blank" rel="noopener noreferrer" className="text-sm text-cyan-400 hover:text-cyan-300 break-all">
-                      {selectedMapping.source_url}
-                    </a>
-                  </div>
-                )}
+                      <p className="text-xs text-slate-400 mt-1 text-right">{resolved}/{typeClusters.length} resolved</p>
+                    </motion.div>
+                  );
+                })}
               </div>
+            </div>
 
-              <div className="flex gap-3 justify-end">
-                <button
-                  onClick={() => handleReview(selectedMapping, 'reject')}
-                  className="px-6 py-2 rounded-xl bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30 transition-all"
-                >
-                  <XCircle className="w-4 h-4 inline mr-2" />
-                  Reject
-                </button>
-                <button
-                  onClick={() => handleReview(selectedMapping, 'approve')}
-                  className="px-6 py-2 rounded-xl bg-green-500/20 text-green-400 border border-green-500/30 hover:bg-green-500/30 transition-all"
-                >
-                  <CheckCircle className="w-4 h-4 inline mr-2" />
-                  Approve & Merge
-                </button>
+            {/* Confidence Distribution */}
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Confidence Distribution</h3>
+              <div className="grid grid-cols-4 gap-3">
+                {[
+                  { range: '95-100%', label: 'Very High', color: 'emerald', count: clusters.filter(c => c.confidence >= 0.95).length },
+                  { range: '85-95%', label: 'High', color: 'blue', count: clusters.filter(c => c.confidence >= 0.85 && c.confidence < 0.95).length },
+                  { range: '70-85%', label: 'Medium', color: 'amber', count: clusters.filter(c => c.confidence >= 0.7 && c.confidence < 0.85).length },
+                  { range: '<70%', label: 'Low', color: 'rose', count: clusters.filter(c => c.confidence < 0.7).length },
+                ].map(bucket => (
+                  <motion.div
+                    key={bucket.range}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="glass p-4 rounded-xl text-center"
+                  >
+                    <p className="text-3xl font-bold" style={{ color: `var(--accent-${bucket.color})` }}>{bucket.count}</p>
+                    <p className="text-sm text-slate-400">{bucket.label}</p>
+                    <p className="text-xs text-slate-500">{bucket.range}</p>
+                  </motion.div>
+                ))}
               </div>
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         )}
-      </AnimatePresence>
+
+        {(activeTab === 'clusters' || activeTab === 'conflicts') && (
+          <div className="overflow-x-auto">
+            <table className="table-glass">
+              <thead>
+                <tr>
+                  <th className="px-4 py-3">Entity</th>
+                  <th className="px-4 py-3">Type</th>
+                  <th className="px-4 py-3">Aliases</th>
+                  <th className="px-4 py-3">Status</th>
+                  <th className="px-4 py-3">Confidence</th>
+                  <th className="px-4 py-3">Records</th>
+                  <th className="px-4 py-3 w-32">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/5">
+                {(activeTab === 'clusters' ? clusters : conflicts).map((cluster, i) => {
+                    const entityType = ENTITY_TYPES.find(t => t.key === cluster.type);
+                    const color = entityType?.color || 'blue';
+                    const icon = entityType?.icon;
+                    return (
+                      <motion.tr
+                    key={cluster.id}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.02 }}
+                    className="hover:bg-white/5 transition-colors"
+                  >
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-3">
+                        <div className={`w-8 h-8 rounded-xl ${typeColors[color]} flex items-center justify-center`}>
+                          {icon && <span className="text-xl">{icon}</span>}
+                        </div>
+                        <div>
+                          <p className="font-medium text-white">{cluster.canonical_name}</p>
+                          <p className="text-xs text-slate-400 font-mono">{cluster.id}</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className={`badge badge-${color}`}>{cluster.type}</span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex flex-wrap gap-1 max-w-xs">
+                        {cluster.aliases.slice(0, 3).map((alias: string, idx: number) => (
+                          <span key={idx} className="badge badge-slate text-xs">{alias}</span>
+                        ))}
+                        {cluster.aliases.length > 3 && (
+                          <span className="badge badge-slate text-xs">+{cluster.aliases.length - 3} more</span>
+                        )}
+                      </div>
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className={`badge ${STATUS_COLORS[cluster.status]}`}>
+                        {cluster.status.charAt(0).toUpperCase() + cluster.status.slice(1)}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-2">
+                        <div className="flex-1 h-2 bg-white/5 rounded-full overflow-hidden max-w-[100px]">
+                          <div
+                            className="h-full bg-gradient-to-r from-emerald-500 to-blue-500 rounded-full"
+                            style={{ width: `${cluster.confidence * 100}%` }}
+                          />
+                        </div>
+                        <span className="text-sm font-mono text-white w-14 text-right">
+                          {(cluster.confidence * 100).toFixed(0)}%
+                        </span>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className="font-mono text-white">{cluster.count}</span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-1">
+                        <button className="p-1.5 rounded-lg hover:bg-white/10 transition-colors text-slate-400 hover:text-cyan-400" title="View Details">
+                          <ExternalLink className="w-4 h-4" />
+                        </button>
+                        <button className="p-1.5 rounded-lg hover:bg-white/10 transition-colors text-slate-400 hover:text-amber-400" title="Merge">
+                          <Merge className="w-4 h-4" />
+                        </button>
+                        <button className="p-1.5 rounded-lg hover:bg-white/10 transition-colors text-slate-400 hover:text-rose-400" title="Split">
+                          <Split className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </td>
+                  </motion.tr>
+                )})}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </motion.div>
     </div>
   );
 }
-
-// Need to import AnimatePresence and X
-import { AnimatePresence } from 'framer-motion';
-import { X } from 'lucide-react';

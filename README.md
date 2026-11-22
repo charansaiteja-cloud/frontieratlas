@@ -55,10 +55,10 @@ docker compose up -d --build
 ```
 
 Services:
-- **PostgreSQL** (port 5434) - Primary database with pgvector
-- **Redis** (port 6379) - Celery task queue
-- **Backend API** (port 8000) - FastAPI REST API
-- **Celery Worker** - Background ingestion tasks
+- **PostgreSQL** (port 5434 host → 5432 container) - Primary database with pgvector
+- **Redis** (port 6379) - Task queue and coordination
+- **Backend API** (port 8001) - FastAPI REST API (uses PipelineWorker, not Celery)
+- **Worker** - Async pipeline worker
 - **Frontend** (port 3000) - Next.js dashboard
 
 ### 3. Access the Dashboard
@@ -106,7 +106,14 @@ curl http://localhost:8000/pipeline/start
 - HuggingFace Jobs
 - Company Careers (direct)
 
-**Total: 25 source adapters** with per-domain rate limiting and health tracking.
+### News (5 sources)
+- TechCrunch AI (RSS)
+- VentureBeat AI (RSS)
+- MIT Technology Review AI (RSS)
+- The Decoder (RSS)
+- HuggingFace Blog (RSS)
+
+**Total: 21 source adapters** with per-domain rate limiting and health tracking.
 
 ## 🏗️ Architecture
 
@@ -123,9 +130,9 @@ curl http://localhost:8000/pipeline/start
                       │
         ┌─────────────┼─────────────┐
         │             │             │
-┌───────▼──────┐ ┌────▼────┐ ┌─────▼─────┐
-│  PostgreSQL  │ │  Redis  │ │   Celery  │
-│  + pgvector  │ │  Queue  │ │   Worker  │
+┌───────▼──────┐ ┌────▼────┐ ┌───────────┐
+│  PostgreSQL  │ │  Redis  │ │ Pipeline  │
+│  + pgvector  │ │ Queue   │ │ Worker    │
 └──────────────┘ └─────────┘ └───────────┘
 ```
 
@@ -153,8 +160,8 @@ pip install -r requirements.txt
 # Run API server
 uvicorn app.main:app --reload --port 8000
 
-# Run Celery worker
-celery -A app.workers worker --loglevel=info
+# Run Pipeline worker
+python -m app.workers worker --loglevel=info
 
 # Run tests
 pytest --cov=app --cov-report=html
@@ -277,11 +284,15 @@ npm run test:e2e          # Playwright E2E tests
 ### Integration Tests
 
 ```bash
-# Start test environment
-docker compose -f docker-compose.test.yml up -d
+# Start Docker infrastructure (PostgreSQL on port 5434, Redis)
+docker compose up -d
 
-# Run integration suite
-./scripts/run-integration-tests.sh
+# Run integration tests (uses real PostgreSQL on port 5434)
+cd backend
+pytest tests/integration/test_api.py -v
+
+# Or run all tests
+pytest
 ```
 
 ## 📤 API Endpoints

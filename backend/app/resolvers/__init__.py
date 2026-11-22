@@ -10,6 +10,7 @@ from loguru import logger
 from rapidfuzz import fuzz, process
 
 from sqlalchemy import select
+from sqlalchemy.orm.attributes import flag_modified
 from app.config import settings
 from app.database import AsyncSessionLocal
 from app.models import CanonicalEntity, EntityMappingLog
@@ -173,6 +174,7 @@ class EntityResolver:
         if entity is not None:
             if alias_name not in entity.aliases:
                 entity.aliases = entity.aliases + [alias_name]
+                flag_modified(entity, "aliases")
             await self.db.commit()
     
     async def merge_entities(self, source_id: int, target_id: int) -> None:
@@ -190,6 +192,8 @@ class EntityResolver:
         )
         # Merge aliases from source to target (target gains source's aliases)
         target.aliases.extend(a for a in source.aliases if a not in target.aliases)
+        flag_modified(target, "aliases")
+        await self.db.commit()
         await self.db.flush()
 
     async def load_seed_entities(self) -> list[CanonicalEntity]:

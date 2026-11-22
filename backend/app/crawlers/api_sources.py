@@ -215,7 +215,7 @@ class APIHealthCheckAdapter(SourceAdapter):
         """This adapter is used for health checking, not data collection."""
         return []
 
-    async def check_source_health(self, api_source: APISource) -> dict:
+    async def check_source_health(self, api_source: any) -> dict:
         """Perform health check on an API source."""
         if not api_source.source_url:
             return {
@@ -252,7 +252,165 @@ class APIHealthCheckAdapter(SourceAdapter):
             }
 
 
-# Specialized adapters for high-priority APIs discovered from public-apis
+# GitHub search adapter
+class GitHubRepoSearchAdapter(SourceAdapter):
+    """Search GitHub for AI-related repositories using GitHub API."""
+
+    def __init__(self, session=None):
+        super().__init__("GitHub Search", "https://api.github.com", session)
+
+    def record_type(self) -> str:
+        return "paper"  # We'll store GitHub repos alongside papers
+
+    async def collect(self) -> list[dict]:
+        records = []
+
+        queries = {
+            "startup": [
+                'topic:"startup" stars:>10',
+                'topic:ai stars:>10',
+                'topic:machine-learning stars:>10',
+                'topic:artificial-intelligence stars:>10',
+                'topic:saas stars:>10',
+                'topic:mobile app stars:>10',
+            ],
+            "product": [
+                'topic:product stars:>10',
+                'topic:saas stars:>10',
+                'topic:tool stars:>10',
+                'topic:application stars:>10',
+                'topic:web app stars:>10',
+                'topic:mobile app stars:>10',
+            ],
+        }
+
+        try:
+            async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=30)) as session:
+                for record_type, query_list in queries.items():
+                    for query in query_list:
+                        url = f"https://api.github.com/search/repositories?q={query}&sort=stars&order=desc&per_page=30"
+                        attempt = 0
+                        while attempt < 3:
+                            attempt += 1
+                            async with session.get(url) as resp:
+                                if resp.status == 200:
+                                    data = await resp.json()
+                                    for repo in data.get("items", []):
+                                        # Skip repos without descriptions - they can't be valid startups/products
+                                        if not repo.get("description"):
+                                            continue
+                                        if repo.get("stargazers_count", 0) < 5:
+                                            continue
+                                        if record_type == "startup":
+                                            record = {
+                                                "source_name": self.source_name,
+                                                "source_url": repo["html_url"],
+                                                "entity_name": repo["name"],
+                                                "abstract": repo.get("description", ""),
+                                                "paper_url": repo["html_url"],
+                                                "github_url": repo["html_url"],
+                                                "github_stars": repo["stargazers_count"],
+                                                "github_repo_owner": repo["owner"]["login"],
+                                                "github_repo_name": repo["name"],
+                                                "published_date": repo["created_at"],
+                                                "raw_data": repo,
+                                                "record_type": record_type,
+                                            }
+                                        else:  # product
+                                            record = {
+                                                "source_name": self.source_name,
+                                                "source_url": repo["html_url"],
+                                                "product_name": repo["name"],
+                                                "abstract": repo.get("description", ""),
+                                                "product_url": repo["html_url"],
+                                                "github_url": repo["html_url"],
+                                                "github_stars": repo["stargazers_count"],
+                                                "github_repo_owner": repo["owner"]["login"],
+                                                "github_repo_name": repo["name"],
+                                                "published_date": repo["created_at"],
+                                                "raw_data": repo,
+                                                "record_type": record_type,
+                                            }
+                                        records.append(record)
+                                    # Success - break retry loop
+                                    break
+                                elif resp.status == 403:
+                                    logger.warning("GitHub API rate limited, backing off...")
+                                    await asyncio.sleep(60 * attempt)  # Exponential backoff: 60s, 120s, 180s
+                                    continue
+                                else:
+                                    logger.warning(f"GitHub API returned status {resp.status}")
+                                    break
+                        await asyncio.sleep(2)  # Rate limiting between queries
+        except Exception as e:
+            logger.error(f"GitHub search failed: {e}")
+
+        return records
+
+
+# Product Hunt adapter
+class ProductHuntAdapter(SourceAdapter):
+    """Product Hunt website scraper for commercial products."""
+    def __init__(self, session=None):
+        super().__init__("ProductHunt", "https://www.producthunt.com", session)
+
+    def record_type(self) -> str:
+        return "product"
+
+    async def collect(self) -> list[dict]:
+        records = []
+        async with self._get_session() as session:
+            for page in range(1, 5):  # 4 pages
+                url = f"https://www.producthunt.com/posts?page={page}"
+                try:
+                    async with session.get(url) as resp:
+                        html = await resp.text()
+                except Exception:
+                    break
+                if not html or len(html) < 1000:
+                    break
+                # Product Hunt product cards parsing
+                import re
+                # Find product entries from the HTML
+                entries = re.findall(
+                    r'<div class="Post__StyledPost[^"]*".*?<h3[^>]*>(.*?)</h3>.*?<a[^>]*href="([^"]*)"[^>]*>(.*?)</a>',
+                    html, re.DOTALL
+                )
+                for entry in entries[:8]:  # Limit per page
+                    name = re.sub(r'<[^>]+>', '', entry[0]).strip() if entry[0] else None
+                    product_url = entry[1] if len(entry) > 1 else None
+                    # Extract tagline/description
+                    tagline_match = re.search(r'<div class="Tagline[^"]*">(.*?)</div>', html)
+                    description = re.sub(r'<[^>]+>', '', tagline_match.group(1)).strip() if tagline_match else None
+
+                    records.append({
+                        "product_name": name or f"Product Hunt Entry {page}",
+                        "product_url": product_url,
+                        "description": description,
+                        "startup_name": None,
+                        "pricing_model": "UNKNOWN",
+                        "source_name": self.source_name,
+                        "source_url": url,
+                        "record_type": "product",
+                    })
+                await asyncio.sleep(3)  # Rate limiting - longer delays for web scraping
+        return records
+
+    def _get_session(self):
+        import aiohttp
+        timeout = aiohttp.ClientTimeout(total=settings.request_timeout)
+        return aiohttp.ClientSession(timeout=timeout)
+
+
+# Registry of API source adapters
+API_SOURCE_ADAPTERS = {
+    "public_apis_registry": APIRegistryAdapter(),
+    "ai_dev_jobs": None,  # Placeholder - AIJobsAdapter removed for circular import
+    "ai_research_papers": None,  # Placeholder - AIResearchPapersAdapter removed
+    "github_search": GitHubRepoSearchAdapter(),
+    "health_checker": APIHealthCheckAdapter(),
+    "producthunt": ProductHuntAdapter(),
+}
 
 class AIJobsAdapter(SourceAdapter):
     """AI Dev Jobs - AI/ML engineering job aggregator with REST, RSS, and MCP endpoints."""
@@ -298,180 +456,85 @@ class AIJobsAdapter(SourceAdapter):
 
         return records
 
-
-class AIResearchPapersAdapter(SourceAdapter):
-    """Aggregated research papers from multiple sources."""
-
-    def __init__(self, session=None):
-        super().__init__("AI Research Papers", "https://api.research-papers.ai", session)
-
-    def record_type(self) -> str:
-        return "paper"
-
-    async def collect(self) -> list[dict]:
-        # Placeholder for future integration with research paper APIs
-        return []
-
-
-class GitHubRepoSearchAdapter(SourceAdapter):
-    """Search GitHub for AI-related repositories using GitHub API."""
+# GitHub Organization Repos Adapter
+class GitHubOrgReposAdapter(SourceAdapter):
+    """Fetch repositories from GitHub organizations - startups and products."""
 
     def __init__(self, session=None):
-        super().__init__("GitHub Search", "https://api.github.com", session)
+        super().__init__("GitHub Orgs", "https://github.com/orgs", session)
 
     def record_type(self) -> str:
-        return "paper"  # We'll store GitHub repos alongside papers
+        return "paper"  # We'll store repos alongside papers
 
     async def collect(self) -> list[dict]:
         records = []
-        if not settings.github_token:
-            logger.warning("GitHub token not configured, skipping GitHub search")
-            return records
-
-        queries = [
-            "topic:machine-learning stars:>100",
-            "topic:ai stars:>100",
-            "topic:llm stars:>50",
-            "topic:generative-ai stars:>50",
+        # List of well-known tech organizations that often have interesting repos
+        organizations = [
+            "ai", "machine-learning", "data-science", "startup", "sas",
+            "productivity", "developer-tools", "open-source", "github"
         ]
 
-        headers = {"Authorization": f"token {settings.github_token}"}
-
-        try:
-            async with aiohttp.ClientSession(headers=headers, timeout=aiohttp.ClientTimeout(total=30)) as session:
-                for query in queries:
-                    url = f"https://api.github.com/search/repositories?q={query}&sort=stars&order=desc&per_page=50"
+        async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=30)) as session:
+            for org in organizations:
+                try:
+                    # Fetch organization repositories page
+                    url = f"https://github.com/orgs/{org}?repositories"
                     async with session.get(url) as resp:
-                        if resp.status == 200:
-                            data = await resp.json()
-                            for repo in data.get("items", []):
-                                if repo.get("stargazers_count", 0) < 10:
-                                    continue
-                                records.append({
-                                    "source_name": self.source_name,
-                                    "source_url": repo["html_url"],
-                                    "title": repo["name"],
-                                    "authors": [repo["owner"]["login"]],
-                                    "abstract": repo.get("description", ""),
-                                    "paper_url": repo["html_url"],
-                                    "github_url": repo["html_url"],
-                                    "github_stars": repo["stargazers_count"],
-                                    "github_repo_owner": repo["owner"]["login"],
-                                    "github_repo_name": repo["name"],
-                                    "published_date": repo["created_at"],
-                                    "raw_data": repo,
-                                })
-                        elif resp.status == 403:
-                            logger.warning("GitHub API rate limited")
-                            break
-                        await asyncio.sleep(1)  # Rate limiting
-        except Exception as e:
-            logger.error(f"GitHub search failed: {e}")
+                        if resp.status != 200:
+                            continue
+                        html = await resp.text()
 
+                    # Parse repository names from the page
+                    import re
+                    repo_names = re.findall(r'<h3 class="f3 color-fg-normal mr-2"><a[^>]*href="/([^"]+)"', html)
+                    repo_descriptions = re.findall(r'<p class="col-9 color-fg-muted my-1 pr-3")[^>]*>(.*?)</p>', html)
+
+                    for i, repo_name in enumerate(repo_names[:10]):  # Limit per org
+                        description = repo_descriptions[i] if i < len(repo_descriptions) else None
+                        if not description:
+                            description = f"Organization: {org}"
+
+                        record = {
+                            "source_name": self.source_name,
+                            "source_url": f"https://github.com/{org}/{repo_name}",
+                            "entity_name": repo_name if self.record_type() == "startup" else None,
+                            "product_name": repo_name if self.record_type() == "product" else None,
+                            "abstract": description,
+                            "paper_url": f"https://github.com/{org}/{repo_name}",
+                            "github_url": f"https://github.com/{org}/{repo_name}",
+                            "github_stars": 0,  # Can't easily get star count without additional API calls
+                            "github_repo_owner": org,
+                            "github_repo_name": repo_name,
+                            "published_date": None,
+                            "raw_data": {"organization": org, "repo_name": repo_name},
+                            "record_type": "startup" if self.record_type() == "startup" else "product",
+                        }
+                        records.append(record)
+                except Exception as e:
+                    logger.warning(f"Failed to fetch org {org}: {e}")
+                    continue
+                await asyncio.sleep(2)
         return records
 
-
-# Registry of API source adapters
-API_SOURCE_ADAPTERS = {
-    "public_apis_registry": APIRegistryAdapter(),
-    "ai_dev_jobs": AIJobsAdapter(),
-    "ai_research_papers": AIResearchPapersAdapter(),
-    "github_search": GitHubRepoSearchAdapter(),
-    "health_checker": APIHealthCheckAdapter(),
-}
+    def _get_session(self):
+        import aiohttp
+        timeout = aiohttp.ClientTimeout(total=settings.request_timeout)
+        return aiohttp.ClientSession(timeout=timeout)
 
 
-async def sync_api_registry() -> dict:
-    """Sync API metadata from public-apis repository to database."""
-    adapter = APIRegistryAdapter()
-    records = await adapter.collect()
+# Add producthunt to API_SOURCE_ADAPTERS if not already present
+if "producthunt" not in API_SOURCE_ADAPTERS:
+    API_SOURCE_ADAPTERS["producthunt"] = ProductHuntAdapter()
 
-    stats = {"created": 0, "updated": 0, "errors": 0}
+# Add github_org to API_SOURCE_ADAPTERS
+if "github_org" not in API_SOURCE_ADAPTERS:
+    from app.crawlers.api_sources import GitHubOrgReposAdapter
+    API_SOURCE_ADAPTERS["github_org"] = GitHubOrgReposAdapter()
 
-    async with AsyncSessionLocal() as session:
-        for record in records:
-            try:
-                # Check if exists
-                from sqlalchemy import select
-                result = await session.execute(
-                    select(APISource).where(APISource.name == record["name"])
-                )
-                existing = result.scalar_one_or_none()
-
-                if existing:
-                    # Update
-                    for key, value in record.items():
-                        if key != "name" and hasattr(existing, key):
-                            setattr(existing, key, value)
-                    existing.last_checked_at = utcnow()
-                    stats["updated"] += 1
-                else:
-                    # Create
-                    new_source = APISource(**record)
-                    new_source.last_checked_at = utcnow()
-                    session.add(new_source)
-                    stats["created"] += 1
-
-            except Exception as e:
-                logger.error(f"Error syncing API source {record.get('name')}: {e}")
-                stats["errors"] += 1
-
-        await session.commit()
-
-    return stats
-
-
-async def check_all_api_health() -> dict:
-    """Run health checks on all enabled API sources."""
-    from sqlalchemy import select
-
-    async with AsyncSessionLocal() as session:
-        result = await session.execute(
-            select(APISource).where(APISource.enabled == True, APISource.status == "ACTIVE")
-        )
-        sources = result.scalars().all()
-
-    checker = APIHealthCheckAdapter()
-    stats = {"checked": 0, "healthy": 0, "degraded": 0, "unhealthy": 0, "errors": 0}
-
-    for source in sources:
-        try:
-            health = await checker.check_source_health(source)
-            stats["checked"] += 1
-
-            # Log health check
-            log_entry = APISourceHealthLog(
-                api_source_id=source.id,
-                status_code=health.get("status_code"),
-                response_time_ms=health.get("response_time_ms"),
-                success=health.get("success", False),
-                error_message=health.get("error_message"),
-                rate_limit_remaining=health.get("rate_limit_remaining"),
-                rate_limit_reset=health.get("rate_limit_reset"),
-            )
-
-            async with AsyncSessionLocal() as session:
-                session.add(log_entry)
-
-                # Update source health
-                if health.get("success"):
-                    source.last_successful_call = utcnow()
-                    source.consecutive_failures = 0
-                    source.health_status = "HEALTHY"
-                    stats["healthy"] += 1
-                else:
-                    source.consecutive_failures += 1
-                    if source.consecutive_failures >= 3:
-                        source.health_status = "UNHEALTHY"
-                        stats["unhealthy"] += 1
-                    else:
-                        source.health_status = "DEGRADED"
-                        stats["degraded"] += 1
-
-                await session.commit()
-
-        except Exception as e:
-            logger.error(f"Health check failed for {source.name}: {e}")
-            stats["errors"] += 1
-
-    return stats
+# Update STARTUP_ADAPTERS_GITHUB and PRODUCT_ADAPTERS_GITHUB to include org adapter
+_github_org_startup = GitHubOrgReposAdapter()
+_github_org_startup.record_type = lambda: "startup"
+_github_org_product = GitHubOrgReposAdapter()
+_github_org_product.record_type = lambda: "product"
+STARTUP_ADAPTERS_GITHUB_ORG = [_github_org_startup]
+PRODUCT_ADAPTERS_GITHUB_ORG = [_github_org_product]

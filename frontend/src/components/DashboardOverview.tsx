@@ -1,8 +1,10 @@
+'use client';
+
 import { motion } from 'framer-motion';
 import {
   Rocket, Package, FileText, Briefcase, Newspaper, GitBranch,
   TrendingUp, Globe, Users, BarChart3, CheckCircle, AlertTriangle,
-  Clock, Zap, Brain, ExternalLink, Download
+  Clock, Zap, Brain, ExternalLink, Download, RefreshCw
 } from 'lucide-react';
 import { LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, BarChart, Bar } from 'recharts';
 import type { DashboardStats, Startup, Product, Paper, Job, NewsItem } from '@/types';
@@ -15,105 +17,85 @@ interface DashboardOverviewProps {
 }
 
 const STAT_CARDS = [
-  { key: 'total_startups', label: 'Startups Discovered', icon: Rocket, color: 'from-blue-500 to-cyan-500', trend: '+12%' },
-  { key: 'total_products', label: 'AI Products', icon: Package, color: 'from-violet-500 to-purple-500', trend: '+8%' },
-  { key: 'total_papers', label: 'Research Papers', icon: FileText, color: 'from-emerald-500 to-teal-500', trend: '+23%' },
-  { key: 'total_github_repos', label: 'GitHub Repos Tracked', icon: GitBranch, color: 'from-orange-500 to-red-500', trend: '+15%' },
-  { key: 'total_jobs', label: 'Total AI Jobs', icon: Briefcase, color: 'from-pink-500 to-rose-500', trend: '+31%' },
-  { key: 'total_news', label: 'AI News Articles', icon: Newspaper, color: 'from-indigo-500 to-blue-500', trend: '+7%' },
-  { key: 'fresh_jobs_24h', label: 'Fresh Jobs (24h)', icon: Zap, color: 'from-yellow-500 to-orange-500', trend: 'New' },
-  { key: 'fresh_news_24h', label: 'Fresh News (24h)', icon: Clock, color: 'from-cyan-500 to-blue-500', trend: 'New' },
+  { key: 'total_startups', label: 'Startups Discovered', icon: Rocket, gradient: 'from-blue-500 to-cyan-500', trend: '+12%' },
+  { key: 'total_products', label: 'AI Products', icon: Package, gradient: 'from-violet-500 to-purple-500', trend: '+8%' },
+  { key: 'total_papers', label: 'Research Papers', icon: FileText, gradient: 'from-emerald-500 to-teal-500', trend: '+23%' },
+  { key: 'total_jobs', label: 'AI Jobs', icon: Briefcase, gradient: 'from-amber-500 to-orange-500', trend: '+15%' },
+  { key: 'total_news', label: 'AI News', icon: Newspaper, gradient: 'from-rose-500 to-pink-500', trend: '+31%' },
+  { key: 'successful_extractions', label: 'Extractions', icon: CheckCircle, gradient: 'from-green-500 to-emerald-500', trend: '94.2%' },
 ];
 
-const CHART_COLORS = ['#3b82f6', '#8b5cf6', '#06b6d4', '#22c55e', '#f59e0b', '#ec4899'];
+const RECENT_ITEMS = [
+  { key: 'startups', label: 'Latest Startups', icon: Rocket, color: 'blue', dataKey: 'startups' as keyof DashboardOverviewProps['data'] },
+  { key: 'products', label: 'Latest Products', icon: Package, color: 'violet', dataKey: 'products' as keyof DashboardOverviewProps['data'] },
+  { key: 'papers', label: 'Latest Papers', icon: FileText, color: 'emerald', dataKey: 'papers' as keyof DashboardOverviewProps['data'] },
+  { key: 'jobs', label: 'Latest Jobs', icon: Briefcase, color: 'amber', dataKey: 'jobs' as keyof DashboardOverviewProps['data'] },
+  { key: 'news', label: 'Latest News', icon: Newspaper, color: 'rose', dataKey: 'news' as keyof DashboardOverviewProps['data'] },
+];
+
+const ICON_COLORS: Record<string, string> = {
+  blue: 'bg-blue-500/20 text-blue-400',
+  violet: 'bg-violet-500/20 text-violet-400',
+  emerald: 'bg-emerald-500/20 text-emerald-400',
+  amber: 'bg-amber-500/20 text-amber-400',
+  rose: 'bg-rose-500/20 text-rose-400',
+};
+
+const CHART_COLORS = ['#3b82f6', '#8b5cf6', '#06b6d4', '#10b981', '#f59e0b'];
 
 export default function DashboardOverview({ data, stats, loading, refresh }: DashboardOverviewProps) {
-  if (!stats && loading) {
-    return (
-      <div className="space-y-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-8 gap-4">
-          {[...Array(8)].map((_, i) => (
-            <motion.div key={i} className="glass rounded-2xl p-6 skeleton" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.05 }} />
-          ))}
-        </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <motion.div className="glass rounded-2xl p-6 skeleton h-96" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }} />
-          <motion.div className="glass rounded-2xl p-6 skeleton h-96" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.25 }} />
-        </div>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <motion.div className="glass rounded-2xl p-6 skeleton h-96" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} />
-          <motion.div className="glass rounded-2xl p-6 skeleton h-96" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.35 }} />
-          <motion.div className="glass rounded-2xl p-6 skeleton h-96" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} />
-        </div>
-      </div>
-    );
-  }
+  const statValues = stats ? [
+    stats.total_startups,
+    stats.total_products,
+    stats.total_papers,
+    stats.total_jobs,
+    stats.total_news,
+    stats.successful_extractions,
+  ] : [0, 0, 0, 0, 0, 0];
 
-  if (!stats) {
-    return (
-      <div className="glass rounded-2xl p-12 text-center">
-        <Brain className="w-16 h-16 mx-auto mb-4 text-slate-500" />
-        <h3 className="text-xl font-semibold mb-2">No data available</h3>
-        <p className="text-slate-400 mb-6">Run the ingestion pipeline to start collecting AI intelligence data.</p>
-        <button onClick={refresh} className="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-violet-600 text-white font-medium hover:from-blue-600 hover:to-violet-700 transition-all">
-          Start Pipeline
-        </button>
-      </div>
-    );
-  }
-
-  // Prepare chart data
-  const ingestionActivity = [
-    { date: 'Mon', startups: 12, products: 8, papers: 25, news: 15, jobs: 10 },
-    { date: 'Tue', startups: 19, products: 12, papers: 30, news: 18, jobs: 14 },
-    { date: 'Wed', startups: 15, products: 10, papers: 28, news: 22, jobs: 12 },
-    { date: 'Thu', startups: 25, products: 15, papers: 35, news: 20, jobs: 18 },
-    { date: 'Fri', startups: 22, products: 18, papers: 32, news: 25, jobs: 20 },
-    { date: 'Sat', startups: 10, products: 8, papers: 20, news: 12, jobs: 8 },
-    { date: 'Sun', startups: 8, products: 6, papers: 15, news: 10, jobs: 6 },
+  // Sample chart data for extraction rate over time
+  const chartData = [
+    { name: 'Mon', extractions: 45, success: 42, failed: 3 },
+    { name: 'Tue', extractions: 52, success: 48, failed: 4 },
+    { name: 'Wed', extractions: 48, success: 45, failed: 3 },
+    { name: 'Thu', extractions: 61, success: 57, failed: 4 },
+    { name: 'Fri', extractions: 55, success: 52, failed: 3 },
+    { name: 'Sat', extractions: 38, success: 35, failed: 3 },
+    { name: 'Sun', extractions: 42, success: 39, failed: 3 },
   ];
 
   const sourceDistribution = [
-    { name: 'arXiv', value: stats.total_papers || 0 },
-    { name: 'Y Combinator', value: Math.floor((stats.total_startups || 0) * 0.3) },
-    { name: 'Hugging Face', value: Math.floor((stats.total_startups || 0) * 0.2) + Math.floor((stats.total_products || 0) * 0.3) },
-    { name: 'Product Hunt', value: Math.floor((stats.total_products || 0) * 0.4) },
-    { name: 'TechCrunch', value: Math.floor((stats.total_news || 0) * 0.25) },
-    { name: 'Greenhouse', value: Math.floor((stats.total_jobs || 0) * 0.3) },
-    { name: 'Lever', value: Math.floor((stats.total_jobs || 0) * 0.2) },
-    { name: 'Other', value: 50 },
+    { name: 'Startups', value: data.startups.length, color: '#3b82f6' },
+    { name: 'Products', value: data.products.length, color: '#8b5cf6' },
+    { name: 'Papers', value: data.papers.length, color: '#06b6d4' },
+    { name: 'Jobs', value: data.jobs.length, color: '#f59e0b' },
+    { name: 'News', value: data.news.length, color: '#f43f5e' },
   ].filter(d => d.value > 0);
 
-  const recordTypeDistribution = [
-    { name: 'Startups', value: stats.total_startups, color: '#3b82f6' },
-    { name: 'Products', value: stats.total_products, color: '#8b5cf6' },
-    { name: 'Papers', value: stats.total_papers, color: '#06b6d4' },
-    { name: 'Jobs', value: stats.total_jobs, color: '#f59e0b' },
-    { name: 'News', value: stats.total_news, color: '#ec4899' },
-  ].filter(d => d.value > 0);
-
-  const freshnessTimeline = [
-    { date: '6 days ago', news: 12, jobs: 8 },
-    { date: '5 days ago', news: 15, jobs: 10 },
-    { date: '4 days ago', news: 18, jobs: 12 },
-    { date: '3 days ago', news: 22, jobs: 15 },
-    { date: '2 days ago', news: 25, jobs: 18 },
-    { date: 'Yesterday', news: 28, jobs: 20 },
-    { date: 'Today', news: stats.fresh_news_24h, jobs: stats.fresh_jobs_24h },
-  ];
-
-  const githubStarsData = data.papers
-    .filter(p => p.github_stars && p.github_stars > 0)
-    .map(p => p.github_stars!)
-    .sort((a, b) => b - a)
-    .slice(0, 20);
-
-  const extractionStatus = [
-    { name: 'Completed', value: stats.successful_extractions, color: '#22c55e' },
-    { name: 'Pending', value: stats.pending_extractions, color: '#f59e0b' },
-    { name: 'Failed', value: stats.failed_extractions, color: '#ef4444' },
-    { name: 'Partial', value: 0, color: '#06b6d4' },
-  ].filter(d => d.value > 0);
+  if (loading && !stats) {
+    return (
+      <div className="space-y-6">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+        >
+          <div>
+            <h1 className="text-3xl font-bold text-gradient">Dashboard</h1>
+            <p className="text-slate-400 mt-1">Global AI Intelligence Overview</p>
+          </div>
+        </motion.div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {[...Array(6)].map((_, i) => (
+            <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }} className="glass-card p-6">
+              <div className="skeleton h-6 w-3/4 mb-2 rounded" />
+              <div className="skeleton h-8 w-1/2 rounded" />
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -124,16 +106,12 @@ export default function DashboardOverview({ data, stats, loading, refresh }: Das
         className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
       >
         <div>
-          <h1 className="text-3xl font-bold text-gradient">Intelligence Dashboard</h1>
-          <p className="text-slate-400 mt-1">Real-time AI ecosystem monitoring & analysis</p>
+          <h1 className="text-3xl font-bold text-gradient">Dashboard</h1>
+          <p className="text-slate-400 mt-1">Global AI Intelligence Overview</p>
         </div>
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full glass border border-green-500/30 bg-green-500/10">
-            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-            <span className="text-xs font-medium text-green-400">Live</span>
-          </div>
-          <button onClick={refresh} disabled={loading} className="px-4 py-2 rounded-xl glass border border-white/10 hover:border-blue-500/30 transition-all flex items-center gap-2">
-            <Zap className="w-4 h-4" />
+          <button onClick={refresh} disabled={loading} className="btn-secondary flex items-center gap-2">
+            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
             <span>Refresh</span>
           </button>
         </div>
@@ -144,7 +122,7 @@ export default function DashboardOverview({ data, stats, loading, refresh }: Das
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-8 gap-4"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4"
       >
         {STAT_CARDS.map((stat, i) => (
           <motion.div
@@ -152,19 +130,18 @@ export default function DashboardOverview({ data, stats, loading, refresh }: Das
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 + i * 0.05 }}
-            className="glass rounded-2xl p-6 hover:border-blue-500/30 transition-all group"
+            className="glass-card-hover p-6 group"
           >
             <div className="flex items-start justify-between">
               <div>
                 <p className="text-sm text-slate-400 font-medium">{stat.label}</p>
-                <p className="text-3xl font-bold text-white mt-1">{stats[stat.key as keyof DashboardStats]?.toLocaleString() || '0'}</p>
-                <div className="flex items-center gap-1 mt-2">
-                  <TrendingUp className="w-4 h-4 text-green-400" />
-                  <span className="text-xs text-green-400 font-medium">{stat.trend}</span>
-                  <span className="text-xs text-slate-500">vs last week</span>
-                </div>
+                <p className="text-3xl font-bold text-white mt-1">{statValues[i].toLocaleString()}</p>
+                <p className="text-xs text-emerald-400 mt-2 flex items-center gap-1">
+                  <TrendingUp className="w-3 h-3" />
+                  {stat.trend} vs last week
+                </p>
               </div>
-              <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${stat.color} flex items-center justify-center opacity-90 group-hover:opacity-100 transition-opacity`}>
+              <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${stat.gradient} flex items-center justify-center glow-blue group-hover:scale-110 transition-transform duration-300`}>
                 <stat.icon className="w-6 h-6 text-white" />
               </div>
             </div>
@@ -172,221 +149,159 @@ export default function DashboardOverview({ data, stats, loading, refresh }: Das
         ))}
       </motion.div>
 
-      {/* Charts Row 1 */}
+      {/* Charts Row */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
         className="grid grid-cols-1 lg:grid-cols-2 gap-6"
       >
-        {/* Ingestion Activity */}
-        <div className="glass rounded-2xl p-6">
+        {/* Extraction Rate Chart */}
+        <div className="glass-card p-6">
           <div className="flex items-center justify-between mb-6">
-            <h3 className="text-lg font-semibold">Ingestion Activity (7 Days)</h3>
-            <div className="flex items-center gap-4 text-xs">
-              <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-full bg-blue-500" /> Startups</span>
-              <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-full bg-violet-500" /> Products</span>
-              <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-full bg-cyan-500" /> Papers</span>
+            <div>
+              <h3 className="text-lg font-semibold">Extraction Rate (7 Days)</h3>
+              <p className="text-sm text-slate-400 mt-1">Success vs failed extractions</p>
             </div>
           </div>
-          <div className="h-72">
+          <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={ingestionActivity}>
+              <AreaChart data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                 <defs>
-                  <linearGradient id="colorStartups" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                  <linearGradient id="colorSuccess" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
                   </linearGradient>
-                  <linearGradient id="colorProducts" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0} />
-                  </linearGradient>
-                  <linearGradient id="colorPapers" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#06b6d4" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#06b6d4" stopOpacity={0} />
+                  <linearGradient id="colorFailed" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#f43f5e" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="#f43f5e" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(100,116,139,0.1)" vertical={false} />
-                <XAxis dataKey="date" stroke="rgba(100,116,139,0.5)" fontSize={12} tickLine={false} axisLine={false} />
-                <YAxis stroke="rgba(100,116,139,0.5)" fontSize={12} tickLine={false} axisLine={false} tickFormatter={v => v >= 1000 ? `${(v/1000).toFixed(1)}k` : v} />
-                <Tooltip contentStyle={{ background: 'rgba(15,23,42,0.95)', border: '1px solid rgba(100,116,139,0.3)', borderRadius: '12px' }} />
-                <Area type="monotone" dataKey="startups" stroke="#3b82f6" fillOpacity={1} fill="url(#colorStartups)" strokeWidth={2} />
-                <Area type="monotone" dataKey="products" stroke="#8b5cf6" fillOpacity={1} fill="url(#colorProducts)" strokeWidth={2} />
-                <Area type="monotone" dataKey="papers" stroke="#06b6d4" fillOpacity={1} fill="url(#colorPapers)" strokeWidth={2} />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(100, 116, 139, 0.1)" vertical={false} />
+                <XAxis dataKey="name" stroke="rgba(148, 163, 184, 0.5)" fontSize={12} tickLine={false} axisLine={false} />
+                <YAxis stroke="rgba(148, 163, 184, 0.5)" fontSize={12} tickLine={false} axisLine={false} tickFormatter={val => val} />
+                <Tooltip
+                  contentStyle={{
+                    background: 'rgba(15, 23, 42, 0.95)',
+                    border: '1px solid rgba(100, 116, 139, 0.3)',
+                    borderRadius: '12px',
+                    backdropFilter: 'blur(20px)',
+                  }}
+                  labelStyle={{ color: '#f1f5f9' }}
+                  itemStyle={{ fontWeight: 500 }}
+                />
+                <Area type="monotone" dataKey="success" stroke="#10b981" strokeWidth={2} fillOpacity={1} fill="url(#colorSuccess)" />
+                <Area type="monotone" dataKey="failed" stroke="#f43f5e" strokeWidth={2} fillOpacity={1} fill="url(#colorFailed)" />
               </AreaChart>
             </ResponsiveContainer>
           </div>
         </div>
 
         {/* Source Distribution */}
-        <div className="glass rounded-2xl p-6">
-          <h3 className="text-lg font-semibold mb-6">Source Distribution</h3>
-          <div className="h-72">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={sourceDistribution}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={60}
-                  outerRadius={100}
-                  paddingAngle={2}
-                  dataKey="value"
-                  nameKey="name"
-                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                  labelLine={false}
-                  fontSize={11}
-                >
-                  {sourceDistribution.map((_, i) => (
-                    <Cell key={`cell-${i}`} fill={CHART_COLORS[i % CHART_COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip contentStyle={{ background: 'rgba(15,23,42,0.95)', border: '1px solid rgba(100,116,139,0.3)', borderRadius: '12px' }} />
-              </PieChart>
-            </ResponsiveContainer>
+        <div className="glass-card p-6">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h3 className="text-lg font-semibold">Source Distribution</h3>
+              <p className="text-sm text-slate-400 mt-1">Records by data source type</p>
+            </div>
+          </div>
+          <div className="h-64 flex items-center justify-center">
+            {sourceDistribution.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={sourceDistribution}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={60}
+                    outerRadius={90}
+                    paddingAngle={2}
+                    dataKey="value"
+                    nameKey="name"
+                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                    labelLine={false}
+                    stroke="transparent"
+                  >
+                    {sourceDistribution.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    contentStyle={{
+                      background: 'rgba(15, 23, 42, 0.95)',
+                      border: '1px solid rgba(100, 116, 139, 0.3)',
+                      borderRadius: '12px',
+                      backdropFilter: 'blur(20px)',
+                    }}
+                    formatter={(value: number) => [value.toLocaleString(), 'records']}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="text-center text-slate-500 py-12">
+                <BarChart3 className="w-12 h-12 mx-auto mb-3 opacity-50" />
+                <p>No data available</p>
+              </div>
+            )}
           </div>
         </div>
       </motion.div>
 
-      {/* Charts Row 2 */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.25 }}
-        className="grid grid-cols-1 lg:grid-cols-3 gap-6"
-      >
-        {/* Record Type Distribution */}
-        <div className="glass rounded-2xl p-6">
-          <h3 className="text-lg font-semibold mb-6">Record Types</h3>
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={recordTypeDistribution} layout="vertical">
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(100,116,139,0.1)" horizontal={false} />
-                <XAxis type="number" stroke="rgba(100,116,139,0.5)" fontSize={12} tickLine={false} axisLine={false} />
-                <YAxis type="category" dataKey="name" stroke="rgba(100,116,139,0.5)" fontSize={12} tickLine={false} axisLine={false} width={100} />
-                <Tooltip contentStyle={{ background: 'rgba(15,23,42,0.95)', border: '1px solid rgba(100,116,139,0.3)', borderRadius: '12px' }} />
-                <Bar dataKey="value" radius={[0, 4, 4, 0]}>
-                  {recordTypeDistribution.map((_, i) => (
-                    <Cell key={`bar-${i}`} fill={CHART_COLORS[i % CHART_COLORS.length]} />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
-        {/* Freshness Timeline */}
-        <div className="glass rounded-2xl p-6">
-          <h3 className="text-lg font-semibold mb-6">Freshness Timeline (7 Days)</h3>
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={freshnessTimeline}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(100,116,139,0.1)" vertical={false} />
-                <XAxis dataKey="date" stroke="rgba(100,116,139,0.5)" fontSize={11} tickLine={false} axisLine={false} />
-                <YAxis stroke="rgba(100,116,139,0.5)" fontSize={12} tickLine={false} axisLine={false} />
-                <Tooltip contentStyle={{ background: 'rgba(15,23,42,0.95)', border: '1px solid rgba(100,116,139,0.3)', borderRadius: '12px' }} />
-                <Line type="monotone" dataKey="news" stroke="#ec4899" strokeWidth={2} dot={false} activeDot={{ r: 6 }} />
-                <Line type="monotone" dataKey="jobs" stroke="#f59e0b" strokeWidth={2} dot={false} activeDot={{ r: 6 }} />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-          <div className="flex items-center gap-4 mt-4 text-xs">
-            <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-full bg-pink-500" /> News</span>
-            <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-full bg-amber-500" /> Jobs</span>
-          </div>
-        </div>
-
-        {/* Extraction Status */}
-        <div className="glass rounded-2xl p-6">
-          <h3 className="text-lg font-semibold mb-6">Extraction Status</h3>
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={extractionStatus}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={50}
-                  outerRadius={90}
-                  paddingAngle={3}
-                  dataKey="value"
-                  nameKey="name"
-                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                  labelLine={false}
-                  fontSize={11}
-                >
-                  {extractionStatus.map((item, i) => (
-                    <Cell key={`ext-${i}`} fill={item.color} />
-                  ))}
-                </Pie>
-                <Tooltip contentStyle={{ background: 'rgba(15,23,42,0.95)', border: '1px solid rgba(100,116,139,0.3)', borderRadius: '12px' }} />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-          <div className="mt-4 space-y-2">
-            <div className="flex justify-between text-sm">
-              <span className="text-slate-400">Success Rate</span>
-              <span className="font-semibold text-green-400">{(stats.successful_extractions / Math.max(1, stats.successful_extractions + stats.failed_extractions + stats.pending_extractions) * 100).toFixed(1)}%</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-slate-400">Total Processed</span>
-              <span className="font-semibold">{stats.successful_extractions + stats.failed_extractions + stats.pending_extractions}</span>
-            </div>
-          </div>
-        </div>
-      </motion.div>
-
-      {/* Quick Stats Row */}
+      {/* Recent Items Grid */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4"
       >
-        <div className="glass rounded-2xl p-5">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
-              <Users className="w-5 h-5 text-white" />
-            </div>
-            <div>
-              <p className="text-sm text-slate-400">Healthy Sources</p>
-              <p className="text-2xl font-bold">{stats.healthy_sources} / {stats.total_sources}</p>
-            </div>
-          </div>
-        </div>
-        <div className="glass rounded-2xl p-5">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-500 flex items-center justify-center">
-              <Globe className="w-5 h-5 text-white" />
-            </div>
-            <div>
-              <p className="text-sm text-slate-400">Countries Covered</p>
-              <p className="text-2xl font-bold">47</p>
-            </div>
-          </div>
-        </div>
-        <div className="glass rounded-2xl p-5">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center">
-              <BarChart3 className="w-5 h-5 text-white" />
-            </div>
-            <div>
-              <p className="text-sm text-slate-400">Data Freshness</p>
-              <p className="text-2xl font-bold">{(stats.fresh_jobs_24h + stats.fresh_news_24h) / Math.max(1, stats.total_jobs + stats.total_news) * 100 > 0 ? '94%' : '0%'}</p>
-            </div>
-          </div>
-        </div>
-        <div className="glass rounded-2xl p-5">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center">
-              <Brain className="w-5 h-5 text-white" />
-            </div>
-            <div>
-              <p className="text-sm text-slate-400">Entities Resolved</p>
-              <p className="text-2xl font-bold">{data.startups.length + data.products.length}</p>
-            </div>
-          </div>
-        </div>
+        {RECENT_ITEMS.map((item, i) => {
+          const items = data[item.dataKey] as any[];
+          const recentItems = items.slice(0, 3);
+
+          return (
+            <motion.div
+              key={item.key}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 + i * 0.05 }}
+              className="glass-card p-4"
+            >
+              <div className="flex items-center gap-2 mb-4">
+                <div className={`w-8 h-8 rounded-xl ${ICON_COLORS[item.color]} flex items-center justify-center`}>
+                  <item.icon className="w-4 h-4" />
+                </div>
+                <h4 className="font-semibold text-white">{item.label}</h4>
+              </div>
+              <div className="space-y-3">
+                {recentItems.length > 0 ? (
+                  recentItems.map((entry: any, idx: number) => (
+                    <motion.div
+                      key={`${item.key}-${idx}`}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: idx * 0.05 }}
+                      className="flex items-start gap-3 p-2 rounded-lg hover:bg-white/5 transition-colors group"
+                    >
+                      <div className="w-1.5 h-1.5 rounded-full mt-2 flex-shrink-0 bg-gradient-to-r from-blue-500 to-violet-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-white truncate group-hover:text-blue-400 transition-colors">
+                          {entry.entity_name || entry.product_name || entry.title || entry.company || entry.headline}
+                        </p>
+                        <p className="text-xs text-slate-400 truncate">
+                          {entry.source_name}
+                        </p>
+                      </div>
+                    </motion.div>
+                  ))
+                ) : (
+                  <div className="text-center py-6 text-slate-500">
+                    <p className="text-sm">No recent data</p>
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          );
+        })}
       </motion.div>
     </div>
   );

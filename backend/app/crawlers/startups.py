@@ -63,7 +63,7 @@ class YCombinatorAdapter(SourceAdapter):
                 await asyncio.sleep(1)
         return records
 
-    async def _get_session(self):
+    def _get_session(self):
         import aiohttp
         timeout = aiohttp.ClientTimeout(total=settings.request_timeout)
         return aiohttp.ClientSession(timeout=timeout)
@@ -115,7 +115,7 @@ class HuggingFaceOrgsAdapter(SourceAdapter):
                 await asyncio.sleep(1)
         return records
 
-    async def _get_session(self):
+    def _get_session(self):
         import aiohttp
         timeout = aiohttp.ClientTimeout(total=settings.request_timeout)
         return aiohttp.ClientSession(timeout=timeout)

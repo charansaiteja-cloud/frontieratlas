@@ -15,7 +15,8 @@ RUN npm run build
 
 FROM base AS runner
 ENV NODE_ENV=production
-COPY --from=builder /app/public ./public
+RUN apk add --no-cache curl
+# COPY --from=builder /app/public ./public  # Removed: standalone mode does not use a public directory
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 

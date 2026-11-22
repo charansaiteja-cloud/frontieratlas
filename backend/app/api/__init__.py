@@ -3,11 +3,12 @@ import csv
 import io
 import uuid
 from datetime import datetime, timezone, timedelta
-from typing import Optional
+from typing import Optional, Union
 
 from fastapi import APIRouter, Depends, Query, HTTPException, Response
 from fastapi.responses import StreamingResponse
 from sqlalchemy import select, func, desc
+from sqlalchemy.orm import selectinload
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
@@ -25,6 +26,44 @@ from app.schemas import (
     APISourceHealthLogSchema
 )
 from app.pipelines import pipeline
+
+
+def safe_isoformat(dt: Union[datetime, str, None]) -> str:
+    """Safely convert datetime or string to ISO format string."""
+    if dt is None:
+        return ""
+    if isinstance(dt, datetime):
+        return dt.isoformat()
+    if isinstance(dt, str):
+        return dt
+    return str(dt)
+
+
+def safe_json_to_str(val, default="") -> str:
+    """Safely convert JSON list/value to semicolon-separated string."""
+    if val is None:
+        return default
+    if isinstance(val, list):
+        items = []
+        for item in val:
+            if isinstance(item, dict):
+                # Try to extract a meaningful string from dict
+                if "name" in item:
+                    items.append(str(item["name"]))
+                elif "login" in item:
+                    items.append(str(item["login"]))
+                else:
+                    items.append(str(item))
+            else:
+                items.append(str(item))
+        return "; ".join(items) if items else default
+    if isinstance(val, dict):
+        if "name" in val:
+            return str(val["name"])
+        if "login" in val:
+            return str(val["login"])
+        return str(val)
+    return str(val)
 
 
 router = APIRouter()
@@ -59,8 +98,11 @@ async def dashboard_stats(db: AsyncSession = Depends(get_db)):
     failed = await db.execute(select(func.count(Record.id)).where(Record.extraction_status == "FAILED"))
     pending = await db.execute(select(func.count(Record.id)).where(Record.extraction_status == "PENDING"))
     
-    total_records = completed.scalar() + failed.scalar() + pending.scalar()
-    extraction_rate = completed.scalar() / total_records if total_records > 0 else 0.0
+    completed_count = completed.scalar() or 0
+    failed_count = failed.scalar() or 0
+    pending_count = pending.scalar() or 0
+    total_records = completed_count + failed_count + pending_count
+    extraction_rate = completed_count / total_records if total_records > 0 else 0.0
     
     # Source stats
     total_sources = await db.execute(select(func.count(SourceHealth.id)))
@@ -75,9 +117,9 @@ async def dashboard_stats(db: AsyncSession = Depends(get_db)):
         total_news=news.scalar() or 0,
         fresh_jobs_24h=fresh_jobs.scalar() or 0,
         fresh_news_24h=fresh_news.scalar() or 0,
-        successful_extractions=completed.scalar() or 0,
-        failed_extractions=failed.scalar() or 0,
-        pending_extractions=pending.scalar() or 0,
+        successful_extractions=completed_count,
+        failed_extractions=failed_count,
+        pending_extractions=pending_count,
         extraction_rate=extraction_rate,
         total_sources=total_sources.scalar() or 0,
         healthy_sources=healthy_sources.scalar() or 0,
@@ -115,6 +157,15 @@ async def get_startups(
     }
 
 
+@router.get("/startups/{startup_id}")
+async def get_startup_by_id(startup_id: uuid.UUID, db: AsyncSession = Depends(get_db)):
+    result = await db.execute(select(Startup).where(Startup.id == startup_id))
+    startup = result.scalar_one_or_none()
+    if not startup:
+        raise HTTPException(status_code=404, detail="Startup not found")
+    return startup
+
+
 @router.get("/products")
 async def get_products(
     page: int = Query(1, ge=1),
@@ -139,6 +190,15 @@ async def get_products(
         "page": page,
         "page_size": page_size,
     }
+
+
+@router.get("/products/{product_id}")
+async def get_product_by_id(product_id: uuid.UUID, db: AsyncSession = Depends(get_db)):
+    result = await db.execute(select(Product).where(Product.id == product_id))
+    product = result.scalar_one_or_none()
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found")
+    return product
 
 
 @router.get("/papers")
@@ -168,6 +228,15 @@ async def get_papers(
         "page": page,
         "page_size": page_size,
     }
+
+
+@router.get("/papers/{paper_id}")
+async def get_paper_by_id(paper_id: uuid.UUID, db: AsyncSession = Depends(get_db)):
+    result = await db.execute(select(ResearchPaper).where(ResearchPaper.id == paper_id))
+    paper = result.scalar_one_or_none()
+    if not paper:
+        raise HTTPException(status_code=404, detail="Paper not found")
+    return paper
 
 
 @router.get("/jobs")
@@ -203,6 +272,15 @@ async def get_jobs(
     }
 
 
+@router.get("/jobs/{job_id}")
+async def get_job_by_id(job_id: uuid.UUID, db: AsyncSession = Depends(get_db)):
+    result = await db.execute(select(Job).where(Job.id == job_id))
+    job = result.scalar_one_or_none()
+    if not job:
+        raise HTTPException(status_code=404, detail="Job not found")
+    return job
+
+
 @router.get("/news")
 async def get_news(
     page: int = Query(1, ge=1),
@@ -231,6 +309,15 @@ async def get_news(
         "page": page,
         "page_size": page_size,
     }
+
+
+@router.get("/news/{news_id}")
+async def get_news_by_id(news_id: uuid.UUID, db: AsyncSession = Depends(get_db)):
+    result = await db.execute(select(News).where(News.id == news_id))
+    news = result.scalar_one_or_none()
+    if not news:
+        raise HTTPException(status_code=404, detail="News not found")
+    return news
 
 
 @router.get("/entities/mappings")
@@ -346,7 +433,7 @@ async def export_data(record_type: str, db: AsyncSession = Depends(get_db)):
                 ("record_id", lambda r: r.record.id if r.record else ""),
                 ("source_name", lambda r: r.record.source_name if r.record else ""),
                 ("source_url", lambda r: r.record.source_url if r.record else ""),
-                ("collected_at", lambda r: r.record.collected_at.isoformat() if r.record and r.record.collected_at else ""),
+                ("collected_at", lambda r: safe_isoformat(r.record.collected_at) if r.record else ""),
                 ("entity_name", lambda r: r.entity_name),
                 ("description", lambda r: r.description),
                 ("website", lambda r: r.website),
@@ -356,10 +443,10 @@ async def export_data(record_type: str, db: AsyncSession = Depends(get_db)):
                 ("employee_count", lambda r: r.employee_count),
                 ("total_funding_usd", lambda r: r.total_funding_usd),
                 ("last_funding_round", lambda r: r.last_funding_round),
-                ("last_funding_date", lambda r: r.last_funding_date.isoformat() if r.last_funding_date else ""),
-                ("investors", lambda r: "; ".join(r.investors) if r.investors else ""),
+                ("last_funding_date", lambda r: safe_isoformat(r.last_funding_date)),
+                ("investors", lambda r: safe_json_to_str(r.investors)),
                 ("headquarters", lambda r: r.headquarters),
-                ("tags", lambda r: "; ".join(r.tags) if r.tags else ""),
+                ("tags", lambda r: safe_json_to_str(r.tags)),
                 ("extraction_status", lambda r: r.record.extraction_status if r.record else ""),
             ]
         },
@@ -370,18 +457,18 @@ async def export_data(record_type: str, db: AsyncSession = Depends(get_db)):
                 ("record_id", lambda r: r.record.id if r.record else ""),
                 ("source_name", lambda r: r.record.source_name if r.record else ""),
                 ("source_url", lambda r: r.record.source_url if r.record else ""),
-                ("collected_at", lambda r: r.record.collected_at.isoformat() if r.record and r.record.collected_at else ""),
+                ("collected_at", lambda r: safe_isoformat(r.record.collected_at) if r.record else ""),
                 ("product_name", lambda r: r.product_name),
                 ("description", lambda r: r.description),
                 ("website", lambda r: r.website),
                 ("pricing_model", lambda r: r.pricing_model),
                 ("starting_price_usd", lambda r: r.starting_price_usd),
                 ("category", lambda r: r.category),
-                ("tags", lambda r: "; ".join(r.tags) if r.tags else ""),
-                ("key_features", lambda r: "; ".join(r.key_features) if r.key_features else ""),
-                ("integrations", lambda r: "; ".join(r.integrations) if r.integrations else ""),
+                ("tags", lambda r: safe_json_to_str(r.tags)),
+                ("key_features", lambda r: safe_json_to_str(r.key_features)),
+                ("integrations", lambda r: safe_json_to_str(r.integrations)),
                 ("company_name", lambda r: r.company_name),
-                ("launch_date", lambda r: r.launch_date.isoformat() if r.launch_date else ""),
+                ("launch_date", lambda r: safe_isoformat(r.launch_date)),
                 ("extraction_status", lambda r: r.record.extraction_status if r.record else ""),
             ]
         },
@@ -392,12 +479,12 @@ async def export_data(record_type: str, db: AsyncSession = Depends(get_db)):
                 ("record_id", lambda r: r.record.id if r.record else ""),
                 ("source_name", lambda r: r.record.source_name if r.record else ""),
                 ("source_url", lambda r: r.record.source_url if r.record else ""),
-                ("collected_at", lambda r: r.record.collected_at.isoformat() if r.record and r.record.collected_at else ""),
+                ("collected_at", lambda r: safe_isoformat(r.record.collected_at) if r.record else ""),
                 ("title", lambda r: r.title),
-                ("authors", lambda r: "; ".join(r.authors) if r.authors else ""),
+                ("authors", lambda r: safe_json_to_str(r.authors)),
                 ("abstract", lambda r: r.abstract),
                 ("venue", lambda r: r.venue),
-                ("published_date", lambda r: r.published_date.isoformat() if r.published_date else ""),
+                ("published_date", lambda r: safe_isoformat(r.published_date)),
                 ("doi", lambda r: r.doi),
                 ("arxiv_id", lambda r: r.arxiv_id),
                 ("paper_url", lambda r: r.paper_url),
@@ -405,9 +492,9 @@ async def export_data(record_type: str, db: AsyncSession = Depends(get_db)):
                 ("github_url", lambda r: r.github_url),
                 ("github_stars", lambda r: r.github_stars),
                 ("github_forks", lambda r: r.github_forks),
-                ("topics", lambda r: "; ".join(r.topics) if r.topics else ""),
-                ("tasks", lambda r: "; ".join(r.tasks) if r.tasks else ""),
-                ("datasets", lambda r: "; ".join(r.datasets) if r.datasets else ""),
+                ("topics", lambda r: safe_json_to_str(r.topics)),
+                ("tasks", lambda r: safe_json_to_str(r.tasks)),
+                ("datasets", lambda r: safe_json_to_str(r.datasets)),
                 ("extraction_status", lambda r: r.record.extraction_status if r.record else ""),
             ]
         },
@@ -418,11 +505,11 @@ async def export_data(record_type: str, db: AsyncSession = Depends(get_db)):
                 ("record_id", lambda r: r.record.id if r.record else ""),
                 ("source_name", lambda r: r.record.source_name if r.record else ""),
                 ("source_url", lambda r: r.record.source_url if r.record else ""),
-                ("collected_at", lambda r: r.record.collected_at.isoformat() if r.record and r.record.collected_at else ""),
+                ("collected_at", lambda r: safe_isoformat(r.record.collected_at) if r.record else ""),
                 ("title", lambda r: r.title),
                 ("company_name", lambda r: r.company_name),
                 ("description", lambda r: r.description),
-                ("requirements", lambda r: r.requirements),
+                ("requirements", lambda r: safe_json_to_str(r.requirements)),
                 ("location", lambda r: r.location),
                 ("is_remote", lambda r: r.is_remote),
                 ("employment_type", lambda r: r.employment_type),
@@ -432,7 +519,7 @@ async def export_data(record_type: str, db: AsyncSession = Depends(get_db)):
                 ("salary_max_usd", lambda r: r.salary_max_usd),
                 ("currency", lambda r: r.currency),
                 ("visa_sponsorship", lambda r: r.visa_sponsorship),
-                ("published_date", lambda r: r.published_date.isoformat() if r.published_date else ""),
+                ("published_date", lambda r: safe_isoformat(r.published_date)),
                 ("application_url", lambda r: r.application_url),
                 ("extraction_status", lambda r: r.record.extraction_status if r.record else ""),
             ]
@@ -444,15 +531,15 @@ async def export_data(record_type: str, db: AsyncSession = Depends(get_db)):
                 ("record_id", lambda r: r.record.id if r.record else ""),
                 ("source_name", lambda r: r.record.source_name if r.record else ""),
                 ("source_url", lambda r: r.record.source_url if r.record else ""),
-                ("collected_at", lambda r: r.record.collected_at.isoformat() if r.record and r.record.collected_at else ""),
+                ("collected_at", lambda r: safe_isoformat(r.record.collected_at) if r.record else ""),
                 ("headline", lambda r: r.headline),
                 ("summary", lambda r: r.summary),
                 ("url", lambda r: r.url),
                 ("author", lambda r: r.author),
-                ("published_at", lambda r: r.published_at.isoformat() if r.published_at else ""),
+                ("published_at", lambda r: safe_isoformat(r.published_at)),
                 ("source_category", lambda r: r.source_category),
-                ("tags", lambda r: "; ".join(r.tags) if r.tags else ""),
-                ("mentioned_entities", lambda r: "; ".join(r.mentioned_entities) if r.mentioned_entities else ""),
+                ("tags", lambda r: safe_json_to_str(r.tags)),
+                ("mentioned_entities", lambda r: safe_json_to_str(r.mentioned_entities)),
                 ("sentiment_score", lambda r: r.sentiment_score),
                 ("extraction_status", lambda r: r.record.extraction_status if r.record else ""),
             ]
@@ -469,9 +556,9 @@ async def export_data(record_type: str, db: AsyncSession = Depends(get_db)):
                 ("resolution_status", lambda r: r.resolution_status),
                 ("required_human_review", lambda r: r.required_human_review),
                 ("reviewed_by", lambda r: r.reviewed_by),
-                ("reviewed_at", lambda r: r.reviewed_at.isoformat() if r.reviewed_at else ""),
+                ("reviewed_at", lambda r: safe_isoformat(r.reviewed_at)),
                 ("source_url", lambda r: r.source_url),
-                ("created_at", lambda r: r.created_at.isoformat() if r.created_at else ""),
+                ("created_at", lambda r: safe_isoformat(r.created_at)),
             ]
         }
     }
@@ -480,7 +567,12 @@ async def export_data(record_type: str, db: AsyncSession = Depends(get_db)):
         raise HTTPException(status_code=404, detail=f"Unknown record type: {record_type}")
     
     config = export_configs[record_type]
-    result = await db.execute(config["query"])
+    # Eagerly load record relationship to avoid MissingGreenlet error (except for entities which don't have record)
+    if record_type != "entities":
+        query = config["query"].options(selectinload(config["model"].record))
+    else:
+        query = config["query"]
+    result = await db.execute(query)
     items = result.scalars().all()
     
     # Generate CSV

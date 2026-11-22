@@ -102,10 +102,18 @@ class BaseCrawler(ABC):
         content_hash = hashlib.sha256(content.encode()).hexdigest()
         return CrawlResult(url, status, content, headers, content_hash, utcnow())
 
+    @staticmethod
+    def _should_retry(result: CrawlResult) -> bool:
+        """Check if a crawl result should trigger a retry."""
+        return result.status in (429, 413)
+
     @retry(
         wait=wait_exponential_jitter(initial=1, max=30, jitter=2),
         stop=stop_after_attempt(3),
-        retry=retry_if_exception_type((aiohttp.ClientError, asyncio.TimeoutError, httpx.RequestError)),
+        retry=(
+            retry_if_exception_type((aiohttp.ClientError, asyncio.TimeoutError, httpx.RequestError)) |
+            retry_if_result(_should_retry)
+        ),
     )
     async def fetch(self, url: str, use_playwright: bool = False) -> CrawlResult:
         state = await self.rate_limiter.acquire(url)
@@ -113,10 +121,11 @@ class BaseCrawler(ABC):
             if use_playwright:
                 result = await self._fetch_with_playwright(url)
             else:
-                async with self.session.get(url) as resp:
-                    content = await resp.text()
-                    headers = dict(resp.headers)
-                    status = resp.status
+                resp = await self.session.get(url)
+                async with resp as response:
+                    content = await response.text()
+                    headers = dict(response.headers)
+                    status = response.status
                     content_hash = hashlib.sha256(content.encode()).hexdigest()
                     result = CrawlResult(url, status, content, headers, content_hash, utcnow())
             self.stats["fetched"] += 1
@@ -192,4 +201,13 @@ from app.crawlers.products import PRODUCT_ADAPTERS  # noqa: E402,F401
 from app.crawlers.papers import PAPER_ADAPTERS  # noqa: E402,F401
 from app.crawlers.news import NEWS_ADAPTERS  # noqa: E402,F401
 from app.crawlers.jobs import JOB_ADAPTERS  # noqa: E402,F401
-from app.crawlers.api_sources import API_SOURCE_ADAPTERS  # noqa: E402,F401
+from app.crawlers.api_sources import API_SOURCE_ADAPTERS, GitHubRepoSearchAdapter  # noqa: E402,F401
+
+# Create GitHub adapters with appropriate record types
+_github_startup = GitHubRepoSearchAdapter()
+_github_startup.record_type = lambda: "startup"
+_github_product = GitHubRepoSearchAdapter()
+_github_product.record_type = lambda: "product"
+
+STARTUP_ADAPTERS_GITHUB = [_github_startup]
+PRODUCT_ADAPTERS_GITHUB = [_github_product]

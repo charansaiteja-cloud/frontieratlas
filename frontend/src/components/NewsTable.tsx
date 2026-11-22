@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { useState } from 'react';
 import {
   Search, Filter, Download, ExternalLink, ChevronDown, ChevronUp,
-  Newspaper, Calendar, Clock, Globe, Tag
+  Newspaper, Calendar, Clock, Globe, Tag, RefreshCw
 } from 'lucide-react';
 import type { NewsItem } from '@/types';
 
@@ -23,8 +23,7 @@ export default function NewsTable({ data, loading, refresh }: NewsTableProps) {
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc');
   const [sourceFilter, setSourceFilter] = useState<string>('');
   const [freshOnly, setFreshOnly] = useState(false);
-
-  const items = data.news;
+  const [items, setItems] = useState<NewsItem[]>(data.news);
 
   const sortedItems = [...items].sort((a, b) => {
     const aVal = a[sortKey];
@@ -32,30 +31,64 @@ export default function NewsTable({ data, loading, refresh }: NewsTableProps) {
     if (aVal == null && bVal == null) return 0;
     if (aVal == null) return 1;
     if (bVal == null) return -1;
-    const cmp = String(aVal).localeCompare(String(bVal));
-    return sortDir === 'asc' ? cmp : -cmp;
+    const comparison = String(aVal).localeCompare(String(bVal));
+    return sortDir === 'asc' ? comparison : -comparison;
   });
 
-  const filteredItems = sortedItems.filter(item =>
-    (item.headline.toLowerCase().includes(search.toLowerCase()) ||
-     item.author?.toLowerCase().includes(search.toLowerCase()) ||
-     item.source_name.toLowerCase().includes(search.toLowerCase())) &&
-    (!sourceFilter || item.source_name === sourceFilter) &&
-    (!freshOnly || new Date(item.published_at) > new Date(Date.now() - 24 * 60 * 60 * 1000))
-  );
+  const filteredItems = sortedItems.filter(news => {
+    if (sourceFilter && news.source_name !== sourceFilter) return false;
+    if (freshOnly) {
+      const publishedDate = new Date(news.published_at);
+      const dayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+      if (publishedDate < dayAgo) return false;
+    }
+    return true;
+  });
 
   const paginatedItems = filteredItems.slice((page - 1) * pageSize, page * pageSize);
-  const totalPages = Math.ceil(filteredItems.length / pageSize);
 
-  const formatDate = (dateStr: string) => {
+  const handleSort = (key: keyof NewsItem) => {
+    if (sortKey === key) {
+      setSortDir(d => d === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortKey(key);
+      setSortDir('asc');
+    }
+  };
+
+  const formatDate = (dateStr?: string) => {
+    if (!dateStr) return '—';
     try {
-      return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+      return new Date(dateStr).toLocaleDateString('en-US', {
+        year: 'numeric', month: 'short', day: 'numeric',
+        hour: '2-digit', minute: '2-digit'
+      });
     } catch {
       return dateStr;
     }
   };
 
-  const sources = Array.from(new Set(items.map(i => i.source_name))).sort();
+  const formatRelativeTime = (dateStr?: string) => {
+    if (!dateStr) return '—';
+    try {
+      const date = new Date(dateStr);
+      const now = new Date();
+      const diffMs = now.getTime() - date.getTime();
+      const diffMins = Math.floor(diffMs / 60000);
+      const diffHours = Math.floor(diffMs / 3600000);
+      const diffDays = Math.floor(diffMs / 86400000);
+
+      if (diffMins < 1) return 'Just now';
+      if (diffMins < 60) return `${diffMins}m ago`;
+      if (diffHours < 24) return `${diffHours}h ago`;
+      if (diffDays < 7) return `${diffDays}d ago`;
+      return formatDate(dateStr);
+    } catch {
+      return dateStr;
+    }
+  };
+
+  const sources = Array.from(new Set(data.news.map(n => n.source_name)));
 
   return (
     <div className="space-y-6">
@@ -66,123 +99,205 @@ export default function NewsTable({ data, loading, refresh }: NewsTableProps) {
       >
         <div>
           <h1 className="text-3xl font-bold text-gradient">AI News</h1>
-          <p className="text-slate-400 mt-1">{filteredItems.length} articles from TechCrunch, VentureBeat, MIT Tech Review, The Decoder, and Hugging Face Blog</p>
+          <p className="text-slate-400 mt-1">Latest AI news and articles</p>
         </div>
-        <div className="flex items-center gap-3 flex-wrap">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-            <input
-              type="text"
-              placeholder="Search news..."
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              className="w-64 pl-10 pr-4 py-2 rounded-xl glass border border-white/10 focus:border-blue-500/30 focus:outline-none text-sm bg-white/5"
-            />
-          </div>
-          <select value={sourceFilter} onChange={e => setSourceFilter(e.target.value)} className="px-4 py-2 rounded-xl glass border border-white/10 focus:border-blue-500/30 focus:outline-none text-sm bg-white/5">
-            <option value="">All Sources</option>
-            {sources.map(s => <option key={s} value={s}>{s}</option>)}
-          </select>
-          <label className="flex items-center gap-2 px-3 py-2 rounded-xl glass border border-white/10 hover:border-blue-500/30 cursor-pointer text-sm">
-            <input type="checkbox" checked={freshOnly} onChange={e => setFreshOnly(e.target.checked)} className="w-4 h-4 accent-blue-500" />
-            <span>Fresh (24h)</span>
-          </label>
-          <button onClick={refresh} disabled={loading} className="px-4 py-2 rounded-xl glass border border-white/10 hover:border-blue-500/30 transition-all flex items-center gap-2 text-sm">
-            <Download className="w-4 h-4" />
-            <span>Export CSV</span>
-          </button>
-        </div>
+        <button onClick={refresh} disabled={loading} className="btn-secondary flex items-center gap-2">
+          <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+          <span>Refresh</span>
+        </button>
       </motion.div>
 
+      {/* Stats Summary */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="glass rounded-2xl overflow-hidden"
+        className="grid grid-cols-2 lg:grid-cols-5 gap-4"
       >
-        {loading && filteredItems.length === 0 ? (
+        <div className="glass-card p-4">
+          <p className="text-sm text-slate-400">Total Articles</p>
+          <p className="text-2xl font-bold text-white">{data.news.length.toLocaleString()}</p>
+        </div>
+        <div className="glass-card p-4">
+          <p className="text-sm text-slate-400">Last 24h</p>
+          <p className="text-2xl font-bold text-emerald-400">
+            {data.news.filter(n => {
+              const d = new Date(n.published_at);
+              return d > new Date(Date.now() - 24 * 60 * 60 * 1000);
+            }).length.toLocaleString()}
+          </p>
+        </div>
+        <div className="glass-card p-4">
+          <p className="text-sm text-slate-400">This Week</p>
+          <p className="text-2xl font-bold text-blue-400">
+            {data.news.filter(n => {
+              const d = new Date(n.published_at);
+              return d > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+            }).length.toLocaleString()}
+          </p>
+        </div>
+        <div className="glass-card p-4">
+          <p className="text-sm text-slate-400">Sources</p>
+          <p className="text-2xl font-bold text-white">{sources.length}</p>
+        </div>
+        <div className="glass-card p-4">
+          <p className="text-sm text-slate-400">With Full Text</p>
+          <p className="text-2xl font-bold text-violet-400">
+            {data.news.filter(n => n.full_text).length.toLocaleString()}
+          </p>
+        </div>
+      </motion.div>
+
+      {/* Filters */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.15 }}
+        className="glass-card p-4"
+      >
+        <div className="flex flex-col sm:flex-row gap-4 flex-wrap">
+          <div className="relative flex-1 min-w-[200px]">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+            <input
+              type="text"
+              placeholder="Search news by headline, author..."
+              value={search}
+              onChange={e => { setSearch(e.target.value); setPage(1); }}
+              className="input-glass pl-10"
+            />
+          </div>
+          <select
+            value={sourceFilter}
+            onChange={e => { setSourceFilter(e.target.value); setPage(1); }}
+            className="select-glass w-auto min-w-[150px]"
+          >
+            <option value="">All Sources</option>
+            {sources.map(src => (
+              <option key={src} value={src}>{src}</option>
+            ))}
+          </select>
+          <label className="flex items-center gap-2 px-3 py-2 rounded-xl glass border border-white/10 hover:border-blue-500/30 cursor-pointer text-sm">
+            <input type="checkbox" checked={freshOnly} onChange={e => { setFreshOnly(e.target.checked); setPage(1); }} className="w-4 h-4 accent-blue-500" />
+            <span>Last 24h only</span>
+          </label>
+          <select
+            value={pageSize}
+            onChange={e => { setPageSize(Number(e.target.value)); setPage(1); }}
+            className="select-glass w-auto min-w-[140px]"
+          >
+            <option value="10">10 per page</option>
+            <option value="20">20 per page</option>
+            <option value="50">50 per page</option>
+            <option value="100">100 per page</option>
+          </select>
+        </div>
+      </motion.div>
+
+      {/* Table */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+        className="glass-card overflow-hidden"
+      >
+        {loading && items.length === 0 ? (
           <div className="p-12 text-center">
-            <div className="w-12 h-12 border-4 border-pink-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+            <div className="w-12 h-12 border-4 border-rose-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
             <p className="text-slate-400">Loading news...</p>
           </div>
-        ) : filteredItems.length === 0 ? (
+        ) : items.length === 0 ? (
           <div className="p-12 text-center">
             <Newspaper className="w-16 h-16 mx-auto mb-4 text-slate-500" />
             <h3 className="text-xl font-semibold mb-2">No news found</h3>
-            <p className="text-slate-400 mb-6">Run the ingestion pipeline to fetch AI news.</p>
-            <button onClick={refresh} className="px-6 py-3 rounded-xl bg-gradient-to-r from-pink-500 to-rose-600 text-white font-medium">
-              Start Pipeline
-            </button>
+            <p className="text-slate-400 mb-6">Start the ingestion pipeline to discover AI news.</p>
           </div>
         ) : (
           <>
             <div className="overflow-x-auto">
-              <table className="w-full">
+              <table className="table-glass">
                 <thead>
-                  <tr className="border-b border-white/10 bg-white/5">
+                  <tr>
                     {[
-                      { key: 'headline', label: 'Headline', width: '35%' },
-                      { key: 'source_name', label: 'Source', width: '15%' },
-                      { key: 'author', label: 'Author', width: '12%' },
-                      { key: 'published_at', label: 'Published', width: '18%' },
-                      { key: 'article_url', label: 'Link', width: '8%' },
+                      { key: 'headline', label: 'Headline', sortable: true },
+                      { key: 'source_name', label: 'Source', sortable: true },
+                      { key: 'author', label: 'Author', sortable: true },
+                      { key: 'published_at', label: 'Published', sortable: true },
+                      { key: 'article_url', label: 'Link', sortable: false },
                     ].map(col => (
                       <th
                         key={col.key}
-                        onClick={() => {
-                          const k = col.key as keyof NewsItem;
-                          setSortDir(sortKey === k && sortDir === 'asc' ? 'desc' : 'asc');
-                          setSortKey(k);
-                        }}
-                        className="px-4 py-3 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider cursor-pointer hover:text-white select-none"
-                        style={{ width: col.width }}
+                        className={`px-4 py-3 ${col.sortable ? 'cursor-pointer hover:text-rose-400' : ''}`}
+                        onClick={() => col.sortable && handleSort(col.key as keyof NewsItem)}
+                        style={{ minWidth: col.key === 'headline' ? '300px' : '140px' }}
                       >
                         <div className="flex items-center gap-1">
-                          {col.label}
-                          {sortKey === col.key && (
-                            sortDir === 'asc' ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />
+                          <span>{col.label}</span>
+                          {col.sortable && sortKey === col.key && (
+                            <span className="text-rose-400">
+                              {sortDir === 'asc' ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                            </span>
                           )}
                         </div>
                       </th>
                     ))}
+                    <th className="px-4 py-3 w-24">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/5">
-                  {paginatedItems.map((item, i) => (
+                  {paginatedItems.map((news, i) => (
                     <motion.tr
-                      key={item.id}
+                      key={news.id}
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: i * 0.02 }}
                       className="hover:bg-white/5 transition-colors"
                     >
                       <td className="px-4 py-3">
-                        <div>
-                          <p className="font-medium text-white line-clamp-1">{item.headline}</p>
-                          {item.full_text && (
-                            <p className="text-sm text-slate-400 line-clamp-1 mt-1 max-w-md">{item.full_text}</p>
+                        <div className="flex items-start gap-3">
+                          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-rose-500 to-pink-500 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <Newspaper className="w-4 h-4 text-white" />
+                          </div>
+                          <div className="min-w-0">
+                            <p className="font-medium text-white truncate">{news.headline}</p>
+                            {news.full_text && (
+                              <span className="badge badge-emerald text-xs">Full Text</span>
+                            )}
+                            {news.canonical_entity_id && (
+                              <p className="text-xs text-slate-400 mt-1">Entity: {news.canonical_entity_id.slice(0, 8)}...</p>
+                            )}
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className="badge badge-rose">{news.source_name}</span>
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className="text-sm text-slate-300">{news.author || '—'}</span>
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="flex flex-col gap-0.5">
+                          <span className="text-sm text-slate-300">{formatDate(news.published_at)}</span>
+                          <span className="text-xs text-slate-500">{formatRelativeTime(news.published_at)}</span>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3">
+                        {news.article_url ? (
+                          <a href={news.article_url} target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:text-cyan-300 text-sm flex items-center gap-1">
+                            <ExternalLink className="w-3 h-3" />
+                            View
+                          </a>
+                        ) : (
+                          <span className="text-slate-500">—</span>
+                        )}
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="flex items-center gap-1">
+                          {news.article_url && (
+                            <a href={news.article_url} target="_blank" rel="noopener noreferrer" className="p-1.5 rounded-lg hover:bg-white/10 transition-colors text-slate-400 hover:text-cyan-400" title="Read Article">
+                              <ExternalLink className="w-4 h-4" />
+                            </a>
                           )}
                         </div>
-                      </td>
-                      <td className="px-4 py-3">
-                        <span className="px-2 py-1 text-xs rounded-full bg-pink-500/20 text-pink-400 border border-pink-500/30">
-                          {item.source_name}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3">
-                        <p className="text-sm text-slate-300">{item.author || '—'}</p>
-                      </td>
-                      <td className="px-4 py-3">
-                        <div className="flex items-center gap-1 text-sm text-slate-300">
-                          <Calendar className="w-3 h-3 text-slate-500" />
-                          {formatDate(item.published_at)}
-                        </div>
-                      </td>
-                      <td className="px-4 py-3">
-                        <a href={item.article_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-sm text-cyan-400 hover:text-cyan-300 transition-colors">
-                          <Globe className="w-3 h-3" />
-                          Read
-                        </a>
                       </td>
                     </motion.tr>
                   ))}
@@ -190,15 +305,15 @@ export default function NewsTable({ data, loading, refresh }: NewsTableProps) {
               </table>
             </div>
 
-            {totalPages > 1 && (
+            {filteredItems.length > pageSize && (
               <div className="px-4 py-3 border-t border-white/10 flex items-center justify-between">
                 <p className="text-sm text-slate-400">
                   Showing {(page - 1) * pageSize + 1} to {Math.min(page * pageSize, filteredItems.length)} of {filteredItems.length} results
                 </p>
                 <div className="flex items-center gap-2">
-                  <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} className="px-3 py-1.5 rounded-lg glass border border-white/10 hover:border-blue-500/30 disabled:opacity-50 text-sm">Previous</button>
-                  <span className="px-3 text-sm text-slate-300">Page {page} / {totalPages}</span>
-                  <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages} className="px-3 py-1.5 rounded-lg glass border border-white/10 hover:border-blue-500/30 disabled:opacity-50 text-sm">Next</button>
+                  <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} className="btn-ghost px-3 py-1.5 text-sm">Previous</button>
+                  <span className="px-3 text-sm text-slate-300">Page {page} / {Math.ceil(filteredItems.length / pageSize)}</span>
+                  <button onClick={() => setPage(p => Math.min(Math.ceil(filteredItems.length / pageSize), p + 1))} disabled={page === Math.ceil(filteredItems.length / pageSize)} className="btn-ghost px-3 py-1.5 text-sm">Next</button>
                 </div>
               </div>
             )}

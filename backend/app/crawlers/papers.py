@@ -19,7 +19,7 @@ def utcnow() -> datetime:
 class ArxivAdapter(SourceAdapter):
     """arXiv API for AI papers."""
     def __init__(self, session=None):
-        super().__init__("arXiv", "http://export.arxiv.org/api/query")
+        super().__init__("arXiv", "https://export.arxiv.org/api/query")
         self.session = session
 
     def record_type(self) -> str:

@@ -29,7 +29,7 @@ const NAV_ITEMS = [
   { id: 'jobs', label: 'AI Jobs', icon: Briefcase },
   { id: 'news', label: 'AI News', icon: Newspaper },
   { id: 'entities', label: 'Entity Resolution', icon: GitBranch },
-  { id: 'discovery', label: 'Source Discovery', icon: Search },
+  { id: 'discovery', label: 'API Discovery', icon: Search },
   { id: 'pipeline', label: 'Pipeline Monitor', icon: Activity },
   { id: 'settings', label: 'Settings', icon: Settings },
 ] as const;
@@ -120,14 +120,14 @@ export default function DashboardPage() {
       
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-72 glass-strong transform transition-transform duration-300 lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
+        className={`fixed inset-y-0 left-0 z-50 w-72 glass-elevated transform transition-transform duration-300 lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
         aria-label="Navigation"
       >
         <div className="flex flex-col h-full p-4">
           {/* Logo */}
           <div className="flex items-center gap-3 px-2 py-6 border-b border-white/10 mb-6">
             <motion.div
-              className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-violet-600 flex items-center justify-center"
+              className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-violet-600 flex items-center justify-center glow-blue"
               animate={{ rotate: [0, 360] }}
               transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
             >
@@ -141,14 +141,14 @@ export default function DashboardPage() {
 
           {/* Navigation */}
           <nav className="flex-1 space-y-1" role="navigation" aria-label="Main navigation">
-            {NAV_ITEMS.map((item) => {
+            {NAV_ITEMS.map((item, index) => {
               const Icon = item.icon;
               const isActive = activeNav === item.id;
               return (
                 <motion.button
                   key={item.id}
                   onClick={() => { setActiveNav(item.id); setSidebarOpen(false); }}
-                  className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl text-left transition-all duration-200 ${
+                  className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl text-left transition-all duration-300 ${
                     isActive
                       ? 'bg-gradient-to-r from-blue-500/20 to-violet-500/20 text-white border border-blue-500/30 shadow-lg shadow-blue-500/10'
                       : 'text-slate-300/80 hover:bg-white/5 hover:text-white'
@@ -156,6 +156,9 @@ export default function DashboardPage() {
                   whileHover={{ x: isActive ? 0 : 4 }}
                   whileTap={{ scale: 0.98 }}
                   aria-current={isActive ? 'page' : undefined}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.03 }}
                 >
                   <Icon className={`w-5 h-5 flex-shrink-0 ${isActive ? 'text-blue-400' : 'text-slate-400'}`} aria-hidden="true" />
                   <span className="font-medium">{item.label}</span>
@@ -195,7 +198,7 @@ export default function DashboardPage() {
       {/* Main Content */}
       <main className="lg:ml-72 min-h-screen">
         {/* Top Bar */}
-        <header className="sticky top-0 z-30 glass border-b border-white/10 backdrop-blur-2xl">
+        <header className="sticky top-0 z-30 glass-elevated border-b border-white/10 backdrop-blur-2xl">
           <div className="flex items-center justify-between h-16 px-4 lg:px-8">
             <div className="flex items-center gap-4">
               <button
@@ -215,7 +218,7 @@ export default function DashboardPage() {
               <button
                 onClick={loadDashboardData}
                 disabled={loading}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl glass border border-white/10 hover:border-blue-500/30 transition-all text-sm font-medium"
+                className="btn-secondary flex items-center gap-2 px-4 py-2"
               >
                 <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
                 <span>Refresh</span>

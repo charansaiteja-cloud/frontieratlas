@@ -161,3 +161,14 @@ async def run_api_health_checks():
     result = await check_all_api_health()
     logger.info(f"API health checks completed: {result}")
     return result
+
+
+async def main():
+    """Main entry point for worker."""
+    worker = PipelineWorker("pipeline-worker-1")
+    await worker.start()
+
+
+if __name__ == "__main__":
+    import asyncio
+    asyncio.run(main())

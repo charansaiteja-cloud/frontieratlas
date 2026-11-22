@@ -17,4 +17,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-CMD ["celery", "-A", "app.workers", "worker", "--loglevel=info", "--concurrency=4", "--max-tasks-per-child=100"]
+CMD ["python", "-m", "app.workers"]
+
+# Healthcheck: verify worker process is running
+HEALTHCHECK --interval=45s --timeout=10s --retries=3 \
+  CMD ["python", "-c", "import os; pids=[int(p) for p in os.listdir('/proc') if p.isdigit()]; exit(0 if any('app.workers' in open(f'/proc/{p}/cmdline').read() for p in pids) else 1)"]
