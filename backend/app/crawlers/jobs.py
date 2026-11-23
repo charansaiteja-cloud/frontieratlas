@@ -179,9 +179,13 @@ class LeverAdapter(SourceAdapter):
                 await asyncio.sleep(0.3)
         return records
 
-    def _parse_date(self, ts: int) -> datetime | None:
+    def _parse_date(self, date_input: Any) -> datetime | None:
         try:
-            return datetime.fromtimestamp(ts / 1000, tz=timezone.utc)
+            if isinstance(date_input, (int, float)):
+                return datetime.fromtimestamp(date_input / 1000, tz=timezone.utc)
+            elif isinstance(date_input, str):
+                return datetime.fromisoformat(date_input.replace("Z", "+00:00"))
+            return None
         except Exception:
             return None
 
