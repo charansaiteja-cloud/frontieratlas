@@ -24,10 +24,10 @@ const ENTITY_TYPES = [
 ];
 
 const STATUS_COLORS: Record<string, string> = {
-  'resolved': 'badge-emerald',
-  'pending': 'badge-amber',
-  'conflict': 'badge-rose',
-  'merged': 'badge-blue',
+  'resolved': 'badge-liquid-emerald',
+  'pending': 'badge-liquid-amber',
+  'conflict': 'badge-liquid-rose',
+  'merged': 'badge-liquid-blue',
 };
 
 export default function EntityResolution({ loading, refresh }: EntityResolutionProps) {
@@ -137,7 +137,7 @@ export default function EntityResolution({ loading, refresh }: EntityResolutionP
               className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
                 activeTab === tab.id
                   ? 'bg-gradient-to-r from-blue-500/20 to-violet-500/20 text-white border border-blue-500/30 shadow-lg shadow-blue-500/10'
-                  : 'text-slate-300/80 hover:bg-white/5 hover:text-white'
+                  : 'text-slate-300/80 hover:bg-[rgba(255,255,255,0.02)] hover:text-white'
               }`}
               role="tab"
               aria-selected={activeTab === tab.id}
@@ -165,7 +165,7 @@ export default function EntityResolution({ loading, refresh }: EntityResolutionP
             placeholder="Search entities by name, alias..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="input-glass pl-10"
+            className="input-glass-premium pl-10"
           />
         </div>
       </motion.div>
@@ -244,7 +244,7 @@ export default function EntityResolution({ loading, refresh }: EntityResolutionP
 
         {(activeTab === 'clusters' || activeTab === 'conflicts') && (
           <div className="overflow-x-auto">
-            <table className="table-glass">
+            <table className="table-glass-premium">
               <thead>
                 <tr>
                   <th className="px-4 py-3">Entity</th>
@@ -267,7 +267,7 @@ export default function EntityResolution({ loading, refresh }: EntityResolutionP
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: i * 0.02 }}
-                    className="hover:bg-white/5 transition-colors"
+                    className="hover:bg-[rgba(255,255,255,0.02)] transition-colors"
                   >
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
@@ -286,10 +286,10 @@ export default function EntityResolution({ loading, refresh }: EntityResolutionP
                     <td className="px-4 py-3">
                       <div className="flex flex-wrap gap-1 max-w-xs">
                         {cluster.aliases.slice(0, 3).map((alias: string, idx: number) => (
-                          <span key={idx} className="badge badge-slate text-xs">{alias}</span>
+                          <span key={idx} className="badge badge-liquid-slate text-xs">{alias}</span>
                         ))}
                         {cluster.aliases.length > 3 && (
-                          <span className="badge badge-slate text-xs">+{cluster.aliases.length - 3} more</span>
+                          <span className="badge badge-liquid-slate text-xs">+{cluster.aliases.length - 3} more</span>
                         )}
                       </div>
                     </td>
@@ -316,13 +316,13 @@ export default function EntityResolution({ loading, refresh }: EntityResolutionP
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-1">
-                        <button className="p-1.5 rounded-lg hover:bg-white/10 transition-colors text-slate-400 hover:text-cyan-400" title="View Details">
+                        <button className="p-1.5 rounded-lg hover:bg-[rgba(255,255,255,0.05)] transition-colors text-slate-400 hover:text-cyan-400" title="View Details">
                           <ExternalLink className="w-4 h-4" />
                         </button>
-                        <button className="p-1.5 rounded-lg hover:bg-white/10 transition-colors text-slate-400 hover:text-amber-400" title="Merge">
+                        <button className="p-1.5 rounded-lg hover:bg-[rgba(255,255,255,0.05)] transition-colors text-slate-400 hover:text-amber-400" title="Merge">
                           <Merge className="w-4 h-4" />
                         </button>
-                        <button className="p-1.5 rounded-lg hover:bg-white/10 transition-colors text-slate-400 hover:text-rose-400" title="Split">
+                        <button className="p-1.5 rounded-lg hover:bg-[rgba(255,255,255,0.05)] transition-colors text-slate-400 hover:text-rose-400" title="Split">
                           <Split className="w-4 h-4" />
                         </button>
                       </div>

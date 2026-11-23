@@ -27,11 +27,11 @@ const PIPELINE_STAGES = [
 ];
 
 const STATUS_COLORS: Record<string, string> = {
-  'running': 'badge-blue',
-  'completed': 'badge-emerald',
-  'failed': 'badge-rose',
-  'pending': 'badge-amber',
-  'paused': 'badge-slate',
+  'running': 'badge-liquid-blue',
+  'completed': 'badge-liquid-emerald',
+  'failed': 'badge-liquid-rose',
+  'pending': 'badge-liquid-amber',
+  'paused': 'badge-liquid-slate',
 };
 
 const JOB_STATUS_COLORS: Record<string, string> = {
@@ -206,7 +206,7 @@ export default function PipelineMonitor({ loading, refresh }: PipelineMonitorPro
               className={`flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
                 activeTab === tab.id
                   ? 'bg-gradient-to-r from-blue-500/20 to-violet-500/20 text-white border border-blue-500/30 shadow-lg shadow-blue-500/10'
-                  : 'text-slate-300/80 hover:bg-white/5 hover:text-white'
+                  : 'text-slate-300/80 hover:bg-[rgba(255,255,255,0.02)] hover:text-white'
               }`}
               role="tab"
               aria-selected={activeTab === tab.id}
@@ -327,7 +327,7 @@ export default function PipelineMonitor({ loading, refresh }: PipelineMonitorPro
 
         {activeTab === 'runs' && (
           <div className="overflow-x-auto">
-            <table className="table-glass">
+            <table className="table-glass-premium">
               <thead>
                 <tr>
                   <th className="px-4 py-3">Run ID</th>
@@ -347,7 +347,7 @@ export default function PipelineMonitor({ loading, refresh }: PipelineMonitorPro
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: i * 0.02 }}
-                    className="hover:bg-white/5 transition-colors"
+                    className="hover:bg-[rgba(255,255,255,0.02)] transition-colors"
                   >
                     <td className="px-4 py-3 font-mono text-white">{run.id}</td>
                     <td className="px-4 py-3 text-sm text-slate-300">{formatDate(run.started)}</td>
@@ -368,10 +368,10 @@ export default function PipelineMonitor({ loading, refresh }: PipelineMonitorPro
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-1">
-                        <button className="p-1.5 rounded-lg hover:bg-white/10 transition-colors text-slate-400 hover:text-cyan-400" title="View Logs">
+                        <button className="p-1.5 rounded-lg hover:bg-[rgba(255,255,255,0.05)] transition-colors text-slate-400 hover:text-cyan-400" title="View Logs">
                           <Terminal className="w-4 h-4" />
                         </button>
-                        <button className="p-1.5 rounded-lg hover:bg-white/10 transition-colors text-slate-400 hover:text-amber-400" title="Retry">
+                        <button className="p-1.5 rounded-lg hover:bg-[rgba(255,255,255,0.05)] transition-colors text-slate-400 hover:text-amber-400" title="Retry">
                           <RotateCcw className="w-4 h-4" />
                         </button>
                       </div>
@@ -469,7 +469,7 @@ export default function PipelineMonitor({ loading, refresh }: PipelineMonitorPro
                       </div>
                       <div>
                         <h4 className="font-semibold text-white">{worker.name}</h4>
-                        <span className={`badge ${worker.status === 'running' ? 'badge-emerald' : 'badge-slate'}`}>
+                        <span className={`badge ${worker.status === 'running' ? 'badge-liquid-emerald' : 'badge-liquid-slate'}`}>
                           {worker.status.charAt(0).toUpperCase() + worker.status.slice(1)}
                         </span>
                       </div>

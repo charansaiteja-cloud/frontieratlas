@@ -16,19 +16,19 @@ interface JobsTableProps {
 }
 
 const ROLE_COLORS: Record<string, string> = {
-  'ML Research': 'badge-blue',
-  'Engineering': 'badge-emerald',
-  'Product': 'badge-violet',
-  'Data': 'badge-amber',
-  'Other': 'badge-slate',
+  'ML Research': 'badge-liquid-blue',
+  'Engineering': 'badge-liquid-emerald',
+  'Product': 'badge-liquid-violet',
+  'Data': 'badge-liquid-amber',
+  'Other': 'badge-liquid-slate',
 };
 
 const EMPLOYMENT_COLORS: Record<string, string> = {
-  'full-time': 'badge-blue',
-  'part-time': 'badge-amber',
-  'contract': 'badge-violet',
-  'internship': 'badge-emerald',
-  'other': 'badge-slate',
+  'full-time': 'badge-liquid-blue',
+  'part-time': 'badge-liquid-amber',
+  'contract': 'badge-liquid-violet',
+  'internship': 'badge-liquid-emerald',
+  'other': 'badge-liquid-slate',
 };
 
 export default function JobsTable({ data, loading, refresh }: JobsTableProps) {
@@ -151,13 +151,13 @@ export default function JobsTable({ data, loading, refresh }: JobsTableProps) {
               placeholder="Search jobs by title, company..."
               value={search}
               onChange={e => { setSearch(e.target.value); setPage(1); }}
-              className="input-glass pl-10"
+              className="input-glass-premium pl-10"
             />
           </div>
           <select
             value={roleFilter}
             onChange={e => { setRoleFilter(e.target.value); setPage(1); }}
-            className="select-glass w-auto min-w-[150px]"
+            className="select-glass-premium w-auto min-w-[150px]"
           >
             <option value="">All Roles</option>
             {roles.map(role => (
@@ -167,7 +167,7 @@ export default function JobsTable({ data, loading, refresh }: JobsTableProps) {
           <select
             value={remoteFilter}
             onChange={e => { setRemoteFilter(e.target.value); setPage(1); }}
-            className="select-glass w-auto min-w-[140px]"
+            className="select-glass-premium w-auto min-w-[140px]"
           >
             <option value="">All Locations</option>
             <option value="true">Remote Only</option>
@@ -176,7 +176,7 @@ export default function JobsTable({ data, loading, refresh }: JobsTableProps) {
           <select
             value={pageSize}
             onChange={e => { setPageSize(Number(e.target.value)); setPage(1); }}
-            className="select-glass w-auto min-w-[140px]"
+            className="select-glass-premium w-auto min-w-[140px]"
           >
             <option value="10">10 per page</option>
             <option value="20">20 per page</option>
@@ -207,7 +207,7 @@ export default function JobsTable({ data, loading, refresh }: JobsTableProps) {
         ) : (
           <>
             <div className="overflow-x-auto">
-              <table className="table-glass">
+              <table className="table-glass-premium">
                 <thead>
                   <tr>
                     {[
@@ -246,7 +246,7 @@ export default function JobsTable({ data, loading, refresh }: JobsTableProps) {
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: i * 0.02 }}
-                      className="hover:bg-white/5 transition-colors"
+                      className="hover:bg-[rgba(255,255,255,0.02)] transition-colors"
                     >
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-3">
@@ -267,7 +267,7 @@ export default function JobsTable({ data, loading, refresh }: JobsTableProps) {
                       <td className="px-4 py-3">
                         {(() => {
                           const role = job.role_family || 'Other';
-                          return <span className={`badge ${ROLE_COLORS[role] || 'badge-slate'}`}>{role}</span>;
+                          return <span className={`badge ${ROLE_COLORS[role] || 'badge-liquid-slate'}`}>{role}</span>;
                         })()}
                       </td>
                       <td className="px-4 py-3">
@@ -283,12 +283,12 @@ export default function JobsTable({ data, loading, refresh }: JobsTableProps) {
                             Remote
                           </span>
                         ) : (
-                          <span className="badge badge-slate">On-site</span>
+                          <span className="badge badge-liquid-slate">On-site</span>
                         )}
                       </td>
                       <td className="px-4 py-3">
                         {job.employment_type && (
-                          <span className={`badge ${EMPLOYMENT_COLORS[job.employment_type] || 'badge-slate'}`}>
+                          <span className={`badge ${EMPLOYMENT_COLORS[job.employment_type] || 'badge-liquid-slate'}`}>
                             {job.employment_type.replace('-', ' ')}
                           </span>
                         )}
@@ -300,12 +300,12 @@ export default function JobsTable({ data, loading, refresh }: JobsTableProps) {
                         </span>
                       </td>
                       <td className="px-4 py-3">
-                        <span className="badge badge-amber">{job.source_name}</span>
+                        <span className="badge badge-liquid-amber">{job.source_name}</span>
                       </td>
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-1">
                           {job.job_url && (
-                            <a href={job.job_url} target="_blank" rel="noopener noreferrer" className="p-1.5 rounded-lg hover:bg-white/10 transition-colors text-slate-400 hover:text-cyan-400" title="View Job">
+                            <a href={job.job_url} target="_blank" rel="noopener noreferrer" className="p-1.5 rounded-lg hover:bg-[rgba(255,255,255,0.05)] transition-colors text-slate-400 hover:text-cyan-400" title="View Job">
                               <ExternalLink className="w-4 h-4" />
                             </a>
                           )}

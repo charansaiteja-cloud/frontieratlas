@@ -135,7 +135,7 @@ export default function SettingsPanel({ loading, refresh }: SettingsPanelProps) 
               className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
                 activeTab === tab.id
                   ? 'bg-gradient-to-r from-blue-500/20 to-violet-500/20 text-white border border-blue-500/30 shadow-lg shadow-blue-500/10'
-                  : 'text-slate-300/80 hover:bg-white/5 hover:text-white'
+                  : 'text-slate-300/80 hover:bg-[rgba(255,255,255,0.02)] hover:text-white'
               }`}
               role="tab"
               aria-selected={activeTab === tab.id}
@@ -171,7 +171,7 @@ export default function SettingsPanel({ loading, refresh }: SettingsPanelProps) 
                     <select
                       value={language}
                       onChange={e => setLanguage(e.target.value)}
-                      className="select-glass w-auto min-w-[180px]"
+                      className="select-glass-premium w-auto min-w-[180px]"
                     >
                       <option value="en">English</option>
                       <option value="zh">中文</option>
@@ -205,7 +205,7 @@ export default function SettingsPanel({ loading, refresh }: SettingsPanelProps) 
                       value={refreshInterval}
                       onChange={e => setRefreshInterval(Number(e.target.value))}
                       disabled={!autoRefresh}
-                      className="select-glass w-auto min-w-[180px]"
+                      className="select-glass-premium w-auto min-w-[180px]"
                     >
                       <option value="30">30 seconds</option>
                       <option value="60">1 minute</option>
@@ -311,7 +311,7 @@ export default function SettingsPanel({ loading, refresh }: SettingsPanelProps) 
                   <select
                     value={language}
                     onChange={e => setLanguage(e.target.value)}
-                    className="select-glass w-auto min-w-[180px]"
+                    className="select-glass-premium w-auto min-w-[180px]"
                   >
                     <option value="en">English</option>
                     <option value="zh">中文</option>
@@ -357,7 +357,7 @@ export default function SettingsPanel({ loading, refresh }: SettingsPanelProps) 
                                 value={newKeyValue}
                                 onChange={e => setNewKeyValue(e.target.value)}
                                 placeholder="Enter new API key"
-                                className="input-glass w-[300px]"
+                                className="input-glass-premium w-[300px]"
                               />
                             ) : (
                               <>
@@ -431,7 +431,7 @@ export default function SettingsPanel({ loading, refresh }: SettingsPanelProps) 
                       <p className="font-medium text-white">PostgreSQL</p>
                       <p className="text-sm text-slate-400">Primary database connection</p>
                     </div>
-                    <span className="badge badge-emerald">Connected</span>
+                    <span className="badge badge-liquid-emerald">Connected</span>
                   </div>
                   <div className="grid grid-cols-2 gap-4 mt-4 text-sm">
                     <div>
@@ -458,7 +458,7 @@ export default function SettingsPanel({ loading, refresh }: SettingsPanelProps) 
                       <p className="font-medium text-white">Redis</p>
                       <p className="text-sm text-slate-400">Cache and message broker</p>
                     </div>
-                    <span className="badge badge-emerald">Connected</span>
+                    <span className="badge badge-liquid-emerald">Connected</span>
                   </div>
                   <div className="grid grid-cols-2 gap-4 mt-4 text-sm">
                     <div>
@@ -482,21 +482,21 @@ export default function SettingsPanel({ loading, refresh }: SettingsPanelProps) 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="glass p-4 rounded-xl">
                   <p className="text-sm text-slate-400 mb-2">Query Timeout</p>
-                  <input type="number" defaultValue={30} className="input-glass w-32" />
+                  <input type="number" defaultValue={30} className="input-glass-premium w-32" />
                   <p className="text-xs text-slate-500 mt-1">seconds</p>
                 </div>
                 <div className="glass p-4 rounded-xl">
                   <p className="text-sm text-slate-400 mb-2">Pool Timeout</p>
-                  <input type="number" defaultValue={10} className="input-glass w-32" />
+                  <input type="number" defaultValue={10} className="input-glass-premium w-32" />
                   <p className="text-xs text-slate-500 mt-1">seconds</p>
                 </div>
                 <div className="glass p-4 rounded-xl">
                   <p className="text-sm text-slate-400 mb-2">Max Retries</p>
-                  <input type="number" defaultValue={3} className="input-glass w-32" />
+                  <input type="number" defaultValue={3} className="input-glass-premium w-32" />
                 </div>
                 <div className="glass p-4 rounded-xl">
                   <p className="text-sm text-slate-400 mb-2">Batch Size</p>
-                  <input type="number" defaultValue={1000} className="input-glass w-32" />
+                  <input type="number" defaultValue={1000} className="input-glass-premium w-32" />
                   <p className="text-xs text-slate-500 mt-1">records per batch</p>
                 </div>
               </div>
@@ -518,7 +518,7 @@ export default function SettingsPanel({ loading, refresh }: SettingsPanelProps) 
                       <p className="font-medium text-white">Concurrent Workers</p>
                       <p className="text-sm text-slate-400">Number of parallel pipeline workers</p>
                     </div>
-                    <input type="number" defaultValue={4} min={1} max={16} className="input-glass w-24 text-center" />
+                    <input type="number" defaultValue={4} min={1} max={16} className="input-glass-premium w-24 text-center" />
                   </div>
                 </div>
                 <div className="glass p-4 rounded-xl">
@@ -527,7 +527,7 @@ export default function SettingsPanel({ loading, refresh }: SettingsPanelProps) 
                       <p className="font-medium text-white">Batch Size</p>
                       <p className="text-sm text-slate-400">Records per processing batch</p>
                     </div>
-                    <input type="number" defaultValue={500} min={100} max={5000} step={100} className="input-glass w-24 text-center" />
+                    <input type="number" defaultValue={500} min={100} max={5000} step={100} className="input-glass-premium w-24 text-center" />
                   </div>
                 </div>
                 <div className="glass p-4 rounded-xl">
@@ -536,7 +536,7 @@ export default function SettingsPanel({ loading, refresh }: SettingsPanelProps) 
                       <p className="font-medium text-white">Retry Attempts</p>
                       <p className="text-sm text-slate-400">Failed stage retries</p>
                     </div>
-                    <input type="number" defaultValue={3} min={0} max={10} className="input-glass w-24 text-center" />
+                    <input type="number" defaultValue={3} min={0} max={10} className="input-glass-premium w-24 text-center" />
                   </div>
                 </div>
                 <div className="glass p-4 rounded-xl">
@@ -545,7 +545,7 @@ export default function SettingsPanel({ loading, refresh }: SettingsPanelProps) 
                       <p className="font-medium text-white">Timeout</p>
                       <p className="text-sm text-slate-400">Stage execution timeout</p>
                     </div>
-                    <input type="number" defaultValue={300} min={60} max={3600} step={60} className="input-glass w-24 text-center" />
+                    <input type="number" defaultValue={300} min={60} max={3600} step={60} className="input-glass-premium w-24 text-center" />
                     <span className="text-slate-400">seconds</span>
                   </div>
                 </div>
@@ -576,7 +576,7 @@ export default function SettingsPanel({ loading, refresh }: SettingsPanelProps) 
                       <p className="font-medium text-white">Schedule</p>
                       <p className="text-sm text-slate-400">Cron expression for auto runs</p>
                     </div>
-                    <input type="text" defaultValue="0 */2 * * *" className="input-glass w-48 font-mono" />
+                    <input type="text" defaultValue="0 */2 * * *" className="input-glass-premium w-48 font-mono" />
                     <span className="text-slate-400 text-sm">(Every 2 hours)</span>
                   </div>
                 </div>
@@ -586,7 +586,7 @@ export default function SettingsPanel({ loading, refresh }: SettingsPanelProps) 
                       <p className="font-medium text-white">Timezone</p>
                       <p className="text-sm text-slate-400">Schedule timezone</p>
                     </div>
-                    <select className="select-glass w-auto min-w-[200px]">
+                    <select className="select-glass-premium w-auto min-w-[200px]">
                       <option value="UTC">UTC</option>
                       <option value="America/New_York">Eastern Time</option>
                       <option value="America/Los_Angeles">Pacific Time</option>
@@ -648,7 +648,7 @@ export default function SettingsPanel({ loading, refresh }: SettingsPanelProps) 
                       <p className="font-medium text-white">Slack Webhook</p>
                       <p className="text-sm text-slate-400">Send alerts to Slack channel</p>
                     </div>
-                    <input type="url" placeholder="https://hooks.slack.com/services/..." className="input-glass w-80" />
+                    <input type="url" placeholder="https://hooks.slack.com/services/..." className="input-glass-premium w-80" />
                   </div>
                 </div>
                 <div className="glass p-4 rounded-xl">
@@ -657,7 +657,7 @@ export default function SettingsPanel({ loading, refresh }: SettingsPanelProps) 
                       <p className="font-medium text-white">Discord Webhook</p>
                       <p className="text-sm text-slate-400">Send alerts to Discord channel</p>
                     </div>
-                    <input type="url" placeholder="https://discord.com/api/webhooks/..." className="input-glass w-80" />
+                    <input type="url" placeholder="https://discord.com/api/webhooks/..." className="input-glass-premium w-80" />
                   </div>
                 </div>
                 <div className="glass p-4 rounded-xl">
@@ -666,7 +666,7 @@ export default function SettingsPanel({ loading, refresh }: SettingsPanelProps) 
                       <p className="font-medium text-white">Generic Webhook</p>
                       <p className="text-sm text-slate-400">Custom HTTP webhook endpoint</p>
                     </div>
-                    <input type="url" placeholder="https://your-webhook-endpoint.com" className="input-glass w-80" />
+                    <input type="url" placeholder="https://your-webhook-endpoint.com" className="input-glass-premium w-80" />
                   </div>
                 </div>
               </div>
@@ -703,7 +703,7 @@ export default function SettingsPanel({ loading, refresh }: SettingsPanelProps) 
                     <select
                       value={logLevel}
                       onChange={e => setLogLevel(e.target.value as any)}
-                      className="select-glass w-auto min-w-[180px]"
+                      className="select-glass-premium w-auto min-w-[180px]"
                     >
                       <option value="debug">Debug</option>
                       <option value="info">Info</option>

@@ -135,13 +135,13 @@ export default function PapersTable({ data, loading, refresh }: PapersTableProps
               placeholder="Search papers by title, authors..."
               value={search}
               onChange={e => { setSearch(e.target.value); setPage(1); }}
-              className="input-glass pl-10"
+              className="input-glass-premium pl-10"
             />
           </div>
           <select
             value={githubFilter}
             onChange={e => { setGithubFilter(e.target.value); setPage(1); }}
-            className="select-glass w-auto min-w-[160px]"
+            className="select-glass-premium w-auto min-w-[160px]"
           >
             <option value="">All Papers</option>
             <option value="has">Has GitHub Repo</option>
@@ -150,7 +150,7 @@ export default function PapersTable({ data, loading, refresh }: PapersTableProps
           <select
             value={pageSize}
             onChange={e => { setPageSize(Number(e.target.value)); setPage(1); }}
-            className="select-glass w-auto min-w-[140px]"
+            className="select-glass-premium w-auto min-w-[140px]"
           >
             <option value="10">10 per page</option>
             <option value="20">20 per page</option>
@@ -181,7 +181,7 @@ export default function PapersTable({ data, loading, refresh }: PapersTableProps
         ) : (
           <>
             <div className="overflow-x-auto">
-              <table className="table-glass">
+              <table className="table-glass-premium">
                 <thead>
                   <tr>
                     {[
@@ -219,7 +219,7 @@ export default function PapersTable({ data, loading, refresh }: PapersTableProps
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: i * 0.02 }}
-                      className="hover:bg-white/5 transition-colors"
+                      className="hover:bg-[rgba(255,255,255,0.02)] transition-colors"
                     >
                       <td className="px-4 py-3">
                         <div className="flex items-start gap-3">
@@ -248,7 +248,7 @@ export default function PapersTable({ data, loading, refresh }: PapersTableProps
                       </td>
                       <td className="px-4 py-3">
                         {paper.arxiv_id ? (
-                          <span className="badge badge-amber">arXiv</span>
+                          <span className="badge badge-liquid-amber">arXiv</span>
                         ) : (
                           <span className="text-slate-500">—</span>
                         )}
@@ -266,7 +266,7 @@ export default function PapersTable({ data, loading, refresh }: PapersTableProps
                         </div>
                       </td>
                       <td className="px-4 py-3">
-                        <span className="badge badge-emerald">{paper.source_name}</span>
+                        <span className="badge badge-liquid-emerald">{paper.source_name}</span>
                       </td>
                       <td className="px-4 py-3">
                         <span className="text-sm text-slate-300">{formatDate(paper.published_date)}</span>
@@ -274,12 +274,12 @@ export default function PapersTable({ data, loading, refresh }: PapersTableProps
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-1">
                           {paper.paper_url && (
-                            <a href={paper.paper_url} target="_blank" rel="noopener noreferrer" className="p-1.5 rounded-lg hover:bg-white/10 transition-colors text-slate-400 hover:text-cyan-400" title="View Paper">
+                            <a href={paper.paper_url} target="_blank" rel="noopener noreferrer" className="p-1.5 rounded-lg hover:bg-[rgba(255,255,255,0.05)] transition-colors text-slate-400 hover:text-cyan-400" title="View Paper">
                               <ExternalLink className="w-4 h-4" />
                             </a>
                           )}
                           {paper.github_url && (
-                            <a href={paper.github_url} target="_blank" rel="noopener noreferrer" className="p-1.5 rounded-lg hover:bg-white/10 transition-colors text-slate-400 hover:text-emerald-400" title="View GitHub">
+                            <a href={paper.github_url} target="_blank" rel="noopener noreferrer" className="p-1.5 rounded-lg hover:bg-[rgba(255,255,255,0.05)] transition-colors text-slate-400 hover:text-emerald-400" title="View GitHub">
                               <Github className="w-4 h-4" />
                             </a>
                           )}

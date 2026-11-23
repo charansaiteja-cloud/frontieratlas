@@ -120,13 +120,13 @@ export default function StartupsTable({ data, loading, refresh }: StartupsTableP
               placeholder="Search startups by name, description..."
               value={search}
               onChange={e => { setSearch(e.target.value); setPage(1); }}
-              className="input-glass pl-10"
+              className="input-glass-premium pl-10"
             />
           </div>
           <select
             value={pageSize}
             onChange={e => { setPageSize(Number(e.target.value)); setPage(1); }}
-            className="select-glass w-auto min-w-[140px]"
+            className="select-glass-premium w-auto min-w-[140px]"
           >
             <option value="10">10 per page</option>
             <option value="20">20 per page</option>
@@ -157,7 +157,7 @@ export default function StartupsTable({ data, loading, refresh }: StartupsTableP
         ) : (
           <>
             <div className="overflow-x-auto">
-              <table className="table-glass">
+              <table className="table-glass-premium">
                 <thead>
                   <tr>
                     {[
@@ -197,7 +197,7 @@ export default function StartupsTable({ data, loading, refresh }: StartupsTableP
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: i * 0.02 }}
-                      className="hover:bg-white/5 transition-colors"
+                      className="hover:bg-[rgba(255,255,255,0.02)] transition-colors"
                     >
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-3">
@@ -245,7 +245,7 @@ export default function StartupsTable({ data, loading, refresh }: StartupsTableP
                         <span className="text-sm text-slate-300 font-mono">{startup.founding_year || '—'}</span>
                       </td>
                       <td className="px-4 py-3">
-                        <span className="badge badge-blue">{startup.source_name}</span>
+                        <span className="badge badge-liquid-blue">{startup.source_name}</span>
                       </td>
                       <td className="px-4 py-3">
                         <span className="text-sm text-slate-300">{formatDate(startup.created_at)}</span>
@@ -253,7 +253,7 @@ export default function StartupsTable({ data, loading, refresh }: StartupsTableP
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-1">
                           {startup.website && (
-                            <a href={startup.website} target="_blank" rel="noopener noreferrer" className="p-1.5 rounded-lg hover:bg-white/10 transition-colors text-slate-400 hover:text-cyan-400" title="Visit Website">
+                            <a href={startup.website} target="_blank" rel="noopener noreferrer" className="p-1.5 rounded-lg hover:bg-[rgba(255,255,255,0.05)] transition-colors text-slate-400 hover:text-cyan-400" title="Visit Website">
                               <ExternalLink className="w-4 h-4" />
                             </a>
                           )}

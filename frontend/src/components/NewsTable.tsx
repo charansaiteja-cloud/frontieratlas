@@ -163,13 +163,13 @@ export default function NewsTable({ data, loading, refresh }: NewsTableProps) {
               placeholder="Search news by headline, author..."
               value={search}
               onChange={e => { setSearch(e.target.value); setPage(1); }}
-              className="input-glass pl-10"
+              className="input-glass-premium pl-10"
             />
           </div>
           <select
             value={sourceFilter}
             onChange={e => { setSourceFilter(e.target.value); setPage(1); }}
-            className="select-glass w-auto min-w-[150px]"
+            className="select-glass-premium w-auto min-w-[150px]"
           >
             <option value="">All Sources</option>
             {sources.map(src => (
@@ -183,7 +183,7 @@ export default function NewsTable({ data, loading, refresh }: NewsTableProps) {
           <select
             value={pageSize}
             onChange={e => { setPageSize(Number(e.target.value)); setPage(1); }}
-            className="select-glass w-auto min-w-[140px]"
+            className="select-glass-premium w-auto min-w-[140px]"
           >
             <option value="10">10 per page</option>
             <option value="20">20 per page</option>
@@ -214,7 +214,7 @@ export default function NewsTable({ data, loading, refresh }: NewsTableProps) {
         ) : (
           <>
             <div className="overflow-x-auto">
-              <table className="table-glass">
+              <table className="table-glass-premium">
                 <thead>
                   <tr>
                     {[
@@ -250,7 +250,7 @@ export default function NewsTable({ data, loading, refresh }: NewsTableProps) {
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: i * 0.02 }}
-                      className="hover:bg-white/5 transition-colors"
+                      className="hover:bg-[rgba(255,255,255,0.02)] transition-colors"
                     >
                       <td className="px-4 py-3">
                         <div className="flex items-start gap-3">
@@ -260,7 +260,7 @@ export default function NewsTable({ data, loading, refresh }: NewsTableProps) {
                           <div className="min-w-0">
                             <p className="font-medium text-white truncate">{news.headline}</p>
                             {news.full_text && (
-                              <span className="badge badge-emerald text-xs">Full Text</span>
+                              <span className="badge badge-liquid-emerald text-xs">Full Text</span>
                             )}
                             {news.canonical_entity_id && (
                               <p className="text-xs text-slate-400 mt-1">Entity: {news.canonical_entity_id.slice(0, 8)}...</p>
@@ -269,7 +269,7 @@ export default function NewsTable({ data, loading, refresh }: NewsTableProps) {
                         </div>
                       </td>
                       <td className="px-4 py-3">
-                        <span className="badge badge-rose">{news.source_name}</span>
+                        <span className="badge badge-liquid-rose">{news.source_name}</span>
                       </td>
                       <td className="px-4 py-3">
                         <span className="text-sm text-slate-300">{news.author || '—'}</span>
@@ -293,7 +293,7 @@ export default function NewsTable({ data, loading, refresh }: NewsTableProps) {
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-1">
                           {news.article_url && (
-                            <a href={news.article_url} target="_blank" rel="noopener noreferrer" className="p-1.5 rounded-lg hover:bg-white/10 transition-colors text-slate-400 hover:text-cyan-400" title="Read Article">
+                            <a href={news.article_url} target="_blank" rel="noopener noreferrer" className="p-1.5 rounded-lg hover:bg-[rgba(255,255,255,0.05)] transition-colors text-slate-400 hover:text-cyan-400" title="Read Article">
                               <ExternalLink className="w-4 h-4" />
                             </a>
                           )}
