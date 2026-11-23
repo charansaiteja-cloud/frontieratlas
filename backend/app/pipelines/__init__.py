@@ -63,28 +63,28 @@ class IngestionPipeline:
         total_stored = 0
         total_duplicates = 0
         total_failed = 0
-        
+
         for adapter in adapters:
             try:
                 logger.info(f"Collecting from {adapter.source_name}...")
                 raw_records = await adapter.collect()
                 total_collected += len(raw_records)
-                
+
                 for raw in raw_records:
                     stored, is_dup = await self.process_record(record_type, adapter, raw)
                     if stored:
                         total_stored += 1
                     if is_dup:
                         total_duplicates += 1
-                        
+
             except Exception as e:
                 logger.error(f"Adapter {adapter.source_name} failed: {e}")
                 total_failed += 1
                 await self.update_source_health(adapter.source_name, "FAILED", str(e))
                 continue
-            
+
             await self.update_source_health(adapter.source_name, "SUCCESS", "", len(raw_records) if 'raw_records' in locals() else 0)
-        
+
         return {
             "collected": total_collected,
             "stored": total_stored,
@@ -96,7 +96,22 @@ class IngestionPipeline:
         """Process a single raw record through the pipeline."""
         source_url = raw.get("source_url", adapter.source_url)
         content_hash = make_content_hash(record_type, source_url, raw)
-        
+
+        # Freshness check for news and jobs
+        if record_type in ("news", "job"):
+            published = None
+            if record_type == "news":
+                published = raw.get("published_at")
+            else:
+                published = raw.get("published_date")
+            if isinstance(published, str):
+                try:
+                    published = datetime.fromisoformat(published.replace("Z", "+00:00"))
+                except Exception:
+                    published = None
+            if not is_fresh(published):
+                return False, False  # not fresh, skip
+
         async with AsyncSessionLocal() as db:
             # Check deduplication
             stmt = select(Record).where(
@@ -105,10 +120,10 @@ class IngestionPipeline:
             )
             result = await db.execute(stmt)
             existing = result.scalar_one_or_none()
-            
+
             if existing:
                 return False, True  # duplicate
-            
+
             # Create record
             record = Record(
                 record_type=record_type,
@@ -120,16 +135,16 @@ class IngestionPipeline:
             )
             db.add(record)
             await db.flush()
-            
+
             # Create type-specific entity
             await self.create_entity(record_type, record.id, raw, db)
-            
+
             # LLM extraction
             await self.run_llm_extraction(record_type, record.id, raw, db)
-            
+
             # Entity resolution
             await self.run_entity_resolution(record_type, record.id, raw, db)
-            
+
             await db.commit()
             return True, False
 
@@ -213,26 +228,26 @@ class IngestionPipeline:
             )
         else:
             return
-        
+
         db.add(entity)
 
     async def run_llm_extraction(self, record_type: str, record_id: uuid.UUID, raw: dict, db):
         """Run LLM extraction on the record."""
         from app.models import Record
-        
+
         # Update status
         stmt = select(Record).where(Record.id == record_id)
         result = await db.execute(stmt)
         record = result.scalar_one_or_none()
         if not record:
             return
-        
+
         record.extraction_status = ExtractionStatus.PROCESSING
         await db.commit()
-        
+
         # Prepare content for extraction
         content = json.dumps(raw, default=str)
-        
+
         # Run extraction
         schemas = {
             "startup": StartupSchema,
@@ -246,9 +261,9 @@ class IngestionPipeline:
             record.extraction_status = ExtractionStatus.FAILED
             await db.commit()
             return
-        
+
         result = await llm_extractor.extract(record_type, content, schema)
-        
+
         if result["extraction_status"] == "COMPLETED" and result["extracted_data"]:
             # Update entity with extracted data
             await self.update_entity_from_extraction(record_type, record_id, result["extracted_data"], db)
@@ -258,13 +273,13 @@ class IngestionPipeline:
             record.extraction_status = ExtractionStatus.PARTIALLY_COMPLETED
         else:
             record.extraction_status = ExtractionStatus.FAILED
-        
+
         await db.commit()
 
     async def update_entity_from_extraction(self, record_type: str, record_id: uuid.UUID, extracted: dict, db):
         """Update entity with LLM-extracted data."""
         from sqlalchemy import select
-        
+
         if record_type == "startup":
             stmt = select(Startup).where(Startup.record_id == record_id)
         elif record_type == "product":
@@ -277,12 +292,12 @@ class IngestionPipeline:
             stmt = select(News).where(News.record_id == record_id)
         else:
             return
-        
+
         result = await db.execute(stmt)
         entity = result.scalar_one_or_none()
         if not entity:
             return
-        
+
         for key, value in extracted.items():
             if hasattr(entity, key) and value not in (None, "", []):
                 setattr(entity, key, value)
@@ -315,16 +330,16 @@ class IngestionPipeline:
             source_url = raw.get("source_url", "")
         else:
             return
-        
+
         mapping = await entity_resolver.resolve(entity_name, entity_type, source_url)
-        
+
         if mapping and mapping.canonical_entity_id:
             # Update entity with canonical ID
             await self.update_canonical_id(record_type, record_id, uuid.UUID(mapping.canonical_entity_id), db)
 
     async def update_canonical_id(self, record_type: str, record_id: uuid.UUID, canonical_id: uuid.UUID, db):
         from sqlalchemy import select
-        
+
         if record_type == "startup":
             stmt = select(Startup).where(Startup.record_id == record_id)
         elif record_type == "product":
@@ -335,7 +350,7 @@ class IngestionPipeline:
             stmt = select(News).where(News.record_id == record_id)
         else:
             return
-        
+
         result = await db.execute(stmt)
         entity = result.scalar_one_or_none()
         if entity:
@@ -347,11 +362,11 @@ class IngestionPipeline:
             stmt = select(SourceHealth).where(SourceHealth.source_name == source_name)
             result = await db.execute(stmt)
             health = result.scalar_one_or_none()
-            
+
             if not health:
                 health = SourceHealth(source_name=source_name, source_type=record_type if 'record_type' in locals() else "unknown")
                 db.add(health)
-            
+
             health.last_crawl_status = status
             if status == "SUCCESS":
                 health.last_successful_crawl = utcnow()
@@ -368,7 +383,7 @@ class IngestionPipeline:
                 health.failure_count += 1
                 health.blocked_reason = error
                 health.health_status = "DEGRADED" if health.failure_count < 3 else "BLOCKED"
-            
+
             await db.commit()
 
 

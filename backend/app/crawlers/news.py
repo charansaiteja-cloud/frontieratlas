@@ -24,6 +24,26 @@ def is_fresh(published: datetime | None) -> bool:
     return (utcnow() - published) < timedelta(hours=settings.fresh_window_hours)
 
 
+async def fetch_with_retry(client: httpx.AsyncClient, url: str, headers: dict = None, max_retries: int = 3) -> httpx.Response | None:
+    """Fetch with exponential backoff and jitter."""
+    for attempt in range(max_retries):
+        try:
+            resp = await client.get(url, headers=headers)
+            if resp.status_code == 429:
+                wait_time = (2 ** attempt) + 0.5
+                await asyncio.sleep(wait_time)
+                continue
+            if resp.status_code >= 500:
+                wait_time = (2 ** attempt) + 0.5
+                await asyncio.sleep(wait_time)
+                continue
+            return resp
+        except (httpx.TimeoutException, httpx.NetworkError):
+            wait_time = (2 ** attempt) + 0.5
+            await asyncio.sleep(wait_time)
+    return None
+
+
 class BaseNewsAdapter(SourceAdapter):
     def __init__(self, name: str, feed_url: str, source_url: str, session=None):
         super().__init__(name, source_url, session)
@@ -36,7 +56,9 @@ class BaseNewsAdapter(SourceAdapter):
         records = []
         try:
             async with httpx.AsyncClient(timeout=settings.request_timeout) as client:
-                resp = await client.get(self.feed_url)
+                resp = await fetch_with_retry(client, self.feed_url)
+                if not resp or resp.status_code != 200:
+                    return records
                 feed = feedparser.parse(resp.text)
         except Exception:
             return records
@@ -103,10 +125,88 @@ class HuggingFaceBlogAdapter(BaseNewsAdapter):
         super().__init__("Hugging Face Blog", "https://huggingface.co/blog/feed.xml", "https://huggingface.co/blog/")
 
 
+class ArtificialIntelligenceNewsAdapter(BaseNewsAdapter):
+    """Artificial Intelligence News - AI-focused news site."""
+    def __init__(self, session=None):
+        super().__init__("Artificial Intelligence News", "https://artificialintelligence-news.com/feed/", "https://artificialintelligence-news.com/", session)
+
+
+class VentureBeatAIAdapterFixed(BaseNewsAdapter):
+    """VentureBeat AI with better error handling."""
+    def __init__(self, session=None):
+        super().__init__("VentureBeat AI", "https://venturebeat.com/category/ai/feed/", "https://venturebeat.com/category/ai/", session)
+
+
+class InfoWorldAIAdapter(BaseNewsAdapter):
+    """InfoWorld AI/ML coverage."""
+    def __init__(self, session=None):
+        super().__init__("InfoWorld AI", "https://www.infoworld.com/category/artificial-intelligence/index.rss", "https://www.infoworld.com/category/artificial-intelligence/", session)
+
+
+class ZDNetAIAdapter(BaseNewsAdapter):
+    """ZDNet AI coverage."""
+    def __init__(self, session=None):
+        super().__init__("ZDNet AI", "https://www.zdnet.com/topic/artificial-intelligence/rss.xml", "https://www.zdnet.com/topic/artificial-intelligence/", session)
+
+
+class AnalyticsIndiaMagAdapter(BaseNewsAdapter):
+    """Analytics India Magazine - AI news."""
+    def __init__(self, session=None):
+        super().__init__("Analytics India Magazine", "https://analyticsindiamag.com/feed/", "https://analyticsindiamag.com/", session)
+
+
+class TheRegisterAIAdapter(BaseNewsAdapter):
+    """The Register AI/ML coverage."""
+    def __init__(self, session=None):
+        super().__init__("The Register AI", "https://www.theregister.com/Software/Artificial_Intelligence/headlines.atom", "https://www.theregister.com/Software/Artificial_Intelligence/", session)
+
+
+class TowardsDataScienceAdapter(BaseNewsAdapter):
+    """Towards Data Science - ML/AI articles on Medium."""
+    def __init__(self, session=None):
+        super().__init__("Towards Data Science", "https://towardsdatascience.com/feed", "https://towardsdatascience.com/", session)
+
+
+class MarkTechPostAdapter(BaseNewsAdapter):
+    """MarkTechPost - AI/ML news and tutorials."""
+    def __init__(self, session=None):
+        super().__init__("MarkTechPost", "https://www.marktechpost.com/feed/", "https://www.marktechpost.com/", session)
+
+
+class AnalyticsVidhyaAdapter(BaseNewsAdapter):
+    """Analytics Vidhya - AI/ML tutorials and news."""
+    def __init__(self, session=None):
+        super().__init__("Analytics Vidhya", "https://www.analyticsvidhya.com/feed/", "https://www.analyticsvidhya.com/", session)
+
+
+class AWSMLBlogAdapter(BaseNewsAdapter):
+    """AWS Machine Learning Blog."""
+    def __init__(self, session=None):
+        super().__init__("AWS ML Blog", "https://aws.amazon.com/blogs/machine-learning/feed/", "https://aws.amazon.com/blogs/machine-learning/", session)
+
+
+class TowardsAIAdapter(BaseNewsAdapter):
+    """Towards AI - AI/ML publication on Medium."""
+    def __init__(self, session=None):
+        super().__init__("Towards AI", "https://pub.towardsai.net/feed", "https://pub.towardsai.net/", session)
+
+
+class MachineLearningMasteryAdapter(BaseNewsAdapter):
+    """Machine Learning Mastery - ML tutorials and news."""
+    def __init__(self, session=None):
+        super().__init__("Machine Learning Mastery", "https://machinelearningmastery.com/blog/feed/", "https://machinelearningmastery.com/", session)
+
+
 NEWS_ADAPTERS = [
-    TechCrunchAIAdapter(),
-    VentureBeatAIAdapter(),
-    MITTechReviewAIAdapter(),
     TheDecoderAdapter(),
+    TowardsDataScienceAdapter(),
+    MarkTechPostAdapter(),
+    AnalyticsVidhyaAdapter(),
+    AWSMLBlogAdapter(),
+    TowardsAIAdapter(),
+    MachineLearningMasteryAdapter(),
+    AnalyticsIndiaMagAdapter(),
+    TechCrunchAIAdapter(),
+    MITTechReviewAIAdapter(),
     HuggingFaceBlogAdapter(),
 ]
