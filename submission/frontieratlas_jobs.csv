@@ -1,5 +1,68 @@
 record_id,source_name,source_url,collected_at,title,company_name,description,requirements,location,is_remote,employment_type,experience_level,role_family,salary_min_usd,salary_max_usd,currency,visa_sponsorship,published_date,application_url,extraction_status
+2ab8e45d-d1e7-4f6d-a1c3-ad09fd7d3b38,Greenhouse,https://boards-api.greenhouse.io/v1/boards/gusto/jobs,2026-11-23T05:06:03.426516+00:00,"Staff Software Engineer, Retirement Engineering","Gusto, Inc.",,,"Denver, CO - Hybrid; New York, NY - Hybrid; San Francisco, CA - Hybrid",False,,,Engineering,,,USD,False,2026-11-23 05:05:08+00,,FAILED
+3b695665-0d8f-4f60-9912-9606180230f6,Greenhouse,https://boards-api.greenhouse.io/v1/boards/gitlab/jobs,2026-11-23T05:06:03.384168+00:00,"Engineering Manager, SSCS: Supply Chain",GitLab,,,"Bangalore, India; Remote Ireland; Remote, Canada; Remote, Israel; Remote, United Kingdom; Remote, United States",True,,,ML Research,,,USD,False,2026-11-23 05:00:24+00,,FAILED
 4461990e-db29-4ed5-809f-2b902f1141d4,Greenhouse,https://boards-api.greenhouse.io/v1/boards/gusto/jobs,2026-11-23T03:29:15.664715+00:00,Site Reliability Engineer ,"Gusto, Inc.",,,"Denver, CO - Hybrid; San Francisco, CA - Hybrid; Seattle, WA - Remote",True,,,Engineering,,,USD,False,2026-11-23 03:04:49+00,,FAILED
+0af9ac13-4c3e-4139-a406-6860251a040f,Ashby,https://api.ashbyhq.com/posting-api/job-board/kong?includeCompensation=false,2026-11-23T05:08:45.695911+00:00,"Regional Sales Director, India",Kong,"Are you ready to unlock intelligence?
+
+If you don’t think you meet all of the criteria below but are still interested in the job, please apply.  Nobody checks every box - we’re looking for candidates that are particularly strong in a few areas, and have some interest and capabilities in others.
+
+
+
+About the role:
+
+Kong is seeking an Enterprise Sales Leader to help us build and grow the Kong API platform and our Enterprise Sales Team in India. We are searching for a seasoned industry leader who will lead our Enterprise Account Executives and drive business results and revenue. Reporting to the Country Manager,India this senior leadership position will have ownership and accountability to ensure Kong maximises our market potential bringing in new customers as well as growing our existing clients.
+
+This leader will work closely with our other senior leaders to ensure decisions are driving the overall Kong business goals and our long term vision continues to thrive. You will play a part in reshaping and leading the incredible growth of Kong. It is the intention of the leadership team to build a high quality, sustainable and strong sales organization. To date, a significant amount of Kong’s success has been gained through the quality of our product, our global account base, our adoption by the open source community and by inbound leads.
+
+You will build and strengthen a quality, scalable, regional sales team focused on acquisition of new brands and targeted account plans. Kong is the perfect environment for you to have a significant impact and grow our amazing company. We are a people first organisation and expect you to be the same.
+
+
+
+What You’ll Be Doing:
+
+ - Growing Kong’s presence and footprint in Enterprise accounts in India.
+
+ - Driving a highly performant and highly accountable culture to achieve and exceed sales goals.
+
+ - Attract, hire and retain top talent through your network and in collaboration with the rest of the org.
+
+ - Provide strong coaching and mentorship on the sales process, PG, qualification and closing.
+
+ - Conduct weekly forecast meetings with your team and report to leadership.
+
+ - Collaborate effectively with Marketing, Partners, and all stakeholders.
+
+
+
+What You’ll Bring:
+
+ - You have been a top performer as an IC and front-line manager with a track record of overachievement.
+
+ - Accurate forecasting at the individual and team levels.
+
+ - Ability to recruit, develop, and retain top talent.
+
+ - Strong territory management at a regional level.
+
+ - Proven systems/methodology for consistent pipeline generation.
+
+ - Experience using and teaching sales methodologies.
+
+ - Energy, passion, and rigour in your career as a Sales leader.
+
+
+
+About Kong:
+
+Kong Inc., the AI Connectivity Company, is building the connectivity layer of AI. Trusted by the Fortune 500® and AI-native startups alike, Kong’s unified API and AI platform enables organizations to secure, manage, accelerate, govern, and monetize the flow of intelligence across APIs and AI traffic — on any model, any cloud. For more information, visit www.konghq.com http://www.konghq.com.
+
+
+
+About Kong: 
+
+Kong Inc., the AI Connectivity Company, is building the connectivity layer of AI. Trusted by the Fortune 500® and AI-native startups alike, Kong’s unified API and AI platform enables organizations to secure, manage, accelerate, govern, and monetize the flow of intelligence across APIs and AI traffic — on any model, any cloud. For more information, visit www.konghq.com http://www.konghq.com.
+
+",,"Bangalore, India",True,FullTime,,Other,,,USD,False,2026-11-23 02:44:45.102+00,,FAILED
 15374045-a398-4676-9de1-f082d87a8d70,Greenhouse,https://boards-api.greenhouse.io/v1/boards/cloudflare/jobs,2026-11-23T03:29:15.600563+00:00,"HR Operations Specialist, Tokyo (12-months contract)",Cloudflare,,,Hybrid,False,,,Other,,,USD,False,2026-11-23 02:42:36+00,,FAILED
 b973d282-e67f-4803-aaa8-0286e01da959,Greenhouse,https://boards-api.greenhouse.io/v1/boards/cloudflare/jobs,2026-11-23T03:29:15.622481+00:00,"People Operations Specialist, Tokyo (12-months contract)",Cloudflare,,,Hybrid,False,,,Other,,,USD,False,2026-11-23 02:41:56+00,,FAILED
 29c94e31-149c-4a27-94a5-2ffabce2b1e1,Company Careers,https://about.gitlab.com/jobs/,2026-11-23T01:55:10.885307+00:00,Learn more,GitLab,,,,False,FULL_TIME,,Other,,,USD,False,2026-11-23 01:55:07.181172+00,,FAILED
@@ -19,6 +82,99 @@ d8a52981-52f2-4f41-993a-661a6fbbf586,Company Careers,https://www.anthropic.com/c
 7ee78234-c393-45f5-8e1e-75a2f2a6d791,Company Careers,https://www.pinecone.io/careers/,2026-11-23T01:37:04.268326+00:00,Join our talent community to stay connected!Interested in working at Pinecone but don’t see a role that fits? Please join our Open Talent Community to receive updates about upcoming opportunities.Join,Pinecone,,,,False,FULL_TIME,,Other,,,USD,False,2026-11-23 01:37:03.173658+00,,FAILED
 1bb3717f-3502-4a62-a47e-0004b9d3b346,Company Careers,https://cohere.com/careers,2026-11-23T01:37:04.238856+00:00,See open roles,Cohere,,,,False,FULL_TIME,,Other,,,USD,False,2026-11-23 01:36:58.408689+00,,FAILED
 8a86d87f-06db-474b-a898-aa88bbe8f068,Company Careers,https://www.anthropic.com/careers,2026-11-23T01:37:04.182687+00:00,Explore open roles,Anthropic,,,,False,FULL_TIME,,Other,,,USD,False,2026-11-23 01:36:55.89582+00,,FAILED
+7c096263-43a6-415c-8ed3-10333037722c,Ashby,https://api.ashbyhq.com/posting-api/job-board/langchain?includeCompensation=false,2026-11-23T05:08:45.671696+00:00,Engagement Manager  (London),Langchain,"ABOUT US
+
+At LangChain, our mission is to enable every company to own its intelligence. We believe agents will transform how companies operate, and we're building the foundation to make that future possible. Our open-source harnesses and LangSmith platform give developers and enterprises the infrastructure to run, improve, and govern agents at scale.
+
+We've raised $460M to date, with our most recent funding round valuing the company at $3B, backed by leading investors including Sequoia, Benchmark, IVP, and CapitalG. As we continue to expand our platform and tackle some of the hardest challenges in agent engineering, every team member has the opportunity to make a meaningful impact and help shape both our technology and the future of the industry.
+
+More than 7,000 organizations rely on LangSmith, from fast-growing startups to Fortune 500 enterprises, including NVIDIA, Bridgewater, LinkedIn, Workday, and Rippling. We're just getting started on making high-performing agents easier to build and manage at scale.
+
+
+
+
+ABOUT THE ROLE
+
+The Professional Services team is the bridge between LangChain's technology and the enterprise customers building on top of it. We partner with some of the world's most ambitious companies to help them move from pilot to production — designing solutions, accelerating time-to-value, and ensuring teams get the most out of LangChain, LangGraph, and LangSmith. We work at the intersection of deep technical expertise and customer partnership, and we take pride in the outcomes our customers achieve. As LangChain grows, PS plays a direct role in shaping how enterprise AI gets built in the real world.
+
+We're looking for an Engagement Manager to join our Professional Services team. You'll manage multiple concurrent technical engagements, ensuring successful delivery of Professional Services projects for enterprise customers. You'll be the primary point of contact for customers and coordinate cross-functional teams to deliver exceptional outcomes.
+
+This role offers direct impact on customer success, the opportunity to shape processes and methodologies, and the chance to work with cutting-edge AI technology. You'll join a collaborative team environment with a strong engineering culture.
+
+
+
+
+WHAT YOU'LL DO
+
+ - Engagement Lifecycle Management: Manage the full engagement lifecycle from SOW review through closeout, including planning, execution, risk management, scope management, and handoff
+
+ - Customer Communication & Relationship Management: Serve as the primary point of contact for customers — deliver status updates, manage expectations, handle escalations, and negotiate scope changes
+
+ - Multi-Engagement Management: Manage 5–8 concurrent technical engagements simultaneously while maintaining quality and meeting deadlines
+
+ - Cross-Functional Coordination: Coordinate with Solution Architects, AI Engineers, Sales, Support, Enablement, and Product/Engineering teams; manage resource allocation and capacity planning
+
+ - Risk & Issue Management: Proactively identify risks and issues, develop mitigation strategies, track resolution, and ensure deliverables meet quality standards
+   
+   
+
+
+WHAT YOU'LL BRING
+
+ - You have 5+ years of engagement or project management experience, preferably with technical or software engagements
+
+ - You've managed multiple concurrent engagements and know how to keep quality high across all of them
+
+ - You have strong experience working with enterprise customers and leading customer-facing communication
+
+ - You've coordinated cross-functional technical teams — engineers, architects, product — and managed resource allocation
+
+ - You're experienced with project management tools such as Linear, Jira, Asana, or similar
+
+ - You've handled scope change management and complex stakeholder dynamics
+
+ - You have start-up DNA: you thrive in fast-paced, ambiguous environments and don't wait to be told what to do
+
+ - You're a natural communicator — clear, direct, and effective with both technical teams and executive stakeholders
+
+You exemplify our operating principles
+
+ - You are motivated to build something great: you hold a high bar for quality, craft, and impact
+
+ - You embrace hot takes: you share informed opinions, challenge the status quo, and engage in constructive debate
+
+ - You operate with maximum agency: you take ownership, move work forward independently, and help others unblock
+
+ - You run to the roar: you lean into hard problems, ambiguity, and fast-moving challenges
+
+
+NICE TO HAVE
+
+ - PMP or similar project management certification
+
+ - Experience in Professional Services or consulting
+
+ - Experience with AI/ML or infrastructure engagements
+
+ - Experience with time tracking and billing coordination
+
+ - Knowledge of software development lifecycle and agile methodologies
+
+
+
+
+COMPENSATION PHILOSOPHY
+
+We offer competitive compensation that includes base salary, variable compensation for relevant roles, meaningful equity, benefits, and perks. 
+
+We are hiring for this role across a range of scope, and the compensation band reflects that. Your offer depends on what we learn about your impact, craft, leadership, and communication during the interview process. We will tell you early where you’re tracking and talk comp with you before offer stage. Team members in the EU, UK, and APAC receive locally competitive benefits aligned with regional norms and regulations.
+
+
+
+
+BENEFITS
+
+Benefits include medical, dental, and vision coverage, flexible vacation, a 401(k) plan, meals on in-office days in the US and more.",,London,False,FullTime,,Other,,,USD,False,2026-11-23 01:36:10.466+00,,FAILED
 2fa33409-7b6e-4571-8699-137dc2c706f5,Company Careers,https://www.amazon.science/jobs,2026-11-23T01:26:38.497839+00:00,Careers,Amazon Science,,,,False,FULL_TIME,,Other,,,USD,False,2026-11-23 01:26:36.915882+00,,FAILED
 08ff2d0f-6134-483b-bd44-a46e5ee08679,Company Careers,https://www.amazon.science/jobs,2026-11-23T01:26:38.479400+00:00,CareersExplore our open roles.,Amazon Science,,,,False,FULL_TIME,,Other,,,USD,False,2026-11-23 01:26:36.915868+00,,FAILED
 748c482a-0ff5-487a-a68f-ee6fffe4daa8,Company Careers,https://www.amazon.science/jobs,2026-11-23T01:26:38.459463+00:00,CareersExplore our open roles.,Amazon Science,,,,False,FULL_TIME,,Other,,,USD,False,2026-11-23 01:26:36.915851+00,,FAILED
@@ -72,6 +228,394 @@ d739d4e7-8f05-4cb4-b0c0-395e64a87870,Greenhouse,https://boards-api.greenhouse.io
 690fccd1-e9de-4f4f-b8ec-581650f022ea,Greenhouse,https://boards-api.greenhouse.io/v1/boards/anthropic/jobs,2026-11-23T00:43:12.322708+00:00,"Program Manager, Cloud Partners",Anthropic,,,"San Francisco, CA | New York City, NY",False,,,Other,,,USD,False,2026-11-22 19:46:05+00,,FAILED
 0f70b8ad-29d5-4db8-96af-e2e5b0a6002c,Greenhouse,https://boards-api.greenhouse.io/v1/boards/anthropic/jobs,2026-11-23T00:43:12.294967+00:00,Head of Campaign Operations,Anthropic,,,"San Francisco, CA | New York City, NY",False,,,ML Research,,,USD,False,2026-11-22 19:40:48+00,,FAILED
 14316bf0-ab32-4a58-a6b1-11b4884ef1cd,Greenhouse,https://boards-api.greenhouse.io/v1/boards/anthropic/jobs,2026-11-23T00:43:12.253632+00:00,Campaign Manager,Anthropic,,,"San Francisco, CA | New York City, NY",False,,,ML Research,,,USD,False,2026-11-22 19:38:51+00,,FAILED
+a9b31a0a-878a-422f-abbf-72ba3fa470b3,Ashby,https://api.ashbyhq.com/posting-api/job-board/openai?includeCompensation=false,2026-11-23T05:08:45.643223+00:00,"Research Engineer / Research Scientist, Health",Openai,"About the Team
+
+The Health team, within OpenAI’s broader Post Training organization, has a mission to ensure AGI improves health for all humanity.
+
+Improving human health will be one of the defining impacts of AGI. Hundreds of millions of people already turn to ChatGPT for questions about their health and millions of clinicians use it weekly to support care delivery. Increasingly capable models create an opportunity to make high-quality medical intelligence more accessible across patients and clinicians—raising the floor of human health—and accelerate the new capabilities and scientific advances that raise the ceiling of human health.
+
+Our job is to make those benefits real. We work across the full model stack—pretraining, midtraining, reinforcement learning, post-training, evaluations, harnessing, and deployment—and connect that research to the patients, clinicians, and real-world outcomes we aim to improve.
+
+About the Role
+
+We’re looking for an exceptional, hands-on researcher who wants to build frontier health capabilities and turn them into impact at scale. This is a role for someone who can take an important, underdefined problem from 0→1: identify the right bet, build what’s needed to test it, and drive it all the way to a measurable improvement in the models and products we actually ship.
+
+We’re especially excited about two kinds of people: researchers with the technical depth to move the frontier in pretraining, reinforcement learning (RL) / post-training, or evals; and researchers with real depth in developing frontier biomedical AI capabilities. Prior experience in healthcare is helpful but not required. Research excellence, velocity, ownership, and alignment with the mission are most important to us.
+
+This role is based in San Francisco, CA. We use a hybrid work model of 3 days in the office per week and offer relocation assistance to new employees.
+
+In this role, you will:
+
+ - Own a high-leverage research direction end to end—from deciding which problem matters and how to measure it, to designing and running experiments, to integrating successful work into frontier models.
+
+ - Develop scalable methods across pretraining, midtraining, reinforcement learning, and post-training to improve health reasoning, knowledge, reliability, calibration, and behavior.
+
+ - Build and study RL environments grounded in real health problems; understand which data and training setups produce robust, generalizable improvements rather than just higher benchmark scores.
+
+ - Create meaningful, trustworthy, and unsaturated evaluations that tell us whether our models are actually getting better at what matters for patients and clinicians.
+
+ - Advance new 0→1 capabilities in health that may have an increasing impact with upcoming increases in model intelligence and test-time compute.
+
+ - Develop models and agents that can work over longitudinal, multimodal health data to produce useful predictions, surface new scientific insights, and support better individual- and population-level decisions.
+
+ - Work closely with researchers, engineers, clinicians, and product teams to bring health capabilities into the models and products used by hundreds of millions of people.
+
+ - Help establish that AI improves real health outcomes, not just that it can produce impressive answers or demos.
+
+You might thrive in this role if you:
+
+ - Care deeply about using increasingly capable AI to improve human health, and take seriously the responsibility of deploying it safely.
+
+ - Have an unusually strong track record in machine learning or AI research, with the depth to push at least one important area forward: pretraining, reinforcement learning / post-training, evals (not necessarily specific to health); or substantial depth in a relevant frontier health / biomedical AI problem.
+
+ - Are a hands-on builder: you can design experiments, write and debug code, work directly with data and training infrastructure, and move quickly from an idea to evidence.
+
+ - Have strong research taste and can distinguish an important problem or a promising approach from an interesting one.
+
+ - Own ambiguous problems end to end, and are willing to learn whatever is missing to get the job done.
+
+ - Stay goal-oriented rather than method-oriented, and don’t shy away from unglamorous work if it is the highest-leverage path to impact.
+
+ - Care about whether a capability will scale, generalize, and make it into the real world—not just whether it can be shown in a paper or prototype.
+
+ - Enjoy working with low-ego, ambitious people across research, engineering, medicine, and product.
+
+ - Bonus: Experience with health AI, longitudinal health data, or clinical research.
+
+ 
+
+If you want your work to help make medical intelligence widely accessible—and to work on some of the most important frontier problems at the intersection of AI, science, and human health—we’d love to hear from you.
+
+
+
+About OpenAI
+
+OpenAI is an AI research and deployment company dedicated to ensuring that general-purpose artificial intelligence benefits all of humanity. We push the boundaries of the capabilities of AI systems and seek to safely deploy them to the world through our products. AI is an extremely powerful tool that must be created with safety and human needs at its core, and to achieve our mission, we must encompass and value the many different perspectives, voices, and experiences that form the full spectrum of humanity. 
+
+We are an equal opportunity employer, and we do not discriminate on the basis of race, religion, color, national origin, sex, sexual orientation, age, veteran status, disability, genetic information, or other applicable legally protected characteristic. 
+
+For additional information, please see OpenAI’s Affirmative Action and Equal Employment Opportunity Policy Statement https://cdn.openai.com/policies/eeo-policy-statement.pdf.
+
+Background checks for applicants will be administered in accordance with applicable law, and qualified applicants with arrest or conviction records will be considered for employment consistent with those laws, including the San Francisco Fair Chance Ordinance, the Los Angeles County Fair Chance Ordinance for Employers, and the California Fair Chance Act, for US-based candidates. For unincorporated Los Angeles County workers: we reasonably believe that criminal history may have a direct, adverse and negative relationship with the following job duties, potentially resulting in the withdrawal of a conditional offer of employment: protect computer hardware entrusted to you from theft, loss or damage; return all computer hardware in your possession (including the data contained therein) upon termination of employment or end of assignment; and maintain the confidentiality of proprietary, confidential, and non-public information. In addition, job duties require access to secure and protected information technology systems and related data security obligations.
+
+To notify OpenAI that you believe this job posting is non-compliant, please submit a report through this form https://form.asana.com/?d=57018692298241&k=5MqR40fZd7jlxVUh5J-UeA. No response will be provided to inquiries unrelated to job posting compliance.
+
+We are committed to providing reasonable accommodations to applicants with disabilities, and requests can be made via this link https://form.asana.com/?k=bQ7w9h3iexRlicUdWRiwvg&d=57018692298241.
+
+OpenAI Global Applicant Privacy Policy https://cdn.openai.com/policies/global-employee-and-contractor-privacy-policy.pdf
+
+At OpenAI, we believe artificial intelligence has the potential to help people solve immense global challenges, and we want the upside of AI to be widely shared. Join us in shaping the future of technology.",,San Francisco,False,FullTime,,ML Research,,,USD,False,2026-11-22 17:20:10.7+00,,FAILED
+f26ace69-1e0f-48da-9cfa-7372b73f4a96,Ashby,https://api.ashbyhq.com/posting-api/job-board/openai?includeCompensation=false,2026-11-23T05:08:45.616029+00:00,"Research Engineer / Research Scientist, Human Flourishing",Openai,"About the Team
+
+The Human Flourishing team’s mission is to ensure AI systems understand and advance human flourishing. As AI becomes more capable and plays a larger role in people’s lives, we want its human benefits to grow with its capabilities. The Human Flourishing team is part of the broader Post Training organization.
+
+Our approach has two parts. Firstly, we measure and improve models’ understanding, capability, and propensity to act according to people’s values and to help them achieve their long-term goals. Secondly, we directly scale tangible impact for users in human domains like education and mental health, working across research, product, and partnerships to increase the benefits over a billion people experience weekly when they use ChatGPT.
+
+Our recent work includes Beneficial RL https://alignment.openai.com/beneficial-rl/, which investigates how training for beneficial behavior generalizes across settings, and MentalHealthBench https://openai.com/index/introducing-mentalhealthbench/, a benchmark developed with mental health experts to evaluate realistic conversations.
+
+About the Role
+
+We’re looking for an exceptional, hands-on researcher to turn difficult-to-define signals of long-term flourishing into measurable improvements in model behavior. You’ll help set research direction, build what is needed to test your ideas, and drive successful work into the models and products we ship.
+
+We’re especially interested in researchers with deep experience improving frontier models through pretraining or reinforcement learning (RL) / post-training, especially on less verifiable problems, or researchers who combine strong LLM skills with deep expertise in domains like education or mental health. Prior experience in these domains is not required.
+
+In this role, you will
+
+ - Develop scalable training methods across the training stack that improve how models understand people’s values, support their agency, and help them achieve long-term goals.
+
+ - Lead high-leverage research from an open question to a shipped improvement: choose a hard-to-define problem, iteratively define success, run experiments, and integrate into frontier models.
+
+ - Build RL environments for difficult-to-verify outcomes, and study whether beneficial behavior generalizes across settings.
+
+ - Create evaluations grounded in human expertise and feedback that reveal capability gaps, unintended incentives in RL, and failures that aggregate scores can miss.
+
+ - Test whether measures of model behavior predict better learning, wellbeing, and other long-term outcomes, and use those findings to guide training.
+
+ - Build new 0→1 capabilities in human domains that may have an increasing impact with upcoming increases in model intelligence and test-time compute.
+
+ - Partner with product teams, engineers, partnerships teams, and domain experts to deploy promising methods, measure their effects in real use, and turn what you learn into further improvements.
+
+ - Assess AI’s impacts on human flourishing at the scale of over a billion users.
+
+You might thrive in this role if you
+
+ - Care deeply about helping AI improve people’s lives, and feel this is a responsibility that comes with increasingly capable models.
+
+ - Have an unusually strong research record in pretraining or RL / post-training research, especially in a hard-to-verify area; or combine strong LLM research skills with deep expertise in education, mental health, or a related field of human benefit.
+
+ - Are a hands-on builder who can turn ideas into rigorous experiments, write and debug code, and work directly with data and training infrastructure.
+
+ - Have the taste to choose consequential problems and actionable steps on the path to solving those problems.
+
+ - Take ownership of ambiguous problems and choose methods based on the impact they can deliver, including when the most useful work is unglamorous.
+
+ - Care about whether a capability will scale, generalize, and make it into the real world—not just whether it can be shown in a paper or prototype.
+
+ - Work well across disciplines and can grok the most important bottlenecks to scaling our impact in a multidisciplinary problem.
+
+If you’re excited about ensuring AI systems advance human flourishing, we’d love to hear from you.
+
+
+
+About OpenAI
+
+OpenAI is an AI research and deployment company dedicated to ensuring that general-purpose artificial intelligence benefits all of humanity. We push the boundaries of the capabilities of AI systems and seek to safely deploy them to the world through our products. AI is an extremely powerful tool that must be created with safety and human needs at its core, and to achieve our mission, we must encompass and value the many different perspectives, voices, and experiences that form the full spectrum of humanity. 
+
+We are an equal opportunity employer, and we do not discriminate on the basis of race, religion, color, national origin, sex, sexual orientation, age, veteran status, disability, genetic information, or other applicable legally protected characteristic. 
+
+For additional information, please see OpenAI’s Affirmative Action and Equal Employment Opportunity Policy Statement https://cdn.openai.com/policies/eeo-policy-statement.pdf.
+
+Background checks for applicants will be administered in accordance with applicable law, and qualified applicants with arrest or conviction records will be considered for employment consistent with those laws, including the San Francisco Fair Chance Ordinance, the Los Angeles County Fair Chance Ordinance for Employers, and the California Fair Chance Act, for US-based candidates. For unincorporated Los Angeles County workers: we reasonably believe that criminal history may have a direct, adverse and negative relationship with the following job duties, potentially resulting in the withdrawal of a conditional offer of employment: protect computer hardware entrusted to you from theft, loss or damage; return all computer hardware in your possession (including the data contained therein) upon termination of employment or end of assignment; and maintain the confidentiality of proprietary, confidential, and non-public information. In addition, job duties require access to secure and protected information technology systems and related data security obligations.
+
+To notify OpenAI that you believe this job posting is non-compliant, please submit a report through this form https://form.asana.com/?d=57018692298241&k=5MqR40fZd7jlxVUh5J-UeA. No response will be provided to inquiries unrelated to job posting compliance.
+
+We are committed to providing reasonable accommodations to applicants with disabilities, and requests can be made via this link https://form.asana.com/?k=bQ7w9h3iexRlicUdWRiwvg&d=57018692298241.
+
+OpenAI Global Applicant Privacy Policy https://cdn.openai.com/policies/global-employee-and-contractor-privacy-policy.pdf
+
+At OpenAI, we believe artificial intelligence has the potential to help people solve immense global challenges, and we want the upside of AI to be widely shared. Join us in shaping the future of technology.",,San Francisco,False,FullTime,,ML Research,,,USD,False,2026-11-22 17:19:07.642+00,,FAILED
+4c6a6d6b-e0f5-4122-866a-d4bde1172047,Ashby,https://api.ashbyhq.com/posting-api/job-board/openai?includeCompensation=false,2026-11-23T05:08:45.591964+00:00,"Research Engineer / Research Scientist - Post Training, Memory",Openai,"About the Team
+
+The Personalization-Memory team, within OpenAI's broader Post Training organization, is focused on developing agents that can learn from prior interactions in order to become more helpful and efficient over time. We build general-purpose memory and personalization capabilities that transfer across ChatGPT and other agentic products, and we collaborate with applied engineering on the product surfaces that allow users to interact with memory.
+
+About the Role
+
+As a Research Engineer / Research Scientist on the Personalization-Memory team, your work will span memory architecture, post-training, and developing long-horizon tasks for training and evaluations.
+
+We're looking for individuals who have a background in reinforcement learning research, are able to iterate quickly, and who can convert scientific rigor and long-term research into realized product impact.
+
+This role is based in San Francisco, CA. We use a hybrid work model of 3 days in the office per week and offer relocation assistance to new employees.
+
+In this role, you will:
+
+ - Own and pursue a research agenda for improving long-horizon memory and personalization in frontier models.
+
+ - Build robust evaluations for tracking modeling improvements.
+
+ - Design, implement, test, and debug code across our research stack.
+
+ - Collaborate closely with the research and product teams to influence the shape of technical solutions in the product.
+
+You might thrive in this role if you:
+
+ - Love being on the cutting edge of RL and frontier model research.
+
+ - Value principled approaches and research craftsmanship.
+
+ - Are passionate about long-horizon tasks, memory, and turning your research into product impact.
+
+ - Are comfortable diving into a large ML codebase to debug.
+
+ - Thrive in a fast-paced, dynamic, and technically complex environment.
+
+
+
+About OpenAI
+
+OpenAI is an AI research and deployment company dedicated to ensuring that general-purpose artificial intelligence benefits all of humanity. We push the boundaries of the capabilities of AI systems and seek to safely deploy them to the world through our products. AI is an extremely powerful tool that must be created with safety and human needs at its core, and to achieve our mission, we must encompass and value the many different perspectives, voices, and experiences that form the full spectrum of humanity. 
+
+We are an equal opportunity employer, and we do not discriminate on the basis of race, religion, color, national origin, sex, sexual orientation, age, veteran status, disability, genetic information, or other applicable legally protected characteristic. 
+
+For additional information, please see OpenAI’s Affirmative Action and Equal Employment Opportunity Policy Statement https://cdn.openai.com/policies/eeo-policy-statement.pdf.
+
+Background checks for applicants will be administered in accordance with applicable law, and qualified applicants with arrest or conviction records will be considered for employment consistent with those laws, including the San Francisco Fair Chance Ordinance, the Los Angeles County Fair Chance Ordinance for Employers, and the California Fair Chance Act, for US-based candidates. For unincorporated Los Angeles County workers: we reasonably believe that criminal history may have a direct, adverse and negative relationship with the following job duties, potentially resulting in the withdrawal of a conditional offer of employment: protect computer hardware entrusted to you from theft, loss or damage; return all computer hardware in your possession (including the data contained therein) upon termination of employment or end of assignment; and maintain the confidentiality of proprietary, confidential, and non-public information. In addition, job duties require access to secure and protected information technology systems and related data security obligations.
+
+To notify OpenAI that you believe this job posting is non-compliant, please submit a report through this form https://form.asana.com/?d=57018692298241&k=5MqR40fZd7jlxVUh5J-UeA. No response will be provided to inquiries unrelated to job posting compliance.
+
+We are committed to providing reasonable accommodations to applicants with disabilities, and requests can be made via this link https://form.asana.com/?k=bQ7w9h3iexRlicUdWRiwvg&d=57018692298241.
+
+OpenAI Global Applicant Privacy Policy https://cdn.openai.com/policies/global-employee-and-contractor-privacy-policy.pdf
+
+At OpenAI, we believe artificial intelligence has the potential to help people solve immense global challenges, and we want the upside of AI to be widely shared. Join us in shaping the future of technology.",,San Francisco,False,FullTime,,ML Research,,,USD,False,2026-11-22 17:17:35.967+00,,FAILED
+6b251411-d9a6-4703-95e1-edf3d75241a5,Ashby,https://api.ashbyhq.com/posting-api/job-board/openai?includeCompensation=false,2026-11-23T05:08:45.564123+00:00,"Research Engineer/Research Scientist- Post Training, Model Experience",Openai,"About the Team
+
+The Post Training team is responsible for training and improving pre-trained models to be deployed into ChatGPT, the API, and potential future products. In the Model Experience team, we shape the default character and behavior of ChatGPT: how the model communicates, responds to users, uses its capabilities, and behaves across different contexts and languages. Our goal is to make every interaction with ChatGPT thoughtful, helpful, and trustworthy. We take an opinionated view of what good human–AI interaction should look like, then turn that vision into real model behavior through human data, evaluations, reward models, and post-training.
+
+Our work sits at the intersection of research, product, and model design. We partner closely with teams across OpenAI to conduct research and ensure our models are thoughtful, safe, reliable to serve millions of users.
+
+About the Role
+
+As a Research Engineer / Scientist, you will research and develop improvements to our models. Our team works in research areas combining reinforcement learning and products.
+
+We're looking for individuals with strong ML engineering skills and research experience, especially with novel and highly capable models. An ideal candidate is passionate about product-driven research and the quality of human-AI interaction.
+
+This role is based in San Francisco, CA. We use a hybrid work model of 3 days in the office per week and offer relocation assistance to new employees.
+
+In this role, you will:
+
+ - Own and pursue a research agenda to improve model capability and performance.
+
+ - Collaborate closely with the other research and product teams, allowing customers to optimize their own models.
+
+ - Build robust evaluations for tracking modeling improvements.
+
+ - Design, implement, test, and debug code across our research stack.
+
+You might thrive in this role if you:
+
+ - Have a deep understanding of machine learning and machine learning applications.
+
+ - Have good judgment about model behavior and can communicate this judgment effectively.
+
+ - Enjoy taking ambitious, qualitative problems and turning them into concrete training interventions.
+
+ - Have a working knowledge of relevant models, and building evaluations for model capability improvement.
+
+ - Are comfortable diving into a large ML codebase to debug.
+
+ - Thrive in a dynamic, technically complex, and collaborative environment.
+
+
+
+About OpenAI
+
+OpenAI is an AI research and deployment company dedicated to ensuring that general-purpose artificial intelligence benefits all of humanity. We push the boundaries of the capabilities of AI systems and seek to safely deploy them to the world through our products. AI is an extremely powerful tool that must be created with safety and human needs at its core, and to achieve our mission, we must encompass and value the many different perspectives, voices, and experiences that form the full spectrum of humanity. 
+
+We are an equal opportunity employer, and we do not discriminate on the basis of race, religion, color, national origin, sex, sexual orientation, age, veteran status, disability, genetic information, or other applicable legally protected characteristic. 
+
+For additional information, please see OpenAI’s Affirmative Action and Equal Employment Opportunity Policy Statement https://cdn.openai.com/policies/eeo-policy-statement.pdf.
+
+Background checks for applicants will be administered in accordance with applicable law, and qualified applicants with arrest or conviction records will be considered for employment consistent with those laws, including the San Francisco Fair Chance Ordinance, the Los Angeles County Fair Chance Ordinance for Employers, and the California Fair Chance Act, for US-based candidates. For unincorporated Los Angeles County workers: we reasonably believe that criminal history may have a direct, adverse and negative relationship with the following job duties, potentially resulting in the withdrawal of a conditional offer of employment: protect computer hardware entrusted to you from theft, loss or damage; return all computer hardware in your possession (including the data contained therein) upon termination of employment or end of assignment; and maintain the confidentiality of proprietary, confidential, and non-public information. In addition, job duties require access to secure and protected information technology systems and related data security obligations.
+
+To notify OpenAI that you believe this job posting is non-compliant, please submit a report through this form https://form.asana.com/?d=57018692298241&k=5MqR40fZd7jlxVUh5J-UeA. No response will be provided to inquiries unrelated to job posting compliance.
+
+We are committed to providing reasonable accommodations to applicants with disabilities, and requests can be made via this link https://form.asana.com/?k=bQ7w9h3iexRlicUdWRiwvg&d=57018692298241.
+
+OpenAI Global Applicant Privacy Policy https://cdn.openai.com/policies/global-employee-and-contractor-privacy-policy.pdf
+
+At OpenAI, we believe artificial intelligence has the potential to help people solve immense global challenges, and we want the upside of AI to be widely shared. Join us in shaping the future of technology.",,San Francisco,False,FullTime,,ML Research,,,USD,False,2026-11-22 17:14:45.574+00,,FAILED
+5af076af-764d-4110-893f-6dbff7726958,Ashby,https://api.ashbyhq.com/posting-api/job-board/openai?includeCompensation=false,2026-11-23T05:08:45.539574+00:00,"Research Engineer/Research Scientist-Post Training, Proactivity",Openai,"About the Team
+
+The Proactivity Research team, within OpenAI’s broader Post Training team, is focused on making our models in ChatGPT, Dots, and future potential products proactive in ways that are truly useful. We're laying the technical foundations for AI that can anticipate what users need in real time, adapt as their goals and preferences shift, and build a deeper, evolving understanding of the person it's helping.
+
+About the Role
+
+As a Research Engineer / Scientist, you will research and develop improvements to our models’ personalization and agentic capabilities. Our team works on reinforcement learning, dataset creation, evaluations, and other post-training methods. We partner closely with research and product teams across the company to realize the vision of a highly personalized, collaborative, and proactive assistant.
+
+We're looking for individuals with strong ML engineering skills and research experience, especially with novel and highly capable models. An ideal candidate is passionate about product-driven research.
+
+This role is based in San Francisco, CA. We use a hybrid work model of 3 days in the office per week and offer relocation assistance to new employees.
+
+In this role, you will:
+
+ - Own and pursue a research agenda to improve the proactivity and ability of our models to anticipate user needs and further their goals.
+
+ - Build robust evaluations for tracking modeling improvements.
+
+ - Design, implement, test, and debug code across our research stack.
+
+ - Collaborate closely with the other research and product teams to influence the shape of technical solutions in the product
+
+You might thrive in this role if you:
+
+ - Have a deep understanding of machine learning and machine learning applications.
+
+ - Have a working knowledge of LLM post-training and evaluation approaches
+
+ - Are passionate about, or have experience thinking about, personalization and enabling users to achieve their goals
+
+ - Are comfortable diving into a large ML codebase to debug.
+
+ - Thrive in a dynamic and technically complex environment.
+
+
+
+
+
+About OpenAI
+
+OpenAI is an AI research and deployment company dedicated to ensuring that general-purpose artificial intelligence benefits all of humanity. We push the boundaries of the capabilities of AI systems and seek to safely deploy them to the world through our products. AI is an extremely powerful tool that must be created with safety and human needs at its core, and to achieve our mission, we must encompass and value the many different perspectives, voices, and experiences that form the full spectrum of humanity. 
+
+We are an equal opportunity employer, and we do not discriminate on the basis of race, religion, color, national origin, sex, sexual orientation, age, veteran status, disability, genetic information, or other applicable legally protected characteristic. 
+
+For additional information, please see OpenAI’s Affirmative Action and Equal Employment Opportunity Policy Statement https://cdn.openai.com/policies/eeo-policy-statement.pdf.
+
+Background checks for applicants will be administered in accordance with applicable law, and qualified applicants with arrest or conviction records will be considered for employment consistent with those laws, including the San Francisco Fair Chance Ordinance, the Los Angeles County Fair Chance Ordinance for Employers, and the California Fair Chance Act, for US-based candidates. For unincorporated Los Angeles County workers: we reasonably believe that criminal history may have a direct, adverse and negative relationship with the following job duties, potentially resulting in the withdrawal of a conditional offer of employment: protect computer hardware entrusted to you from theft, loss or damage; return all computer hardware in your possession (including the data contained therein) upon termination of employment or end of assignment; and maintain the confidentiality of proprietary, confidential, and non-public information. In addition, job duties require access to secure and protected information technology systems and related data security obligations.
+
+To notify OpenAI that you believe this job posting is non-compliant, please submit a report through this form https://form.asana.com/?d=57018692298241&k=5MqR40fZd7jlxVUh5J-UeA. No response will be provided to inquiries unrelated to job posting compliance.
+
+We are committed to providing reasonable accommodations to applicants with disabilities, and requests can be made via this link https://form.asana.com/?k=bQ7w9h3iexRlicUdWRiwvg&d=57018692298241.
+
+OpenAI Global Applicant Privacy Policy https://cdn.openai.com/policies/global-employee-and-contractor-privacy-policy.pdf
+
+At OpenAI, we believe artificial intelligence has the potential to help people solve immense global challenges, and we want the upside of AI to be widely shared. Join us in shaping the future of technology.",,San Francisco,False,FullTime,,ML Research,,,USD,False,2026-11-22 17:12:41.4+00,,FAILED
+702a3622-d23c-4674-a536-8cd0a5aba98f,Ashby,https://api.ashbyhq.com/posting-api/job-board/openai?includeCompensation=false,2026-11-23T05:08:45.495487+00:00,"Research Engineer / Research Scientist, Post-Training — Collective Alignment (User Signals)",Openai,"About the Team
+
+The Collective Alignment (User Signals) team is a post-training research team working at the intersection of data science, human feedback, and reinforcement learning. We develop methods for learning from real-world user interactions to build AI systems that deliver lasting value, helping people learn, grow, and accomplish increasingly complex goals with ChatGPT.
+
+Learning from user feedback presents fundamental research challenges: signals are often noisy, biased, and difficult to interpret, and improvements in offline metrics do not always translate into better experiences for users. Our team develops scientific approaches to understanding these signals and translating them into improvements in model behavior through evaluations, reward modeling, and post-training.
+
+About the Role
+
+As a Research Engineer or Research Scientist, you will investigate how AI systems can learn from human feedback and real-world usage to better serve users over time.
+
+You will develop new approaches to extracting meaningful learning signals from complex user interactions and incorporating those signals into model training.
+
+This role requires strong deep learning research skills, scientific rigor, and curiosity about how people interact with AI. You will design controlled experiments and ablations, critically examine the relationship between offline evaluations and online model behavior, and work closely with research, product, and data science teams to understand whether improvements translate into meaningful value for users.
+
+In this role, you will:
+
+ - Develop novel methods for learning from human feedback and user interaction signals.
+
+ - Research approaches to incorporating feedback into reward modeling, reinforcement learning, and post-training.
+
+ - Design rigorous experiments and ablation studies to isolate the effects of new data, objectives, and training methods.
+
+ - Develop offline evaluations and investigate their relationship with online experiments and real-world user outcomes.
+
+ - Analyze unexpected results, investigate discrepancies between evaluation metrics and user behavior, and develop hypotheses to guide further research.
+
+ - Evaluate tradeoffs and regressions to improve targeted model behaviors while preserving broader capabilities.
+
+ - Collaborate with research, alignment, product, and data science teams.
+
+ - Implement and debug experiments across large-scale deep learning research systems.
+
+You might thrive in this role if you:
+
+ - Have a strong background in deep learning research through academic or industry experience.
+
+ - Have demonstrated research ability through publications or substantive research contributions in deep learning or LLM post-training.
+
+ - Have experience developing new machine learning methods and evaluating them through rigorous, hypothesis-driven experimentation.
+
+ - Think critically about experimental design, measurement, and what evaluation results do and do not establish about model behavior.
+
+ - Are comfortable designing ablations, investigating surprising results, and reasoning about the relationship between offline metrics and real-world outcomes.
+
+ - Have strong programming skills and experience working with complex ML codebases.
+
+ - Are curious about how people interact with AI and how those interactions can inform better models.
+
+Nice to have:
+
+ - Experience with RLHF, reinforcement learning, or modern LLM post-training.
+
+ - Research or demonstrated interest in AI alignment, human feedback, or user signals.
+
+ - Experience with online experimentation, evaluation methodology, or learning from noisy and biased feedback.
+
+ - Experience connecting machine learning research with real-world product behavior.
+
+
+
+About OpenAI
+
+OpenAI is an AI research and deployment company dedicated to ensuring that general-purpose artificial intelligence benefits all of humanity. We push the boundaries of the capabilities of AI systems and seek to safely deploy them to the world through our products. AI is an extremely powerful tool that must be created with safety and human needs at its core, and to achieve our mission, we must encompass and value the many different perspectives, voices, and experiences that form the full spectrum of humanity. 
+
+We are an equal opportunity employer, and we do not discriminate on the basis of race, religion, color, national origin, sex, sexual orientation, age, veteran status, disability, genetic information, or other applicable legally protected characteristic. 
+
+For additional information, please see OpenAI’s Affirmative Action and Equal Employment Opportunity Policy Statement https://cdn.openai.com/policies/eeo-policy-statement.pdf.
+
+Background checks for applicants will be administered in accordance with applicable law, and qualified applicants with arrest or conviction records will be considered for employment consistent with those laws, including the San Francisco Fair Chance Ordinance, the Los Angeles County Fair Chance Ordinance for Employers, and the California Fair Chance Act, for US-based candidates. For unincorporated Los Angeles County workers: we reasonably believe that criminal history may have a direct, adverse and negative relationship with the following job duties, potentially resulting in the withdrawal of a conditional offer of employment: protect computer hardware entrusted to you from theft, loss or damage; return all computer hardware in your possession (including the data contained therein) upon termination of employment or end of assignment; and maintain the confidentiality of proprietary, confidential, and non-public information. In addition, job duties require access to secure and protected information technology systems and related data security obligations.
+
+To notify OpenAI that you believe this job posting is non-compliant, please submit a report through this form https://form.asana.com/?d=57018692298241&k=5MqR40fZd7jlxVUh5J-UeA. No response will be provided to inquiries unrelated to job posting compliance.
+
+We are committed to providing reasonable accommodations to applicants with disabilities, and requests can be made via this link https://form.asana.com/?k=bQ7w9h3iexRlicUdWRiwvg&d=57018692298241.
+
+OpenAI Global Applicant Privacy Policy https://cdn.openai.com/policies/global-employee-and-contractor-privacy-policy.pdf
+
+At OpenAI, we believe artificial intelligence has the potential to help people solve immense global challenges, and we want the upside of AI to be widely shared. Join us in shaping the future of technology.",,San Francisco,False,FullTime,,ML Research,,,USD,False,2026-11-22 17:08:09.743+00,,FAILED
 996bb4c0-c153-4bc7-909e-d57f4d54ef92,Greenhouse,https://boards-api.greenhouse.io/v1/boards/airbnb/jobs,2026-11-23T03:29:15.552510+00:00,"Senior Analyst, France & Netherlands (12 Month Fixed-Term Contract)",Airbnb,,,"Paris, France",False,,,Data,,,USD,False,2026-11-22 16:53:47+00,,FAILED
 45133a04-9c5d-4403-b310-8905d2655957,Company Careers,https://www.amazon.science/jobs,2026-11-22T16:23:28.861845+00:00,Careers,Amazon Science,,,,False,FULL_TIME,,Other,,,USD,False,2026-11-22 16:23:27.275792+00,,FAILED
 c30a3836-65d1-4fbc-8586-11d1a5a44836,Company Careers,https://www.amazon.science/jobs,2026-11-22T16:23:28.842448+00:00,CareersExplore our open roles.,Amazon Science,,,,False,FULL_TIME,,Other,,,USD,False,2026-11-22 16:23:27.275772+00,,FAILED
