@@ -1,4 +1,37 @@
 record_id,source_name,source_url,collected_at,title,company_name,description,requirements,location,is_remote,employment_type,experience_level,role_family,salary_min_usd,salary_max_usd,currency,visa_sponsorship,published_date,application_url,extraction_status
+bc6d09fb-f723-4e1f-9651-42dc747f36e1,Company Careers,https://about.gitlab.com/jobs/,2026-11-23T05:51:35.184002+00:00,Learn more,GitLab,,,,False,FULL_TIME,,Other,,,USD,False,2026-11-23 05:51:26.435589+00,,FAILED
+a39bd6ff-235a-49ae-9025-68d455c1db11,Company Careers,https://about.gitlab.com/jobs/,2026-11-23T05:51:35.164948+00:00,Learn more about our accommodations and accessibility.,GitLab,,,,False,FULL_TIME,,Other,,,USD,False,2026-11-23 05:51:26.435575+00,,FAILED
+6d6f1a68-df3b-40af-ab07-8a9e0ec26905,Company Careers,https://about.gitlab.com/jobs/,2026-11-23T05:51:35.144244+00:00,See open positions,GitLab,,,,False,FULL_TIME,,Other,,,USD,False,2026-11-23 05:51:26.435528+00,,FAILED
+d82eac22-e50a-491c-9cc0-5ef5f07c1f21,Company Careers,https://www.postman.com/careers/,2026-11-23T05:51:35.118395+00:00,View Open Positions,Postman,,,,False,FULL_TIME,,Other,,,USD,False,2026-11-23 05:51:25.210958+00,,FAILED
+bc480db3-41dc-4c1d-b33f-75c52a1c5b42,Company Careers,https://snyk.io/careers/,2026-11-23T05:51:35.088704+00:00,See open jobs,Snyk,,,,False,FULL_TIME,,Other,,,USD,False,2026-11-23 05:51:20.501548+00,,FAILED
+243d9ca7-818f-43e0-a21d-ef7622e0452d,Company Careers,https://www.confluent.io/careers,2026-11-23T05:51:35.067944+00:00,Turn on Job Alerts,Confluent,,,,False,FULL_TIME,,Other,,,USD,False,2026-11-23 05:50:16.790381+00,,FAILED
+93b2c5a3-b862-498f-a332-392fea261b4e,Company Careers,https://www.mongodb.com/careers,2026-11-23T05:51:35.047427+00:00,See Open Jobs,MongoDB,,,,False,FULL_TIME,,Other,,,USD,False,2026-11-23 05:50:09.99574+00,,FAILED
+d3205e94-62e7-4b24-81c8-e8767b34bc99,Company Careers,https://www.pinecone.io/careers/,2026-11-23T05:51:35.021777+00:00,Join our talent community to stay connected!Interested in working at Pinecone but don’t see a role that fits? Please join our Open Talent Community to receive updates about upcoming opportunities.Join,Pinecone,,,,False,FULL_TIME,,Other,,,USD,False,2026-11-23 05:49:28.795922+00,,FAILED
+a2d158fa-7353-45c1-a7db-d37671c9a6cd,Company Careers,https://databricks.com/company/careers,2026-11-23T05:51:34.995296+00:00,Amsterdam,Databricks,,,,False,FULL_TIME,,Other,,,USD,False,2026-11-23 05:49:24.702898+00,,FAILED
+df16e9b0-f9a2-4f00-a25d-ef2c4cbcd211,Company Careers,https://databricks.com/company/careers,2026-11-23T05:51:34.967636+00:00,London,Databricks,,,,False,FULL_TIME,,Other,,,USD,False,2026-11-23 05:49:24.70289+00,,FAILED
+b018bb2c-e122-4cc0-bb84-bc732bfb77b7,Company Careers,https://databricks.com/company/careers,2026-11-23T05:51:34.942569+00:00,New York City,Databricks,,,,False,FULL_TIME,,Other,,,USD,False,2026-11-23 05:49:24.702882+00,,FAILED
+76a992de-8e20-4882-862d-06ab7c214355,Company Careers,https://databricks.com/company/careers,2026-11-23T05:51:34.914199+00:00,"Washington, D.C.",Databricks,,,,False,FULL_TIME,,Other,,,USD,False,2026-11-23 05:49:24.702873+00,,FAILED
+db9af289-6963-4ea8-b3f1-00fe12a9e917,Company Careers,https://databricks.com/company/careers,2026-11-23T05:51:34.887001+00:00,Seattle,Databricks,,,,False,FULL_TIME,,Other,,,USD,False,2026-11-23 05:49:24.702866+00,,FAILED
+1b4b3161-5fb8-44cc-9321-bafe1901ffc1,Company Careers,https://databricks.com/company/careers,2026-11-23T05:51:34.863757+00:00,San Francisco,Databricks,,,,False,FULL_TIME,,Other,,,USD,False,2026-11-23 05:49:24.702857+00,,FAILED
+49cc4f9d-5d4e-4efb-bc41-ce7fab108ebc,Company Careers,https://databricks.com/company/careers,2026-11-23T05:51:34.833974+00:00,Security,Databricks,,,,False,FULL_TIME,,Other,,,USD,False,2026-11-23 05:49:24.702848+00,,FAILED
+94671d91-7706-4d49-ab48-2258c5d94aa0,Company Careers,https://databricks.com/company/careers,2026-11-23T05:51:34.807760+00:00,Recruiting,Databricks,,,,False,FULL_TIME,,Other,,,USD,False,2026-11-23 05:49:24.70284+00,,FAILED
+50d7c6c5-d758-440a-80f8-9b40dac3dd82,Company Careers,https://databricks.com/company/careers,2026-11-23T05:51:34.783248+00:00,Professional Services,Databricks,,,,False,FULL_TIME,,Other,,,USD,False,2026-11-23 05:49:24.702828+00,,FAILED
+3c0884e2-6651-4b5d-bba3-6fec0328e35f,Company Careers,https://databricks.com/company/careers,2026-11-23T05:51:34.761086+00:00,Product,Databricks,,,,False,FULL_TIME,,Product,,,USD,False,2026-11-23 05:49:24.702821+00,,FAILED
+8155da37-e680-4ae0-9ceb-8226afbb8be5,Company Careers,https://databricks.com/company/careers,2026-11-23T05:51:34.737352+00:00,People and HR,Databricks,,,,False,FULL_TIME,,Other,,,USD,False,2026-11-23 05:49:24.702812+00,,FAILED
+465e3d1d-21f2-4725-a9fb-fb8d6a72274e,Company Careers,https://databricks.com/company/careers,2026-11-23T05:51:34.711549+00:00,Operations,Databricks,,,,False,FULL_TIME,,Other,,,USD,False,2026-11-23 05:49:24.702804+00,,FAILED
+72c17b9b-95bf-4433-8011-892a9e3a1a55,Company Careers,https://databricks.com/company/careers,2026-11-23T05:51:34.686524+00:00,Marketing,Databricks,,,,False,FULL_TIME,,Other,,,USD,False,2026-11-23 05:49:24.702795+00,,FAILED
+70b91df9-0c21-4075-bacd-8d348d939ebf,Company Careers,https://databricks.com/company/careers,2026-11-23T05:51:34.657663+00:00,Finance,Databricks,,,,False,FULL_TIME,,Other,,,USD,False,2026-11-23 05:49:24.702787+00,,FAILED
+f1614beb-b04d-4bd9-8087-ccb45f3c0c5b,Company Careers,https://databricks.com/company/careers,2026-11-23T05:51:34.630203+00:00,Field Engineering,Databricks,,,,False,FULL_TIME,,Engineering,,,USD,False,2026-11-23 05:49:24.702779+00,,FAILED
+c4c8092f-bf9e-4f0c-9335-f4bcccb678be,Company Careers,https://databricks.com/company/careers,2026-11-23T05:51:34.605688+00:00,Customer Success,Databricks,,,,False,FULL_TIME,,Other,,,USD,False,2026-11-23 05:49:24.702769+00,,FAILED
+124ba674-b4cc-426e-81c8-165ed6af38d2,Company Careers,https://databricks.com/company/careers,2026-11-23T05:51:34.579333+00:00,Business Development,Databricks,,,,False,FULL_TIME,,Product,,,USD,False,2026-11-23 05:49:24.702759+00,,FAILED
+9f1f339c-31dd-4363-91ff-c14a707bb1fb,Company Careers,https://databricks.com/company/careers,2026-11-23T05:51:34.548969+00:00,Administration,Databricks,,,,False,FULL_TIME,,Other,,,USD,False,2026-11-23 05:49:24.702749+00,,FAILED
+22a32dba-752b-4f71-85eb-984dc973c34c,Company Careers,https://databricks.com/company/careers,2026-11-23T05:51:34.524891+00:00,See open jobs,Databricks,,,,False,FULL_TIME,,Other,,,USD,False,2026-11-23 05:49:24.702736+00,,FAILED
+b6a626fc-c9e2-4249-8850-9defeee12d57,Company Careers,https://databricks.com/company/careers,2026-11-23T05:51:34.499574+00:00,Open Jobs,Databricks,,,,False,FULL_TIME,,Other,,,USD,False,2026-11-23 05:49:24.702688+00,,FAILED
+a8031229-114e-4f68-ae9d-ca4b7ac88e61,Company Careers,https://www.anthropic.com/careers,2026-11-23T05:51:34.457285+00:00,Explore open roles,Anthropic,,,,False,FULL_TIME,,Other,,,USD,False,2026-11-23 05:49:18.270463+00,,FAILED
+daaf0dee-e501-4dd3-ac71-4c23ee016bc3,Greenhouse,https://boards-api.greenhouse.io/v1/boards/mongodb/jobs,2026-11-23T05:52:18.891803+00:00,Senior Solutions Architect (Public Sector),MongoDB,,,Singapore,False,,,Other,,,USD,False,2026-11-23 05:48:29+00,,FAILED
+f0954f06-acd9-4438-a909-7dca9d9a7fb4,Greenhouse,https://boards-api.greenhouse.io/v1/boards/mongodb/jobs,2026-11-23T05:46:15.024223+00:00,"Senior/ Enterprise Account Executive, Growth",MongoDB,,,Melbourne,False,,,Other,,,USD,False,2026-11-23 05:35:38+00,,FAILED
+18480da6-cc94-4e5d-897f-d415ae60e819,Greenhouse,https://boards-api.greenhouse.io/v1/boards/cloudflare/jobs,2026-11-23T05:46:14.999618+00:00,"Public Relations Executive, APJC",Cloudflare,,,Hybrid,False,,,Other,,,USD,False,2026-11-23 05:20:58+00,,FAILED
+f456b663-9616-407d-9ddc-1db68fb7e334,Greenhouse,https://boards-api.greenhouse.io/v1/boards/stripe/jobs,2026-11-23T05:46:14.940356+00:00,Operations Team Lead (SDC),Stripe,,,Bengaluru,False,,,Other,,,USD,False,2026-11-23 05:18:09+00,,FAILED
 05405c34-1eae-4bc3-8022-c175a8508829,Company Careers,https://about.gitlab.com/jobs/,2026-11-23T05:11:08.978928+00:00,Learn more,GitLab,,,,False,FULL_TIME,,Other,,,USD,False,2026-11-23 05:11:02.00736+00,,FAILED
 8c336fd7-a157-42e9-b7c5-571b25040699,Company Careers,https://about.gitlab.com/jobs/,2026-11-23T05:11:08.953560+00:00,Learn more about our accommodations and accessibility.,GitLab,,,,False,FULL_TIME,,Other,,,USD,False,2026-11-23 05:11:02.007341+00,,FAILED
 289f275d-4b94-4265-a6a6-66781b63bffc,Company Careers,https://about.gitlab.com/jobs/,2026-11-23T05:11:08.924262+00:00,See open positions,GitLab,,,,False,FULL_TIME,,Other,,,USD,False,2026-11-23 05:11:02.007285+00,,FAILED
@@ -257,6 +290,11 @@ d739d4e7-8f05-4cb4-b0c0-395e64a87870,Greenhouse,https://boards-api.greenhouse.io
 690fccd1-e9de-4f4f-b8ec-581650f022ea,Greenhouse,https://boards-api.greenhouse.io/v1/boards/anthropic/jobs,2026-11-23T00:43:12.322708+00:00,"Program Manager, Cloud Partners",Anthropic,,,"San Francisco, CA | New York City, NY",False,,,Other,,,USD,False,2026-11-22 19:46:05+00,,FAILED
 0f70b8ad-29d5-4db8-96af-e2e5b0a6002c,Greenhouse,https://boards-api.greenhouse.io/v1/boards/anthropic/jobs,2026-11-23T00:43:12.294967+00:00,Head of Campaign Operations,Anthropic,,,"San Francisco, CA | New York City, NY",False,,,ML Research,,,USD,False,2026-11-22 19:40:48+00,,FAILED
 14316bf0-ab32-4a58-a6b1-11b4884ef1cd,Greenhouse,https://boards-api.greenhouse.io/v1/boards/anthropic/jobs,2026-11-23T00:43:12.253632+00:00,Campaign Manager,Anthropic,,,"San Francisco, CA | New York City, NY",False,,,ML Research,,,USD,False,2026-11-22 19:38:51+00,,FAILED
+1d6f4ffe-b2d9-44d1-9745-f53db046e369,Company Careers,https://api.ashbyhq.com/posting-api/job-board/openai?includeCompensation=false,2026-11-23T05:11:08.124379+00:00,"Research Engineer / Research Scientist, Health",OpenAI,"About the Team
+
+The Health team, within OpenAI’s broader Post Training organization, has a mission to ensure AGI improves health for all humanity.
+
+Improving human health will be one of the defining impacts of AGI. Hundreds of millions of people already turn to ChatGPT for questions about their health and millions of clinicians use it weekly to support care delivery. Increasingly capable models create an opportunity to make high-quality medical intelligence more accessible across patients and cl",,San Francisco,False,FullTime,,ML Research,,,USD,False,2026-11-22 17:20:10.7+00,,FAILED
 a9b31a0a-878a-422f-abbf-72ba3fa470b3,Ashby,https://api.ashbyhq.com/posting-api/job-board/openai?includeCompensation=false,2026-11-23T05:08:45.643223+00:00,"Research Engineer / Research Scientist, Health",Openai,"About the Team
 
 The Health team, within OpenAI’s broader Post Training organization, has a mission to ensure AGI improves health for all humanity.
@@ -334,11 +372,6 @@ We are committed to providing reasonable accommodations to applicants with disab
 OpenAI Global Applicant Privacy Policy https://cdn.openai.com/policies/global-employee-and-contractor-privacy-policy.pdf
 
 At OpenAI, we believe artificial intelligence has the potential to help people solve immense global challenges, and we want the upside of AI to be widely shared. Join us in shaping the future of technology.",,San Francisco,False,FullTime,,ML Research,,,USD,False,2026-11-22 17:20:10.7+00,,FAILED
-1d6f4ffe-b2d9-44d1-9745-f53db046e369,Company Careers,https://api.ashbyhq.com/posting-api/job-board/openai?includeCompensation=false,2026-11-23T05:11:08.124379+00:00,"Research Engineer / Research Scientist, Health",OpenAI,"About the Team
-
-The Health team, within OpenAI’s broader Post Training organization, has a mission to ensure AGI improves health for all humanity.
-
-Improving human health will be one of the defining impacts of AGI. Hundreds of millions of people already turn to ChatGPT for questions about their health and millions of clinicians use it weekly to support care delivery. Increasingly capable models create an opportunity to make high-quality medical intelligence more accessible across patients and cl",,San Francisco,False,FullTime,,ML Research,,,USD,False,2026-11-22 17:20:10.7+00,,FAILED
 a13dd9e2-6626-4e0e-9069-f4f347e1babb,Company Careers,https://api.ashbyhq.com/posting-api/job-board/openai?includeCompensation=false,2026-11-23T05:11:08.091967+00:00,"Research Engineer / Research Scientist, Human Flourishing",OpenAI,"About the Team
 
 The Human Flourishing team’s mission is to ensure AI systems understand and advance human flourishing. As AI becomes more capable and plays a larger role in people’s lives, we want its human benefits to grow with its capabilities. The Human Flourishing team is part of the broader Post Training organization.
@@ -473,6 +506,9 @@ The Personalization-Memory team, within OpenAI's broader Post Training organizat
 About the Role
 
 As a Research Engineer",,San Francisco,False,FullTime,,ML Research,,,USD,False,2026-11-22 17:17:35.967+00,,FAILED
+34d89370-66b2-4ce7-afd1-26b0ac8542d3,Company Careers,https://api.ashbyhq.com/posting-api/job-board/openai?includeCompensation=false,2026-11-23T05:11:08.020512+00:00,"Research Engineer/Research Scientist- Post Training, Model Experience",OpenAI,"About the Team
+
+The Post Training team is responsible for training and improving pre-trained models to be deployed into ChatGPT, the API, and potential future products. In the Model Experience team, we shape the default character and behavior of ChatGPT: how the model communicates, responds to users, uses its capabilities, and behaves across different contexts and languages. Our goal is to make every interaction with ChatGPT thoughtful, helpful, and trustworthy. We take an opinionated view of wh",,San Francisco,False,FullTime,,ML Research,,,USD,False,2026-11-22 17:14:45.574+00,,FAILED
 6b251411-d9a6-4703-95e1-edf3d75241a5,Ashby,https://api.ashbyhq.com/posting-api/job-board/openai?includeCompensation=false,2026-11-23T05:08:45.564123+00:00,"Research Engineer/Research Scientist- Post Training, Model Experience",Openai,"About the Team
 
 The Post Training team is responsible for training and improving pre-trained models to be deployed into ChatGPT, the API, and potential future products. In the Model Experience team, we shape the default character and behavior of ChatGPT: how the model communicates, responds to users, uses its capabilities, and behaves across different contexts and languages. Our goal is to make every interaction with ChatGPT thoughtful, helpful, and trustworthy. We take an opinionated view of what good human–AI interaction should look like, then turn that vision into real model behavior through human data, evaluations, reward models, and post-training.
@@ -530,9 +566,13 @@ We are committed to providing reasonable accommodations to applicants with disab
 OpenAI Global Applicant Privacy Policy https://cdn.openai.com/policies/global-employee-and-contractor-privacy-policy.pdf
 
 At OpenAI, we believe artificial intelligence has the potential to help people solve immense global challenges, and we want the upside of AI to be widely shared. Join us in shaping the future of technology.",,San Francisco,False,FullTime,,ML Research,,,USD,False,2026-11-22 17:14:45.574+00,,FAILED
-34d89370-66b2-4ce7-afd1-26b0ac8542d3,Company Careers,https://api.ashbyhq.com/posting-api/job-board/openai?includeCompensation=false,2026-11-23T05:11:08.020512+00:00,"Research Engineer/Research Scientist- Post Training, Model Experience",OpenAI,"About the Team
+26ef233f-39bf-43b7-bd86-37add2f628ce,Company Careers,https://api.ashbyhq.com/posting-api/job-board/openai?includeCompensation=false,2026-11-23T05:11:07.990510+00:00,"Research Engineer/Research Scientist-Post Training, Proactivity",OpenAI,"About the Team
 
-The Post Training team is responsible for training and improving pre-trained models to be deployed into ChatGPT, the API, and potential future products. In the Model Experience team, we shape the default character and behavior of ChatGPT: how the model communicates, responds to users, uses its capabilities, and behaves across different contexts and languages. Our goal is to make every interaction with ChatGPT thoughtful, helpful, and trustworthy. We take an opinionated view of wh",,San Francisco,False,FullTime,,ML Research,,,USD,False,2026-11-22 17:14:45.574+00,,FAILED
+The Proactivity Research team, within OpenAI’s broader Post Training team, is focused on making our models in ChatGPT, Dots, and future potential products proactive in ways that are truly useful. We're laying the technical foundations for AI that can anticipate what users need in real time, adapt as their goals and preferences shift, and build a deeper, evolving understanding of the person it's helping.
+
+About the Role
+
+As a Research Engineer / Scientist, you will research and de",,San Francisco,False,FullTime,,ML Research,,,USD,False,2026-11-22 17:12:41.4+00,,FAILED
 5af076af-764d-4110-893f-6dbff7726958,Ashby,https://api.ashbyhq.com/posting-api/job-board/openai?includeCompensation=false,2026-11-23T05:08:45.539574+00:00,"Research Engineer/Research Scientist-Post Training, Proactivity",Openai,"About the Team
 
 The Proactivity Research team, within OpenAI’s broader Post Training team, is focused on making our models in ChatGPT, Dots, and future potential products proactive in ways that are truly useful. We're laying the technical foundations for AI that can anticipate what users need in real time, adapt as their goals and preferences shift, and build a deeper, evolving understanding of the person it's helping.
@@ -588,13 +628,6 @@ We are committed to providing reasonable accommodations to applicants with disab
 OpenAI Global Applicant Privacy Policy https://cdn.openai.com/policies/global-employee-and-contractor-privacy-policy.pdf
 
 At OpenAI, we believe artificial intelligence has the potential to help people solve immense global challenges, and we want the upside of AI to be widely shared. Join us in shaping the future of technology.",,San Francisco,False,FullTime,,ML Research,,,USD,False,2026-11-22 17:12:41.4+00,,FAILED
-26ef233f-39bf-43b7-bd86-37add2f628ce,Company Careers,https://api.ashbyhq.com/posting-api/job-board/openai?includeCompensation=false,2026-11-23T05:11:07.990510+00:00,"Research Engineer/Research Scientist-Post Training, Proactivity",OpenAI,"About the Team
-
-The Proactivity Research team, within OpenAI’s broader Post Training team, is focused on making our models in ChatGPT, Dots, and future potential products proactive in ways that are truly useful. We're laying the technical foundations for AI that can anticipate what users need in real time, adapt as their goals and preferences shift, and build a deeper, evolving understanding of the person it's helping.
-
-About the Role
-
-As a Research Engineer / Scientist, you will research and de",,San Francisco,False,FullTime,,ML Research,,,USD,False,2026-11-22 17:12:41.4+00,,FAILED
 f57f440b-3629-4c29-a525-529873572edb,Company Careers,https://api.ashbyhq.com/posting-api/job-board/openai?includeCompensation=false,2026-11-23T05:11:07.958735+00:00,"Research Engineer / Research Scientist, Post-Training — Collective Alignment (User Signals)",OpenAI,"About the Team
 
 The Collective Alignment (User Signals) team is a post-training research team working at the intersection of data science, human feedback, and reinforcement learning. We develop methods for learning from real-world user interactions to build AI systems that deliver lasting value, helping people learn, grow, and accomplish increasingly complex goals with ChatGPT.
